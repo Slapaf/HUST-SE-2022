@@ -1,10 +1,24 @@
 <!doctype html>
-<link rel="stylesheet" href="register.css">
+<link rel="stylesheet" href="css/register.css">
 <html lang="zh">
 
 <head>
 	<meta charset="UTF-8">
 	<title>注册界面</title>
+</head>
+
+<body>
+	<div class="register_box">
+		<h1 class="title">欢迎注册</h1>
+		<input class="input_box" type="text" id="username" placeholder="设置用户名" onblur="checkUser()">
+		<span class="tip_box" id="tip1"></span>
+		<input class="input_box" type="password" id="input1" placeholder="设置密码" onblur="checkKey_1()">
+		<span class="tip_box" id="tip2"></span>
+		<input class="input_box" type="password" id="input2" placeholder="确认密码" onblur="checkKey_2()">
+		<span class="tip_box" id="tip3"></span>
+		<input class="button_box" type="button" onclick="checkAll()" value="注册">
+	</div>
+
 	<script>
 		function checkUser() {
 			x = document.getElementById("tip1");
@@ -46,19 +60,6 @@
 			}
 		}
 	</script>
-</head>
-
-<body>
-	<div class="register_box">
-		<h1 class="title">欢迎注册</h1>
-		<input class="input_box" type="text" id="username" placeholder="设置用户名" onblur="checkUser()">
-		<span class="tip_box" id="tip1"></span>
-		<input class="input_box" type="password" id="input1" placeholder="设置密码" onblur="checkKey_1()">
-		<span class="tip_box" id="tip2"></span>
-		<input class="input_box" type="password" id="input2" placeholder="确认密码" onblur="checkKey_2()">
-		<span class="tip_box" id="tip3"></span>
-		<input class="button_box" type="button" onclick="checkAll()" value="注册">
-	</div>
 </body>
 
 </html>
