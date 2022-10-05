@@ -7,7 +7,7 @@ bin-release/
 # Other files and folders
 .settings/
 # Pycharm 配置，由于 Windows 和 Linux 环境不同而设置
-.idea/*
+.idea/
 # database 文件，防止冲突
 *.db
 
