@@ -1,0 +1,94 @@
+body {
+  background-color: #f3f6f9;
+  display: flex;
+  justify-content: center;
+}
+
+.container {
+  width: 50%;
+  background-color: white;
+}
+
+.container .header {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  border-bottom: solid 2px #f3f6f9;
+  padding: 20px 30px;
+}
+
+.container .main {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  border-bottom: solid 2px #f3f6f9;
+  padding: 20px 30px;
+}
+
+.container .main ul {
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+}
+
+.container .main ul li {
+  width: 100%;
+  background-color: #f3f6f9;
+  border: solid 2px #c2c2c2;
+  margin: 20px 30px;
+  padding: 20px 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+#btn-for-add {
+    width: 80px;
+    height: 30px;
+    background: #f3f6f9;
+    border: solid 2px #c2c2c2;
+    text-align: center;
+    line-height: 30px;
+    align-self: center;
+}
+
+#btn-for-add:hover {
+    cursor: pointer;
+}
+
+.removeTopic {
+  align-self: flex-end;
+}
+
+.popup {
+  position: absolute;
+  top: -100%;
+  width: 40%;
+  height: 300px;
+  background-color: pink;
+  padding: 16px 20px;
+  opacity: 0;
+}
+
+.popup.show {
+  top: 25%;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.popup-body {
+    display: flex;
+}
+
+.popup-op {
+    width: 25%;
+    height: 30px;
+    margin: 5px 10px;
+    border: solid 2px #fff;
+}
+
+.popup-op:hover {
+    cursor: pointer;
+}

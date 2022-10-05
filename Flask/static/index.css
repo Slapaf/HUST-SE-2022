@@ -1,0 +1,51 @@
+
+nav {
+    display: flex;
+    justify-content: center;
+}
+
+nav .left {
+    width: 50%;
+    height: 100px;
+    background-color: yellow;
+}
+
+nav .right {
+    width: 50%;
+    height: 100px;
+    background-color: pink;
+}
+
+nav .right {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+nav .right div{
+    width: 50px;
+    height: 30px;
+    margin: 10px;
+    background-color: yellow;
+}
+
+.main {
+    height: 700px;
+    background-color: rgb(243, 236, 236);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.main .op1,
+.main .op2 {
+    width: 100px;
+    height: 80px;
+    margin: 20px;
+    background-color: yellow;
+}
+
+footer {
+    height: 100px;
+    background-color: greenyellow;
+}
