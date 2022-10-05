@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>文件收集</title>
+    <link rel="stylesheet" href="css/all.css" />
+    <link rel="stylesheet" href="css/file_collecting.css" />
+  </head>
+  <body>
+    <div class="container">
+      <form action="#" method="post">
+        <div class="header">
+          <input
+            class="collectionTitle"
+            type="text"
+            value="文件收集"
+            name="collectionTitle"
+          />
+          收集者<input class="collector" type="text" name="collector" />
+          截止时间<input class="deadLine" type="date" name="deadLine" />
+        </div>
+        <div class="main">
+          <ul>
+            <li>
+              <h1><input type="text" value="姓名" /></h1>
+              <input
+                type="text"
+                disabled="disabled"
+                placeholder="此项由提交者填写"
+              />
+              <button class="removeTopic">删除题目</button>
+            </li>
+            <li>
+              <h1><input type="text" value="文件" /></h1>
+              <div class="SelectTopic">
+                <input type="checkbox" />姓名
+                <input type="checkbox" />学号
+              </div>
+              <input type="file" />
+              <button class="removeTopic">删除题目</button>
+            </li>
+          </ul>
+          <div id="btn-for-add">添加题目</div>
+        </div>
+      </form>
+    </div>
+    <div class="popup">
+      <div class="popup-header">
+        <h1>添加题目</h1>
+        <span>X</span>
+      </div>
+      <div class="popup-body">
+        <div class="popup-op" id="op-name">姓名</div>
+        <div class="popup-op" id="op-file">文件</div>
+        <div class="popup-op" id="op-sno">学号</div>
+      </div>
+    </div>
+    <script src="js/file_collecting.js"></script>
+  </body>
+</html>

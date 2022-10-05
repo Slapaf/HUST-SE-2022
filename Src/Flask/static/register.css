@@ -1,0 +1,71 @@
+/* 提示信息 */
+.alert {
+    position: relative;
+    padding: 7px;
+    margin: 7px 0;
+    border: 1px solid transparent;
+    color: #004085;
+    background-color: #cce5ff;
+    border-color: #b8daff;
+    border-radius: 5px;
+}
+
+
+ body {
+ 	background-color: #8ea4f8;
+ 	background-repeat: no-repeat;
+ 	background-size: cover;
+ }
+
+ .register_box {
+ 	width: 400px;
+ 	height: 480px;
+ 	background-color: #fff;
+ 	margin: auto;
+ 	margin-top: 150px;
+ 	border-radius: 5px;
+ 	overflow: hidden;
+ }
+
+ .title {
+ 	text-align: center;
+ 	font-size: 28px;
+ 	color: #000;
+ 	margin-top: 80px;
+ 	margin-bottom: 10px;
+ 	letter-spacing: 3px;
+ 	font-family: sans-serif;
+ }
+
+ .input_box {
+ 	position: relative;
+ 	width: 300px;
+ 	height: 30px;
+ 	width: 300px;
+ 	height: 40px;
+ 	padding-left: 10px;
+ 	margin-top: 20px;
+ 	margin-left: 50px;
+ }
+
+ .button_box {
+ 	width: 300px;
+ 	height: 35px;
+ 	width: 300px;
+ 	height: 40px;
+ 	margin-top: 20px;
+ 	margin-left: 50px;
+ 	border-radius: 5px;
+ 	background-color: #64a9d9;
+ 	cursor: pointer;
+ 	color: #fff;
+ }
+
+ .tip_box {
+ 	position: absolute;
+ 	display: block;
+ 	padding-left: 60px;
+ 	font-size: 8px;
+ 	color: rgb(255, 0, 0);
+ 	font-family: sans-serif;
+ }
