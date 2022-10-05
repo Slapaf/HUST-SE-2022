@@ -10,6 +10,8 @@ bin-release/
 .idea/
 # database 文件，防止冲突
 *.db
+# .xml
+*.xml
 
 # Executables
 *.swf
