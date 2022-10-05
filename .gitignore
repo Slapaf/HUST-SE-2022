@@ -9,6 +9,8 @@ bin-release/
 Demo/
 # Pycharm 配置，由于 Windows 和 Linux 环境不同而设置
 .idea
+# database 文件，防止冲突
+*.db
 
 # Executables
 *.swf
