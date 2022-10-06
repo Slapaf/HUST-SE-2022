@@ -4,7 +4,6 @@ from flask_login import LoginManager, login_user, login_required, logout_user, U
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
 import click
-import datetime
 
 """* 数据库配置 """
 app = Flask(__name__)
@@ -17,17 +16,6 @@ login_manager.login_view = 'login'
 
 
 class User(db.Model, UserMixin):  # 表名将会是 user（自动生成，小写处理）
-    """ 用户信息
-
-    Description:
-        记录已注册用户的相关信息。
-
-    Attributes:
-        id: 主键
-        name: 名字（用户昵称）
-        username: 用户名
-        password_hash: 密码散列值
-    """
     id = db.Column(db.Integer, primary_key=True)  # 主键
     name = db.Column(db.String(20))  # 名字（用户昵称）
     username = db.Column(db.String(20))  # 用户名
@@ -36,7 +24,6 @@ class User(db.Model, UserMixin):  # 表名将会是 user（自动生成，小写
     def set_password(self, password):
         """
         用来设置密码的方法，接受密码作为参数
-
         Args:
             password(string): 密码（明文）
 
@@ -48,59 +35,13 @@ class User(db.Model, UserMixin):  # 表名将会是 user（自动生成，小写
     def validate_password(self, password):
         """
         用于验证密码的方法
-
         Args:
             password(string): 密码（明文）
 
         Returns:
-            (bool): 匹配结果
+            匹配结果(bool)
         """
         return check_password_hash(self.password_hash, password)  # 返回布尔值
-
-
-class FileCollection(db.Model):
-    """ 文件收集
-
-    Description:
-        记录管理者创建的文件收集的相关信息。
-
-    Attributes:
-        id: 主键
-        collection_title: 收集名称
-        start_date: 收集开始时间
-        end_date: 收集结束时间
-        namelist_path: 应交名单路径
-        file_path: 提交文件路径
-    """
-    id = db.Column(db.Integer, primary_key=True)
-    collection_title = db.Column(db.String(20))  # 收集名称
-    start_date = db.Column(db.DateTime)  # 收集开始时间
-    end_date = db.Column(db.DateTime)  # 收集结束时间
-    namelist_path = db.Column(db.String(20))  # 应交名单路径
-    file_path = db.Column(db.String(20))  # 提交文件路径
-
-    def set_collection_date(self, deadline: datetime.datetime):
-        """
-        设置收集的开始和结束时间
-
-        Args:
-            deadline: 截止时间
-
-        Returns:
-            None
-        """
-        self.start_date = datetime.datetime.now()  # 开始时间设置为创建收集的时间
-        self.end_date = deadline  # 结束时间设置
-
-    def collection_valid(self):
-        """
-        判断收集是否截止
-
-        Returns:
-            (bool): 截止情况
-        """
-        current_date = datetime.datetime.now()
-        return current_date < self.end_date  # 当前时间小于截止时间时收集有效
 
 
 @app.cli.command()  # 注册为命令，可以传入 name 参数来自定义命令

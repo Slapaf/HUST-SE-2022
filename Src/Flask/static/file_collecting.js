@@ -8,9 +8,11 @@ const rem = ul.getElementsByClassName("removeTopic");
 const op_name = document.getElementById("op-name");
 const op_file = document.getElementById("op-file");
 const op_sno = document.getElementById("op-sno");
+const op_radio = document.getElementById("op-radio");
 const btn_for_add = document.querySelector("#btn-for-add");
 const popup = document.querySelector(".popup");
 const cancel = document.querySelector(".popup-header>span");
+//var qnum = 1;
 
 //点击“添加题目”按钮，弹出弹窗
 btn_for_add.onclick = () => {
@@ -75,7 +77,7 @@ op_name.onclick = () => {
 
   //实时监听内容变化，并且改变复选框中的值
   newinput_topic.onchange = () => {
-    alert("changed!");
+    for_checkbox();
   };
 };
 
@@ -110,6 +112,11 @@ op_sno.onclick = () => {
     //删除对应复选框
     for_checkbox();
   });
+
+  //实时监听内容变化，并且改变复选框中的值
+  newinput_topic.onchange = () => {
+    for_checkbox();
+  };
 };
 
 op_file.onclick = () => {
@@ -143,17 +150,22 @@ op_file.onclick = () => {
   newbtn.addEventListener("click", () => {
     ul.removeChild(newli);
   });
+  //实时监听内容变化，并且改变复选框中的值
+  newinput_topic.onchange = () => {
+    for_checkbox();
+  };
 };
 
 //维护复选框：根据已有的题目动态增加/修改复选框
 function updateCheckbox(selectBox) {
-  let len=selectBox.children.length;
-  for(let i=0;i<len;i++) {
+  let len = selectBox.children.length;
+  for (let i = 0; i < len; i++) {
     selectBox.children[0].remove();
   }
   for (let i = 0; i < lis.length; i++) {
     let input_topic = lis[i].getElementsByClassName("input-topic")[0];
     let input_content = lis[i].getElementsByClassName("input-content")[0];
+    if(!input_content) continue;
     if (input_content.type === "file") continue;
     let newcheckbox = document.createElement("input");
     let newspan = document.createElement("span");
@@ -167,10 +179,75 @@ function updateCheckbox(selectBox) {
 function for_checkbox() {
   for (let i = 0; i < lis.length; i++) {
     let input_content = lis[i].getElementsByClassName("input-content")[0];
+    if(!input_content) continue;
     if (input_content.type === "file") {
       updateCheckbox(lis[i].getElementsByClassName("selectTopic")[0]);
     }
   }
+}
+
+op_radio.onclick = () => {
+  let qnum = 1;
+  let newli = document.createElement("li");
+  let newh1 = document.createElement("h1");
+  let newinput_topic = document.createElement("input");
+  newinput_topic.className = "input-topic";
+  newinput_topic.type = "text";
+  newinput_topic.value = "单选题";
+  let newqbox = document.createElement("div");
+  newqbox.className = "questionBox";
+  let newbtn = document.createElement("button");
+  newbtn.className = "removeTopic";
+  newbtn.appendChild(document.createTextNode("删除题目"));
+  let newadd = document.createElement("div");
+  newadd.appendChild(document.createTextNode("添加选项"));
+  let newdel = document.createElement("div");
+  newdel.appendChild(document.createTextNode("删除选项"));
+  newh1.appendChild(newinput_topic);
+  newli.appendChild(newh1);
+  newli.appendChild(newqbox);
+  newli.appendChild(newbtn);
+  newli.appendChild(newadd);
+  newli.appendChild(newdel);
+  ul.appendChild(newli);
+  //使弹窗消失
+  btn_for_add.onclick();
+  //给新增的题目添加删除事件
+  newbtn.addEventListener("click", () => {
+    ul.removeChild(newli);
+  });
+  //给“添加选项”按钮添加事件
+  newadd.onclick = () => {
+    newqbox.appendChild(addQuestion(qnum));
+    qnum++;
+  };
+  //给“删除选项”按钮添加事件
+  newdel.onclick = () => {
+    let nodes = newqbox.children;
+    if (nodes.length == 0) return;
+    let lastNode = nodes[nodes.length - 1];
+    newqbox.removeChild(lastNode);
+    qnum--;
+  };
+};
+
+function addQuestion(qnum) {
+  let newq = document.createElement("div");
+  newq.className = "question question" + qnum;
+  let newspan = document.createElement("span");
+  newspan.appendChild(document.createTextNode("题目" + qnum));
+  newq.appendChild(newspan);
+  let optionArr = ["A", "B", "C", "D"];
+  for (let i = 0; i < 4; i++) {
+    let newinput_radio = document.createElement("input");
+    newinput_radio.type = "radio";
+    newinput_radio.name = "q" + qnum;
+    let newop = document.createElement("span");
+    newop.appendChild(document.createTextNode(optionArr[i]));
+    newq.appendChild(newinput_radio);
+    newq.appendChild(newop);
+  }
+  return newq;
 }
 
 addLoadEvent(op_name.onclick);
