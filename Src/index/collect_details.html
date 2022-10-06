@@ -33,12 +33,19 @@
       </div>
       <div class="tab_con">
         <div class="item" style="display: block;">
-         <div class="part4">1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br></div>
+          <div class="part4">
+            <button class="btn_add" onclick="click0()">添加姓名</button>
+            <div class="name_box" id="name_box"></div>
+          </div>
         </div>
         <div class="item">
-          <div class="part4">2</div>
+          <div class="part4">未完成</div>
         </div>
       </div>
+    </div>
+    <div class="popup_body" id="popup">
+      <textarea placeholder="请按行输入姓名，或以英文逗号隔开多个姓名，例如：张三,李四" class="textarea" id="textarea"></textarea>
+      <button class="btn_re" onclick="click1()">确认</button>
     </div>
   </div>
 
@@ -47,8 +54,8 @@
     var lis = tab_list.querySelectorAll("li");
     var items = document.querySelectorAll(".item");
     for (var i = 0; i < lis.length; i++) {
-      lis[i].setAttribute("index",i);
-      lis[i].onclick = function() {
+      lis[i].setAttribute("index", i);
+      lis[i].onclick = function () {
         for (var i = 0; i < lis.length; i++) {
           lis[i].className = "";
         }
@@ -58,6 +65,51 @@
           items[i].style.display = "none";
         }
         items[index].style.display = "block";
+      }
+    }
+    function click0() {
+      var popup = document.getElementById("popup");
+      popup.style.display = "block";
+    }
+    function click1() {
+      var popup = document.getElementById("popup");
+      popup.style.display = "none";
+      addname();
+      document.getElementById("textarea").value = "";
+    }
+    function addname() {
+      var str = document.getElementById("textarea").value;
+      if (str != "") {
+        var n = str.split(/[\s\n]|\,/);
+        var flag = 0;
+        let d1 = document.getElementById("name_box");
+        while (flag < n.length) {
+          if (n[flag] != "") {
+            let para = document.createElement("div");
+            let node1 = document.createElement("div");
+            let node2 = document.createTextNode(n[flag]);
+            let delbtn = document.createElement("button");
+            delbtn.appendChild(document.createTextNode("X"));
+            para.className = "name";
+            node1.className = "div1";
+            delbtn.className = "del";
+            node1.title = n[flag];
+            para.appendChild(node1);
+            node1.appendChild(node2);
+            d1.appendChild(para);
+            para.appendChild(delbtn);
+            para.onmouseover = function () {
+              delbtn.style.display = "block";
+            }
+            para.onmouseout = function () {
+              delbtn.style.display = "none";
+            }
+            delbtn.onclick = function () {
+              d1.removeChild(para);
+            };
+          }
+          flag++;
+        }
       }
     }
   </script>
