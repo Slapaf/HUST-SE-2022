@@ -6,8 +6,10 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>文件收集</title>
-    <link rel="stylesheet" href="static/all.css" />
-    <link rel="stylesheet" href="static/file_collecting.css" />
+{#    <link rel="stylesheet" href="static/all.css" />#}
+    <link rel="stylesheet" href="{{ url_for('static', filename='all.css') }}" />
+{#    <link rel="stylesheet" href="static/file_collecting.css" />#}
+    <link rel="stylesheet" href="{{ url_for('static', filename='file_collecting.css') }}" />
   </head>
   <body>
     <div class="container">
@@ -60,6 +62,7 @@
         <div class="popup-op" id="op-sno">学号</div>
       </div>
     </div>
-    <script src="static/file_collecting.js"></script>
+{#    <script src="static/file_collecting.js"></script>#}
+    <script src="{{ url_for('static', filename='file_collecting.js') }}"></script>
   </body>
 </html>
