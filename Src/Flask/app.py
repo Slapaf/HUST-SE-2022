@@ -5,6 +5,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import os
 import click
 
+"""* 数据库配置 """
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(app.root_path, 'data.db')  # 设置数据库连接地址URI
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # 关闭对模型修改的监控
@@ -20,10 +21,26 @@ class User(db.Model, UserMixin):  # 表名将会是 user（自动生成，小写
     username = db.Column(db.String(20))  # 用户名
     password_hash = db.Column(db.String(128))  # 密码散列值
 
-    def set_password(self, password):  # 用来设置密码的方法，接受密码作为参数
+    def set_password(self, password):
+        """
+        用来设置密码的方法，接受密码作为参数
+        Args:
+            password(string): 密码（明文）
+
+        Returns:
+            None
+        """
         self.password_hash = generate_password_hash(password)  # 将生成的密码保持到对应字段
 
-    def validate_password(self, password):  # 用于验证密码的方法，接受密码作为参数
+    def validate_password(self, password):
+        """
+        用于验证密码的方法
+        Args:
+            password(string): 密码（明文）
+
+        Returns:
+            匹配结果(bool)
+        """
         return check_password_hash(self.password_hash, password)  # 返回布尔值
 
 
@@ -59,9 +76,24 @@ def initdb(drop):
 
 
 @login_manager.user_loader
-def load_user(user_id):  # 创建用户加载回调函数，接受用户 ID 作为参数
+def load_user(user_id):
+    """
+    创建用户加载回调函数
+    Args:
+        user_id: 用户 id
+
+    Returns:
+        user: 用户对象
+    """
     user = User.query.get(int(user_id))  # 用 ID 作为 User 模型的主键查询对应的用户
     return user  # 返回用户对象
+
+
+# 主界面
+@app.route('/')
+@app.route('/index')
+def index():
+    return render_template('index.html')
 
 
 # 登录界面
