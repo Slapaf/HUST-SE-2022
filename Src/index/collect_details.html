@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>收集详情</title>
+  <link rel="stylesheet" href="css/collect_details.css" />
+</head>
+
+<body>
+  <div class="container">
+    <div class="part1">
+      <a href="https://www.baidu.com" class="link_box">文件收集</a>
+    </div>
+    <div class="part2">
+      <div class="part2_left">
+        <div>0</div>
+        <div>已收文件数</div>
+      </div>
+      <div class="part2_right">
+        <div>0</div>
+        <div>截止倒计时</div>
+      </div>
+    </div>
+    <div class="part3">
+      <div class="tab_list">
+        <ul>
+          <li class="current">应交名单</li>
+          <li>提交记录</li>
+        </ul>
+      </div>
+      <div class="tab_con">
+        <div class="item" style="display: block;">
+         <div class="part4">1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br>1<br></div>
+        </div>
+        <div class="item">
+          <div class="part4">2</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var tab_list = document.querySelector(".tab_list");
+    var lis = tab_list.querySelectorAll("li");
+    var items = document.querySelectorAll(".item");
+    for (var i = 0; i < lis.length; i++) {
+      lis[i].setAttribute("index",i);
+      lis[i].onclick = function() {
+        for (var i = 0; i < lis.length; i++) {
+          lis[i].className = "";
+        }
+        this.className = "current";
+        var index = this.getAttribute("index");
+        for (var i = 0; i < items.length; i++) {
+          items[i].style.display = "none";
+        }
+        items[index].style.display = "block";
+      }
+    }
+  </script>
+
+</body>
+
+</html>
