@@ -25,5 +25,9 @@
 
 #### 注意事项（完成后删除）
 
-- `Demo` 文件夹已加入 .gitignore，本地试验性修改可以在其中进行
-- Python 项目放在 `Src/` 文件夹下面，`Src` 文件夹需要新建，项目环境为 PyCharm Flask 模板
+- 仓库可作为 PyCharm 项目打开，源代码位于 `Src` 文件夹
+- 代码风格规范参考 [Google 开源项目风格指南](https://zh-google-styleguide.readthedocs.io/en/latest/google-python-styleguide/contents/)
+- 目前加入 `.gitignore` 的文件/文件夹有：
+  - `.idea/` PyCharm 配置文件
+  - `*.db` 数据库文件
+  - `*.xml` 项目配置文件
