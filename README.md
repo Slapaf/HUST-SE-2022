@@ -26,7 +26,8 @@
 #### 注意事项（完成后删除）
 
 - 仓库可作为 PyCharm 项目打开，源代码位于 `Src` 文件夹
-- 代码风格规范参考 [Google 开源项目风格指南](https://zh-google-styleguide.readthedocs.io/en/latest/google-python-styleguide/contents/)
+- 代码风格规范参考 [Google 开源项目风格指南](https://zh-google-styleguide.readthedocs.io/en/latest/google-python-styleguide/contents/)。PyCharm 开启 Docstring format 可通过下方路径进行设置，当前设置为 `Google`
+  > `文件 -> 设置 -> 工具 -> Python 集成工具 -> Docstrings -> Docstring 格式`
 - 目前加入 `.gitignore` 的文件/文件夹有：
   - `.idea/` PyCharm 配置文件
   - `*.db` 数据库文件
