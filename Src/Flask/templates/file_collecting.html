@@ -11,7 +11,7 @@
   </head>
   <body>
     <div class="container">
-      <form action="#" method="post">
+      <form method="post">
         <div class="header">
           <input
             class="collectionTitle"
@@ -24,9 +24,10 @@
         </div>
         <div class="main">
           <ul>
-            <li>
-              <h1><input type="text" value="姓名" /></h1>
+            <!-- <li>
+              <h1><input class="input-topic" type="text" value="姓名" /></h1>
               <input
+                class="input-content"
                 type="text"
                 disabled="disabled"
                 placeholder="此项由提交者填写"
@@ -34,17 +35,18 @@
               <button class="removeTopic">删除题目</button>
             </li>
             <li>
-              <h1><input type="text" value="文件" /></h1>
-              <div class="SelectTopic">
+              <h1><input class="input-topic" type="text" value="文件" /></h1>
+              <div class="selectTopic">
                 <input type="checkbox" />姓名
                 <input type="checkbox" />学号
               </div>
-              <input type="file" />
+              <input class="input-content" type="file" disabled="disabled"/>
               <button class="removeTopic">删除题目</button>
-            </li>
+            </li> -->
           </ul>
           <div id="btn-for-add">添加题目</div>
         </div>
+        <button type="submit">创建</button>
       </form>
     </div>
     <div class="popup">
@@ -58,6 +60,6 @@
         <div class="popup-op" id="op-sno">学号</div>
       </div>
     </div>
-    <script src="js/file_collecting.js"></script>
+    <script src="static/file_collecting.js"></script>
   </body>
 </html>

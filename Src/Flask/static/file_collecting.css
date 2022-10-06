@@ -54,6 +54,7 @@ body {
     align-self: center;
 }
 
+.popup-header>span,
 #btn-for-add:hover {
     cursor: pointer;
 }
@@ -76,6 +77,16 @@ body {
   top: 25%;
   opacity: 1;
   pointer-events: auto;
+}
+
+
+.popup-header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.popup-header h1 {
+  width: 80%;
 }
 
 .popup-body {

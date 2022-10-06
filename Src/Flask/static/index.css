@@ -7,13 +7,13 @@ nav {
 nav .left {
     width: 50%;
     height: 100px;
-    background-color: yellow;
+    background-color: #efefef;
 }
 
 nav .right {
     width: 50%;
     height: 100px;
-    background-color: pink;
+    background-color: #efefef;
 }
 
 nav .right {
@@ -26,12 +26,17 @@ nav .right div{
     width: 50px;
     height: 30px;
     margin: 10px;
-    background-color: yellow;
+    background-color: #efefef;
+}
+
+.container>h1{
+    margin-top: 150px;
+    font-size: 50px;
+    text-align: center;
 }
 
 .main {
-    height: 700px;
-    background-color: rgb(243, 236, 236);
+    height: 500px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -42,10 +47,13 @@ nav .right div{
     width: 100px;
     height: 80px;
     margin: 20px;
-    background-color: yellow;
+    background-color:#efefef;
+    text-align: center;
+    line-height: 80px;
+    font-size: 20px;
 }
 
 footer {
     height: 100px;
-    background-color: greenyellow;
+    background-color: #efefef;
 }
