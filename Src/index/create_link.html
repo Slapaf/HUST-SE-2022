@@ -1,0 +1,41 @@
+<!doctype html>
+<link rel="stylesheet" href="css/create_link.css">
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>创建链接界面</title>
+</head>
+
+<body>
+    <div class="box">
+        <h1 class="title">创建成功！</h1>
+        <div class="text">
+            <div>下面是您的文件收集链接</div>
+            <div>请复制并发给文件提交者</div>
+        </div>
+        <div class="main">
+            <div class="link_box">
+                <div class="link" id="link">https://baidu.com</div>
+            </div>
+            <button class="copy" onclick="mycopy()">复制</button>
+        </div>
+        <div class="btn">
+            <button class="click" onclick="window.location.href = 'index.html'">确定</button>
+        </div>
+    </div>
+    <textarea id="input"></textarea>
+</body>
+<script>
+    let n = document.getElementById("link");
+    n.title = document.getElementById("link").innerText;
+    function mycopy() {
+        var text = document.getElementById("link").innerText;
+        var input = document.getElementById("input");
+        input.textContent = text; // 修改文本框的内容
+        input.select(); // 选中文本
+        document.execCommand("copy"); // 执行浏览器复制命令
+    }
+</script>
+
+</html>
