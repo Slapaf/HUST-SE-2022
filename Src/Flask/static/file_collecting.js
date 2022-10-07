@@ -14,6 +14,9 @@ const popup = document.querySelector(".popup");
 const cancel = document.querySelector(".popup-header>span");
 //var qnum = 1;
 
+// 提交按钮
+const btn_for_submit = document.getElementById("submit")
+
 var question_id = 0;
 
 //点击“添加题目”按钮，弹出弹窗
@@ -266,6 +269,22 @@ function addQuestion(qnum) {
         newq.appendChild(newop);
     }
     return newq;
+}
+
+// 点击了“创建收集”按钮
+btn_for_submit.onclick = () => {
+    var question_data = [];
+    // 获取题目列表
+    var question_list = document.getElementsByTagName("ul").getElementsByTagName("li");
+    for (var i = 0; i < question_list.length; i++) {
+        question_data.push(question_list[i]);
+    }
+    var json_str = JSON.stringify(question_data);
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "../templates/file_collecting", true);
+    xhr.setRequestHeader('Content-type', 'application/json');
+    xhr.send(json_str);
 }
 
 addLoadEvent(op_name.onclick);

@@ -1,3 +1,5 @@
+import time
+
 from flask import Flask, render_template, request, url_for, redirect, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, login_user, login_required, logout_user, UserMixin, current_user
@@ -5,6 +7,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import os
 import click
 import datetime
+import json
 
 """* 数据库配置 """
 app = Flask(__name__)
@@ -111,9 +114,10 @@ def generate_collection():
         None
     """
     if request.method == 'POST':  # 点击了提交按钮
-        tmp = request.form.get("question_list")
+        tmp = request.json
         print(type(tmp))
         print(tmp)
+        time.sleep(5)
         return render_template('index.html')
     return render_template('file_collecting.html')
 
