@@ -51,6 +51,9 @@ function addLoadEvent(func) {
 op_name.onclick = () => {
     //新建一些元素节点
     let newli = document.createElement("li");
+    let newf = document.createElement("form");
+    newf.action="file_collecting.html";
+    newf.method="post";
     let newh1 = document.createElement("h1");
     let newinput_topic = document.createElement("input");
     newinput_topic.className = "input-topic";
@@ -70,9 +73,10 @@ op_name.onclick = () => {
     //把各元素节点插到其父元素下
     newbtn.appendChild(document.createTextNode("删除题目"));
     newh1.appendChild(newinput_topic);
-    newli.appendChild(newh1);
-    newli.appendChild(newinput_content);
-    newli.appendChild(newbtn);
+    newli.appendChild(newf);
+    newf.appendChild(newh1);
+    newf.appendChild(newinput_content);
+    newf.appendChild(newbtn);
     ul.appendChild(newli);
     btn_for_add.onclick();
     //更新checkbox;
@@ -277,14 +281,8 @@ btn_for_submit.onclick = () => {
     // 获取题目列表
     var question_list = document.getElementsByTagName("ul").getElementsByTagName("li");
     for (var i = 0; i < question_list.length; i++) {
-        question_data.push(question_list[i]);
+        document.getElementsByName("form")[i].submit();
     }
-    var json_str = JSON.stringify(question_data);
-
-    var xhr = new XMLHttpRequest();
-    xhr.open("POST", "../templates/file_collecting", true);
-    xhr.setRequestHeader('Content-type', 'application/json');
-    xhr.send(json_str);
 }
 
 addLoadEvent(op_name.onclick);
