@@ -59,7 +59,7 @@ class User(db.Model, UserMixin):  # 表名将会是 user（自动生成，小写
 
 
 class FileCollection(db.Model):
-    """ 文件收集
+    """ TODO 文件收集 （功能待完善）
 
     Description:
         记录管理者创建的文件收集的相关信息。
@@ -101,6 +101,21 @@ class FileCollection(db.Model):
         """
         current_date = datetime.datetime.now()
         return current_date < self.end_date  # 当前时间小于截止时间时收集有效
+
+
+@app.route('/file_collecting', methods=['GET', 'POST'])
+def generate_collection():
+    """
+    TODO 生成一个收集对象
+    Returns:
+        None
+    """
+    if request.method == 'POST':  # 点击了提交按钮
+        tmp = request.form.get("question_list")
+        print(type(tmp))
+        print(tmp)
+        return render_template('index.html')
+    return render_template('file_collecting.html')
 
 
 @app.cli.command()  # 注册为命令，可以传入 name 参数来自定义命令
