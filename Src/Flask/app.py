@@ -110,14 +110,22 @@ class FileCollection(db.Model):
 def generate_collection():
     """
     TODO 生成一个收集对象
+
     Returns:
         None
     """
     if request.method == 'POST':  # 点击了提交按钮
-        tmp = request.json
-        print(type(tmp))
-        print(tmp)
-        time.sleep(5)
+        question_list = request.form  # 获取题目信息列表
+        if not question_list:
+            flash("Transport Error!")  # 获取失败
+            return render_template('index.html')
+        else:
+            question_list = list(question_list.items(multi=True))
+            print(question_list)
+            # TODO 存入数据库
+
+        time.sleep(2)  # ? 调试用，实现后删除
+
         return render_template('index.html')
     return render_template('file_collecting.html')
 

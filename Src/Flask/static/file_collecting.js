@@ -15,7 +15,7 @@ const cancel = document.querySelector(".popup-header>span");
 //var qnum = 1;
 
 // 提交按钮
-const btn_for_submit = document.getElementById("submit")
+// const btn_for_submit = document.getElementById("submit")
 
 var question_id = 0;
 
@@ -51,9 +51,6 @@ function addLoadEvent(func) {
 op_name.onclick = () => {
     //新建一些元素节点
     let newli = document.createElement("li");
-    let newf = document.createElement("form");
-    newf.action="file_collecting.html";
-    newf.method="post";
     let newh1 = document.createElement("h1");
     let newinput_topic = document.createElement("input");
     newinput_topic.className = "input-topic";
@@ -73,10 +70,9 @@ op_name.onclick = () => {
     //把各元素节点插到其父元素下
     newbtn.appendChild(document.createTextNode("删除题目"));
     newh1.appendChild(newinput_topic);
-    newli.appendChild(newf);
-    newf.appendChild(newh1);
-    newf.appendChild(newinput_content);
-    newf.appendChild(newbtn);
+    newli.appendChild(newh1);
+    newli.appendChild(newinput_content);
+    newli.appendChild(newbtn);
     ul.appendChild(newli);
     btn_for_add.onclick();
     //更新checkbox;
@@ -276,14 +272,14 @@ function addQuestion(qnum) {
 }
 
 // 点击了“创建收集”按钮
-btn_for_submit.onclick = () => {
-    var question_data = [];
-    // 获取题目列表
-    var question_list = document.getElementsByTagName("ul").getElementsByTagName("li");
-    for (var i = 0; i < question_list.length; i++) {
-        document.getElementsByName("form")[i].submit();
-    }
-}
+// btn_for_submit.onclick = () => {
+//     // var question_data = [];
+//     // 获取题目列表
+//     // var question_list = document.getElementsByTagName("ul").getElementsByTagName("li");
+//     // for (var i = 0; i < question_list.length; i++) {
+//         document.getElementsByName("form").submit();
+//     // }
+// }
 
 addLoadEvent(op_name.onclick);
 addLoadEvent(op_file.onclick);
