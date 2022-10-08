@@ -1,10 +1,6 @@
 const ul = document.querySelector(".main>ul");
 const lis = ul.getElementsByTagName("li");
-// const li1 = lis[0];
-// const li2 = lis[1];
 const rem = ul.getElementsByClassName("removeTopic");
-// const rem1 = rem[0];
-// const rem2 = rem[1];
 const op_name = document.getElementById("op-name");
 const op_file = document.getElementById("op-file");
 const op_sno = document.getElementById("op-sno");
@@ -13,6 +9,7 @@ const btn_for_add = document.querySelector("#btn-for-add");
 const popup = document.querySelector(".popup");
 const cancel = document.querySelector(".popup-header>span");
 //var qnum = 1;
+let dragElement = null;  //存放拖拽的元素
 
 // 提交按钮
 // const btn_for_submit = document.getElementById("submit")
@@ -28,13 +25,6 @@ btn_for_add.onclick = () => {
 cancel.onclick = () => {
   btn_for_add.onclick();
 };
-
-// rem1.addEventListener("click", () => {
-//   ul.removeChild(li1);
-// });
-// rem2.addEventListener("click", () => {
-//   ul.removeChild(li2);
-// });
 
 function addLoadEvent(func) {
   var oldonload = window.onload;
@@ -87,6 +77,11 @@ op_name.onclick = () => {
   newinput_topic.onchange = () => {
     for_checkbox("modify", newli.id, newinput_topic.value);
   };
+  //添加拖拽效果
+  newli.draggable = "true";
+  newli.ondragstart = onDragStart;
+  newli.ondragover = onDragOver;
+  newli.ondrop = onDrop;
 };
 
 op_sno.onclick = () => {
@@ -128,6 +123,11 @@ op_sno.onclick = () => {
   newinput_topic.onchange = () => {
     for_checkbox("modify", newli.id, newinput_topic.value);
   };
+  //添加拖拽效果
+  newli.draggable = "true";
+  newli.ondragstart = onDragStart;
+  newli.ondragover = onDragOver;
+  newli.ondrop = onDrop;
 };
 
 op_file.onclick = () => {
@@ -168,9 +168,14 @@ op_file.onclick = () => {
   newbtn.addEventListener("click", () => {
     ul.removeChild(newli);
   });
+  //添加拖拽效果
+  newli.draggable = "true";
+  newli.ondragstart = onDragStart;
+  newli.ondragover = onDragOver;
+  newli.ondrop = onDrop;
 };
 
-//维护复选框：根据已有的题目动态增加/修改复选框
+//当增加一个“文件”题目时，调用此函数
 function updateCheckbox(selectBox) {
   // let len = selectBox.children.length;
   // for (let i = 0; i < len; i++) {
@@ -192,6 +197,9 @@ function updateCheckbox(selectBox) {
   }
 }
 
+//修改复选框中的内容
+//当有题目的增加/删除/修改时，调用此函数
+//option有三种取值："add","remove","modify"
 function for_checkbox(option, id, value) {
   for (let i = 0; i < lis.length; i++) {
     let input_content = lis[i].getElementsByClassName("input-content")[0];
@@ -275,8 +283,14 @@ op_radio.onclick = () => {
     newqbox.removeChild(lastNode);
     qnum--;
   };
+  //添加拖拽效果
+  newli.draggable = "true";
+  newli.ondragstart = onDragStart;
+  newli.ondragover = onDragOver;
+  newli.ondrop = onDrop;
 };
 
+//添加单选题
 function addQuestion(qnum) {
   let newq = document.createElement("div");
   newq.className = "question question" + qnum;
@@ -308,3 +322,27 @@ function addQuestion(qnum) {
 
 addLoadEvent(op_name.onclick);
 addLoadEvent(op_file.onclick);
+
+
+function onDragStart(e) {
+  // 获取当前拖拽元素
+  dragElement = e.currentTarget;
+}
+function onDragOver(e) {
+  // 默认的当你dragover的时候会阻止你做drop的操作，所以需要取消这个默认
+  e.preventDefault();
+}
+function onDrop(e) {
+  // 当拖动结束的时候，给拖动div所在的位置下面的div做drop事件
+  let dropElement = e.currentTarget;
+  if (dragElement != null && dragElement != dropElement) {
+    // 临时 div 用于存储 box
+    let temp = document.createElement("li");
+    // 添加 temp 到父元素 wrapper 中
+    ul.appendChild(temp);
+    // 交换
+    ul.replaceChild(temp, dropElement);
+    ul.replaceChild(dropElement, dragElement);
+    ul.replaceChild(dragElement, temp);
+  }
+}
