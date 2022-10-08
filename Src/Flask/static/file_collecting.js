@@ -9,7 +9,7 @@ const btn_for_add = document.querySelector("#btn-for-add");
 const popup = document.querySelector(".popup");
 const cancel = document.querySelector(".popup-header>span");
 //var qnum = 1;
-let dragElement = null;  //存放拖拽的元素
+let dragElement = null; //存放拖拽的元素
 
 // 提交按钮
 // const btn_for_submit = document.getElementById("submit")
@@ -191,6 +191,8 @@ function updateCheckbox(selectBox) {
     newcheckbox.type = "checkbox";
     //设为同一id
     newcheckbox.id = lis[i].id;
+    newcheckbox.name = "checked_topic";
+    newcheckbox.value = input_topic.value;
     newspan.appendChild(document.createTextNode(input_topic.value));
     selectBox.appendChild(newcheckbox);
     selectBox.appendChild(newspan);
@@ -206,6 +208,7 @@ function for_checkbox(option, id, value) {
     if (!input_content) continue;
     if (input_content.type === "file") {
       let selectBox = lis[i].getElementsByClassName("selectTopic")[0];
+      let childrenLength = selectBox.children.length;
       if (option === "add") {
         //新增
         let newcheckbox = document.createElement("input");
@@ -213,24 +216,46 @@ function for_checkbox(option, id, value) {
         newcheckbox.type = "checkbox";
         //设为同一id
         newcheckbox.id = id;
+        //给复选框增添 name和 value
+        newcheckbox.name = "checked_topic";
+        newcheckbox.value = value;
         newspan.appendChild(document.createTextNode(value));
         selectBox.appendChild(newcheckbox);
         selectBox.appendChild(newspan);
       } else if (option === "remove") {
         //删除
-        for (let j = 0; j < selectBox.children.length; j++) {
+        for (let j = 0; j < childrenLength; j++) {
           if (selectBox.children[j].id && selectBox.children[j].id === id) {
             selectBox.removeChild(selectBox.children[j].nextSibling);
             selectBox.removeChild(selectBox.children[j]);
           }
         }
-      } else {
+      } else if (option === "modify") {
         //修改
-        for (let j = 0; j < selectBox.children.length; j++) {
+        for (let j = 0; j < childrenLength; j++) {
           if (selectBox.children[j].id && selectBox.children[j].id === id) {
             selectBox.children[j].nextSibling.innerHTML = value;
+            selectBox.children[j].value = value;
           }
         }
+      } else {
+        //交换位置
+        let drag = null,
+          drop = null,
+          drag_txt = null;
+        for (let j = 0; j < childrenLength; j++) {
+          if (selectBox.children[j].id && selectBox.children[j].id === id) {
+            drag = selectBox.children[j];
+            drag_txt = selectBox.children[j].nextSibling;
+          } else if (
+            selectBox.children[j].id &&
+            selectBox.children[j].id === value
+          ) {
+            drop = selectBox.children[j];
+          }
+        }
+        selectBox.insertBefore(drag_txt, drop);
+        selectBox.insertBefore(drag, drag_txt);
       }
     }
   }
@@ -323,7 +348,6 @@ function addQuestion(qnum) {
 addLoadEvent(op_name.onclick);
 addLoadEvent(op_file.onclick);
 
-
 function onDragStart(e) {
   // 获取当前拖拽元素
   dragElement = e.currentTarget;
@@ -336,13 +360,18 @@ function onDrop(e) {
   // 当拖动结束的时候，给拖动div所在的位置下面的div做drop事件
   let dropElement = e.currentTarget;
   if (dragElement != null && dragElement != dropElement) {
-    // 临时 div 用于存储 box
-    let temp = document.createElement("li");
-    // 添加 temp 到父元素 wrapper 中
-    ul.appendChild(temp);
-    // 交换
-    ul.replaceChild(temp, dropElement);
-    ul.replaceChild(dropElement, dragElement);
-    ul.replaceChild(dragElement, temp);
+    // // 临时 div 用于存储 box
+    // let temp = document.createElement("li");
+    // // 添加 temp 到父元素 wrapper 中
+    // ul.appendChild(temp);
+    // // 交换
+    // ul.replaceChild(temp, dropElement);
+    // ul.replaceChild(dropElement, dragElement);
+    // ul.replaceChild(dragElement, temp);
+    ul.insertBefore(dragElement,dropElement);
   }
+  //交换复选框中的位置
+  let dragId = dragElement.id;
+  let dropId = dropElement.id;
+  for_checkbox("swap", dragId, dropId);
 }
