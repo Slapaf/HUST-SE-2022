@@ -1,0 +1,165 @@
+.list_head {
+    display: flex;
+    height: 60px;
+    border-style: solid;
+    border-left: none;
+    border-right: none;
+    border-top: none;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.list_title,
+.list_operate,
+.member_title,
+.member_operate,
+.operate {
+    width: 25%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.list_name,
+.list_condition,
+.list_times,
+.member_name,
+.member_condition,
+.member_times {
+    margin-left: 8px;
+    margin-right: 8px;
+    width: 10%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.list_date,
+.member_date {
+    margin-left: 8px;
+    margin-right: 8px;
+    width: 20%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.list_member {
+    display: flex;
+    height: 60px;
+    border-style: solid;
+    border-width: 2px;
+    border-color: gray;
+    border-left: none;
+    border-right: none;
+    border-top: none;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.member_operate {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.box {
+    z-index: 11;
+    display: none;
+    width: 600px;
+    height: 400px;
+    background-color: rgb(141, 245, 255);
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    margin: auto;
+    border-radius: 15px;
+}
+
+.title {
+    margin-left: 60px;
+    margin-top: 70px;
+    font-size: 32px;
+    color: #000;
+    letter-spacing: 3px;
+    font-family: sans-serif;
+}
+
+.text {
+    margin-left: 60px;
+    margin-top: 30px;
+    font-size: 14px;
+    color: grey;
+    font-family: sans-serif;
+}
+
+.link_box {
+    display: flex;
+    margin-left: 50px;
+    margin-top: 40px;
+    width: 430px;
+    background-color: rgba(236, 236, 236, 0.792);
+    height: 40px;
+    border-radius: 8px;
+}
+
+.link {
+    margin: auto;
+    overflow: hidden;
+    width: 95%;
+    text-align: center;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: #606B7C;
+}
+
+.main {
+    display: flex;
+}
+
+.copy {
+    margin-top: 40px;
+    margin-left: 20px;
+    border-radius: 8px;
+    border: none;
+}
+
+.btn {
+    display: flex;
+}
+
+.click {
+    display: block;
+    margin: auto;
+    border-radius: 8px;
+    border: none;
+    width: 100px;
+    height: 50px;
+    margin-top: 40px;
+}
+
+#input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    z-index: -10;
+}
+
+#popLayer {
+    display: none;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    background: #DCDBDC;
+    -moz-opacity: 0.8;
+    opacity: .80;
+    filter: alpha(opacity=80);
+}

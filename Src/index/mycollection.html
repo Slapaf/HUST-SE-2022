@@ -1,0 +1,53 @@
+<!doctype html>
+<link rel="stylesheet" href="css/mycollection.css">
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>我的收集</title>
+</head>
+
+<body>
+    <div class="list_head">
+        <div class="list_title">收集标题</div>
+        <div class="list_name">收集者</div>
+        <div class="list_condition">收集状态</div>
+        <div class="list_times">提交次数</div>
+        <div class="list_date">截止时间</div>
+        <div class="list_operate">操作</div>
+    </div>
+    <div class="list_body" id="list_body">
+        <div id="popLayer"></div>
+        <div class="box" id="box">
+            <h1 class="title">收集分享！</h1>
+            <div class="text">
+                <div>下面是您的文件收集链接</div>
+                <div>请复制并发给文件提交者</div>
+            </div>
+            <div class="main">
+                <div class="link_box">
+                    <div class="link" id="link">https://baidu.com</div>
+                </div>
+                <button class="copy" onclick="mycopy()">复制</button>
+            </div>
+            <div class="btn">
+                <button class="click" onclick="closebox()">确定</button>
+            </div>
+        </div>
+    </div>
+    <textarea id="input"></textarea>
+</body>
+<script src="js/mycollection.js"></script>
+<script>
+    let n = document.getElementById("link");
+    n.title = document.getElementById("link").innerText;
+    function mycopy() {
+        var text = document.getElementById("link").innerText;
+        var input = document.getElementById("input");
+        input.textContent = text; // 修改文本框的内容
+        input.select(); // 选中文本
+        document.execCommand("copy"); // 执行浏览器复制命令
+    }
+</script>
+
+</html>
