@@ -224,7 +224,7 @@ function for_checkbox(option, id, value) {
         selectBox.appendChild(newspan);
       } else if (option === "remove") {
         //删除
-        for (let j = 0; j < childrenLength; j++) {
+        for (let j = 0; j < selectBox.children.length; j++) {
           if (selectBox.children[j].id && selectBox.children[j].id === id) {
             selectBox.removeChild(selectBox.children[j].nextSibling);
             selectBox.removeChild(selectBox.children[j]);
@@ -232,7 +232,7 @@ function for_checkbox(option, id, value) {
         }
       } else if (option === "modify") {
         //修改
-        for (let j = 0; j < childrenLength; j++) {
+        for (let j = 0; j < selectBox.children.length; j++) {
           if (selectBox.children[j].id && selectBox.children[j].id === id) {
             selectBox.children[j].nextSibling.innerHTML = value;
             selectBox.children[j].value = value;
@@ -243,7 +243,7 @@ function for_checkbox(option, id, value) {
         let drag = null,
           drop = null,
           drag_txt = null;
-        for (let j = 0; j < childrenLength; j++) {
+        for (let j = 0; j < selectBox.children.length; j++) {
           if (selectBox.children[j].id && selectBox.children[j].id === id) {
             drag = selectBox.children[j];
             drag_txt = selectBox.children[j].nextSibling;
@@ -327,6 +327,7 @@ function addQuestion(qnum) {
     let newinput_radio = document.createElement("input");
     newinput_radio.type = "radio";
     newinput_radio.name = "q" + qnum;
+    newinput_radio.value = optionArr[i];
     let newop = document.createElement("span");
     newop.appendChild(document.createTextNode(optionArr[i]));
     newq.appendChild(newinput_radio);
