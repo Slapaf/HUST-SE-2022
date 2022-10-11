@@ -8,7 +8,7 @@ const op_radio = document.getElementById("op-radio");
 const btn_for_add = document.querySelector("#btn-for-add");
 const popup = document.querySelector(".popup");
 const cancel = document.querySelector(".popup-header>span");
-//var qnum = 1;
+var tnum = 1;
 let dragElement = null; //存放拖拽的元素
 
 // 提交按钮
@@ -47,7 +47,7 @@ op_name.onclick = () => {
   //TODO 增加 id 属性
   newli.id = (++question_id).toString();
   //TODO 增加 name 属性
-  newinput_topic.name = "question_name";
+  newinput_topic.name = "question_name"+(tnum++);
   newinput_topic.type = "text";
   newinput_topic.value = "姓名";
   let newinput_content = document.createElement("input");
@@ -78,10 +78,10 @@ op_name.onclick = () => {
     for_checkbox("modify", newli.id, newinput_topic.value);
   };
   //添加拖拽效果
-  newli.draggable = "true";
-  newli.ondragstart = onDragStart;
-  newli.ondragover = onDragOver;
-  newli.ondrop = onDrop;
+  // newli.draggable = "true";
+  // newli.ondragstart = onDragStart;
+  // newli.ondragover = onDragOver;
+  // newli.ondrop = onDrop;
 };
 
 op_sno.onclick = () => {
@@ -124,10 +124,10 @@ op_sno.onclick = () => {
     for_checkbox("modify", newli.id, newinput_topic.value);
   };
   //添加拖拽效果
-  newli.draggable = "true";
-  newli.ondragstart = onDragStart;
-  newli.ondragover = onDragOver;
-  newli.ondrop = onDrop;
+  // newli.draggable = "true";
+  // newli.ondragstart = onDragStart;
+  // newli.ondragover = onDragOver;
+  // newli.ondrop = onDrop;
 };
 
 op_file.onclick = () => {
@@ -169,10 +169,10 @@ op_file.onclick = () => {
     ul.removeChild(newli);
   });
   //添加拖拽效果
-  newli.draggable = "true";
-  newli.ondragstart = onDragStart;
-  newli.ondragover = onDragOver;
-  newli.ondrop = onDrop;
+  // newli.draggable = "true";
+  // newli.ondragstart = onDragStart;
+  // newli.ondragover = onDragOver;
+  // newli.ondrop = onDrop;
 };
 
 //当增加一个“文件”题目时，调用此函数
@@ -273,21 +273,14 @@ op_radio.onclick = () => {
   newinput_topic.name = "question_radio";
   newinput_topic.type = "text";
   newinput_topic.value = "单选题";
-  let newqbox = document.createElement("div");
-  newqbox.className = "questionBox";
   let newbtn = document.createElement("button");
   newbtn.className = "removeTopic";
   newbtn.appendChild(document.createTextNode("删除题目"));
-  let newadd = document.createElement("div");
-  newadd.appendChild(document.createTextNode("添加选项"));
-  let newdel = document.createElement("div");
-  newdel.appendChild(document.createTextNode("删除选项"));
   newh1.appendChild(newinput_topic);
   newli.appendChild(newh1);
+  let newqbox = addRadio(newinput_topic.value);
   newli.appendChild(newqbox);
   newli.appendChild(newbtn);
-  newli.appendChild(newadd);
-  newli.appendChild(newdel);
   ul.appendChild(newli);
   //使弹窗消失
   btn_for_add.onclick();
@@ -295,45 +288,35 @@ op_radio.onclick = () => {
   newbtn.addEventListener("click", () => {
     ul.removeChild(newli);
   });
-  //给“添加选项”按钮添加事件
-  newadd.onclick = () => {
-    newqbox.appendChild(addQuestion(qnum));
-    qnum++;
-  };
-  //给“删除选项”按钮添加事件
-  newdel.onclick = () => {
-    let nodes = newqbox.children;
-    if (nodes.length == 0) return;
-    let lastNode = nodes[nodes.length - 1];
-    newqbox.removeChild(lastNode);
-    qnum--;
+  //修改题目名字
+  newinput_topic.onchange = () => {
+    for (let i = 0; i < newqbox.children.length; i++) {
+      newqbox.children[i].name = newinput_topic.value;
+    }
   };
   //添加拖拽效果
-  newli.draggable = "true";
-  newli.ondragstart = onDragStart;
-  newli.ondragover = onDragOver;
-  newli.ondrop = onDrop;
+  // newli.draggable = "true";
+  // newli.ondragstart = onDragStart;
+  // newli.ondragover = onDragOver;
+  // newli.ondrop = onDrop;
 };
 
 //添加单选题
-function addQuestion(qnum) {
-  let newq = document.createElement("div");
-  newq.className = "question question" + qnum;
-  let newspan = document.createElement("span");
-  newspan.appendChild(document.createTextNode("题目" + qnum));
-  newq.appendChild(newspan);
+function addRadio(tname) {
+  let newqbox = document.createElement("div");
+  newqbox.className = "questionBox";
   let optionArr = ["A", "B", "C", "D"];
   for (let i = 0; i < 4; i++) {
     let newinput_radio = document.createElement("input");
     newinput_radio.type = "radio";
-    newinput_radio.name = "q" + qnum;
+    newinput_radio.name = tname;
     newinput_radio.value = optionArr[i];
     let newop = document.createElement("span");
     newop.appendChild(document.createTextNode(optionArr[i]));
-    newq.appendChild(newinput_radio);
-    newq.appendChild(newop);
+    newqbox.appendChild(newinput_radio);
+    newqbox.appendChild(newop);
   }
-  return newq;
+  return newqbox;
 }
 
 // 点击了“创建收集”按钮
@@ -369,7 +352,7 @@ function onDrop(e) {
     // ul.replaceChild(temp, dropElement);
     // ul.replaceChild(dropElement, dragElement);
     // ul.replaceChild(dragElement, temp);
-    ul.insertBefore(dragElement,dropElement);
+    ul.insertBefore(dragElement, dropElement);
   }
   //交换复选框中的位置
   let dragId = dragElement.id;
