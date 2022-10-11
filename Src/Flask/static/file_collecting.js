@@ -75,10 +75,10 @@ op_name.onclick = () => {
     for_checkbox("modify", newli.id, newinput_topic.value);
   };
   //添加拖拽效果
-  // newli.draggable = "true";
-  // newli.ondragstart = onDragStart;
-  // newli.ondragover = onDragOver;
-  // newli.ondrop = onDrop;
+  newli.draggable = "true";
+  newli.ondragstart = onDragStart;
+  newli.ondragover = onDragOver;
+  newli.ondrop = onDrop;
 };
 
 op_sno.onclick = () => {
@@ -121,10 +121,10 @@ op_sno.onclick = () => {
     for_checkbox("modify", newli.id, newinput_topic.value);
   };
   //添加拖拽效果
-  // newli.draggable = "true";
-  // newli.ondragstart = onDragStart;
-  // newli.ondragover = onDragOver;
-  // newli.ondrop = onDrop;
+  newli.draggable = "true";
+  newli.ondragstart = onDragStart;
+  newli.ondragover = onDragOver;
+  newli.ondrop = onDrop;
 };
 
 op_file.onclick = () => {
@@ -166,10 +166,10 @@ op_file.onclick = () => {
     ul.removeChild(newli);
   });
   //添加拖拽效果
-  // newli.draggable = "true";
-  // newli.ondragstart = onDragStart;
-  // newli.ondragover = onDragOver;
-  // newli.ondrop = onDrop;
+  newli.draggable = "true";
+  newli.ondragstart = onDragStart;
+  newli.ondragover = onDragOver;
+  newli.ondrop = onDrop;
 };
 
 //当增加一个“文件”题目时，调用此函数
@@ -251,6 +251,11 @@ function for_checkbox(option, id, value) {
             drop = selectBox.children[j];
           }
         }
+        if(value === 0) {
+          selectBox.appendChild(drag);
+          selectBox.appendChild(drag_txt);
+          return;
+        } 
         selectBox.insertBefore(drag_txt, drop);
         selectBox.insertBefore(drag, drag_txt);
       }
@@ -292,10 +297,10 @@ op_radio.onclick = () => {
     }
   };
   //添加拖拽效果
-  // newli.draggable = "true";
-  // newli.ondragstart = onDragStart;
-  // newli.ondragover = onDragOver;
-  // newli.ondrop = onDrop;
+  newli.draggable = "true";
+  newli.ondragstart = onDragStart;
+  newli.ondragover = onDragOver;
+  newli.ondrop = onDrop;
 };
 
 //添加单选题
@@ -316,16 +321,6 @@ function addRadio(tname) {
   return newqbox;
 }
 
-// 点击了“创建收集”按钮
-// btn_for_submit.onclick = () => {
-//     // var question_data = [];
-//     // 获取题目列表
-//     // var question_list = document.getElementsByTagName("ul").getElementsByTagName("li");
-//     // for (var i = 0; i < question_list.length; i++) {
-//         document.getElementsByName("form").submit();
-//     // }
-// }
-
 addLoadEvent(op_name.onclick);
 addLoadEvent(op_file.onclick);
 
@@ -341,20 +336,35 @@ function onDrop(e) {
   // 当拖动结束的时候，给拖动div所在的位置下面的div做drop事件
   let dropElement = e.currentTarget;
   if (dragElement != null && dragElement != dropElement) {
-    // // 临时 div 用于存储 box
-    // let temp = document.createElement("li");
-    // // 添加 temp 到父元素 wrapper 中
-    // ul.appendChild(temp);
-    // // 交换
-    // ul.replaceChild(temp, dropElement);
-    // ul.replaceChild(dropElement, dragElement);
-    // ul.replaceChild(dragElement, temp);
     ul.insertBefore(dragElement, dropElement);
   }
   //交换复选框中的位置
   let dragId = dragElement.id;
   let dropId = dropElement.id;
-  for_checkbox("swap", dragId, dropId);
+  let dragElementType = dragElement.getElementsByClassName("input-topic")[0].name;
+  let dropElementType = dropElement.getElementsByClassName("input-topic")[0].name;
+  if(dragElementType!=="question_file" && dragElementType!=="question_radio") {
+    if(dropElementType==="question_name"||dropElementType==="question_sno") {
+      for_checkbox("swap", dragId, dropId);
+    }else {
+      let next = dropElement.nextSibling;
+      let nextType = null;
+      let flag = 0;
+      while(next) {
+        nextType = next.getElementsByClassName("input-topic")[0].name;
+        if(nextType&&nextType!=="question_file"&&nextType!=="question_radio") {
+          for_checkbox("swap", dragId, next.id);
+          flag = 1;
+          break;
+        }
+        next=next.nextSibling;
+      }
+      if(!flag) {
+        for_checkbox("swap",dragId,0);
+      }
+    }
+  }
+  
 }
 
 
@@ -380,7 +390,6 @@ function beforeSubmit() {
       for (let j = 0; j < c.length; j++) {
         if (c[j].name) {
           c[j].name = "checked_radio" + finalId; //单选框的name
-          console.log(c[j].name);
         }
       }
     }
