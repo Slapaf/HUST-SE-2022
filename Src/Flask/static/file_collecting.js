@@ -7,12 +7,14 @@ const op_sno = document.getElementById("op-sno");
 const op_radio = document.getElementById("op-radio");
 const btn_for_add = document.querySelector("#btn-for-add");
 const popup = document.querySelector(".popup");
+const myalert = document.querySelector(".alert");
 const cancel = document.querySelector(".popup-header>span");
-let dragElement = null; //存放拖拽的元素
 const btn_for_submit = document.getElementById("btn-for-submit"); //提交按钮
-var question_id = 0; //（复选框用）id
 const form = document.getElementById("form");
-
+let dragElement = null; //存放拖拽的元素
+let qnum = 1;  //单选编号（区分单选用）
+let question_id = 0; //（复选框用）id
+let countdown = 3;
 //点击“添加题目”按钮，弹出弹窗
 btn_for_add.onclick = () => {
   popup.classList.toggle("show");
@@ -41,6 +43,7 @@ op_name.onclick = () => {
   let newh1 = document.createElement("h1");
   let newinput_topic = document.createElement("input");
   newinput_topic.className = "input-topic";
+  newinput_topic.required = "required";
   //TODO 增加 id 属性
   newli.id = (++question_id).toString();
   //TODO 增加 name 属性
@@ -87,6 +90,7 @@ op_sno.onclick = () => {
   let newh1 = document.createElement("h1");
   let newinput_topic = document.createElement("input");
   newinput_topic.className = "input-topic";
+  newinput_topic.required = "required";
   //TODO 增加 id 属性
   newli.id = (++question_id).toString();
   //TODO 增加 name 属性
@@ -133,6 +137,7 @@ op_file.onclick = () => {
   let newh1 = document.createElement("h1");
   let newinput_topic = document.createElement("input");
   newinput_topic.className = "input-topic";
+  newinput_topic.required = "required";
   //TODO 增加 id 属性
   newli.id = (++question_id).toString();
   //TODO 增加 name 属性
@@ -197,8 +202,8 @@ function updateCheckbox(selectBox) {
 }
 
 //修改复选框中的内容
-//当有题目的增加/删除/修改时，调用此函数
-//option有三种取值："add","remove","modify"
+//当有题目的增加/删除/修改/交换顺序时，调用此函数
+//option有四种取值："add","remove","modify","swap"
 function for_checkbox(option, id, value) {
   for (let i = 0; i < lis.length; i++) {
     let input_content = lis[i].getElementsByClassName("input-content")[0];
@@ -264,11 +269,11 @@ function for_checkbox(option, id, value) {
 }
 
 op_radio.onclick = () => {
-  let qnum = 1;
   let newli = document.createElement("li");
   let newh1 = document.createElement("h1");
   let newinput_topic = document.createElement("input");
   newinput_topic.className = "input-topic";
+  newinput_topic.required = "required";
   //TODO 增加 id 属性
   newli.id = (++question_id).toString();
   //TODO 增加 name 属性
@@ -280,7 +285,7 @@ op_radio.onclick = () => {
   newbtn.appendChild(document.createTextNode("删除题目"));
   newh1.appendChild(newinput_topic);
   newli.appendChild(newh1);
-  let newqbox = addRadio(newinput_topic.name);
+  let newqbox = addRadio();
   newli.appendChild(newqbox);
   newli.appendChild(newbtn);
   ul.appendChild(newli);
@@ -290,12 +295,6 @@ op_radio.onclick = () => {
   newbtn.addEventListener("click", () => {
     ul.removeChild(newli);
   });
-  //修改题目名字
-  newinput_topic.onchange = () => {
-    for (let i = 0; i < newqbox.children.length; i++) {
-      newqbox.children[i].name = newinput_topic.value;
-    }
-  };
   //添加拖拽效果
   newli.draggable = "true";
   newli.ondragstart = onDragStart;
@@ -304,20 +303,22 @@ op_radio.onclick = () => {
 };
 
 //添加单选题
-function addRadio(tname) {
+function addRadio() {
   let newqbox = document.createElement("div");
   newqbox.className = "questionBox";
   let optionArr = ["A", "B", "C", "D"];
   for (let i = 0; i < 4; i++) {
     let newinput_radio = document.createElement("input");
     newinput_radio.type = "radio";
-    newinput_radio.name = tname;
+    newinput_radio.name = qnum.toString();
     newinput_radio.value = optionArr[i];
+    newinput_radio.required = "required";
     let newop = document.createElement("span");
     newop.appendChild(document.createTextNode(optionArr[i]));
     newqbox.appendChild(newinput_radio);
     newqbox.appendChild(newop);
   }
+  qnum++;
   return newqbox;
 }
 
@@ -335,7 +336,8 @@ function onDragOver(e) {
 function onDrop(e) {
   // 当拖动结束的时候，给拖动div所在的位置下面的div做drop事件
   let dropElement = e.currentTarget;
-  if (dragElement != null && dragElement != dropElement) {
+  if(dragElement === dropElement) return;
+  if (dragElement != null) {
     ul.insertBefore(dragElement, dropElement);
   }
   //交换复选框中的位置
@@ -343,7 +345,7 @@ function onDrop(e) {
   let dropId = dropElement.id;
   let dragElementType = dragElement.getElementsByClassName("input-topic")[0].name;
   let dropElementType = dropElement.getElementsByClassName("input-topic")[0].name;
-  if(dragElementType!=="question_file" && dragElementType!=="question_radio") {
+  if(dragElementType!="question_file" && dragElementType!="question_radio") {
     if(dropElementType==="question_name"||dropElementType==="question_sno") {
       for_checkbox("swap", dragId, dropId);
     }else {
@@ -352,7 +354,7 @@ function onDrop(e) {
       let flag = 0;
       while(next) {
         nextType = next.getElementsByClassName("input-topic")[0].name;
-        if(nextType&&nextType!=="question_file"&&nextType!=="question_radio") {
+        if(nextType&&nextType!="question_file"&&nextType!="question_radio") {
           for_checkbox("swap", dragId, next.id);
           flag = 1;
           break;
@@ -367,9 +369,8 @@ function onDrop(e) {
   
 }
 
-
-form.onsubmit = beforeSubmit;
-function beforeSubmit() {
+//提交表单时给每个问题加上编号
+function numberQuestion() {
   let finalId = 1;
   for (let i = 0; i < lis.length; i++) {
     let topic = lis[i].getElementsByClassName("input-topic")[0];
@@ -396,4 +397,43 @@ function beforeSubmit() {
     finalId++;
   }
   return true;
+}
+
+//检查是否有重复题目
+function check() {
+  let arr=[];
+  let topics = document.getElementsByClassName("input-topic");
+  for(let i=0;i<topics.length;i++) {
+    if(arr.indexOf(topics[i].value)==-1) {
+      arr.push(topics[i].value);
+    }else {
+      myalert.classList.toggle("show");
+      btn_for_submit.disabled = "disabled";
+      countdown = 3;
+      timeOutClose();
+      return false;
+    }
+  }
+  return true;
+}
+
+//表单提交前触发检查和编号程序
+form.onsubmit = ()=>{
+  if(check()) {
+    return numberQuestion();
+  }else {
+    return false;
+  }
+}
+
+//弹窗倒计时
+function timeOutClose() {
+  document.getElementById("timeOutClose").innerHTML = countdown;
+  if(countdown > 0) {
+    setTimeout("timeOutClose();",1000);
+  }else {
+    myalert.classList.toggle("show");
+    btn_for_submit.removeAttribute("disabled");
+  }
+  countdown--;
 }

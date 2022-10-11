@@ -15,9 +15,14 @@
 <div class="container">
     <form id="form" method="post" onkeydown="if(event.keyCode==13){return false;}" name="Form">
         <div class="header">
+            <label>收集标题</label>
             <input class="collectionTitle" type="text" value="文件收集" name="collectionTitle"/>
-            收集者<input class="collector" type="text" name="collector"/>
-            截止时间<input class="deadLine" type="date" name="deadline"/>
+            <label>收集者</label>
+            <input class="collector" type="text" name="collector" required/>
+            <label>截止时间</label>
+            <input class="deadline" type="datetime-local" name="deadline" required/>
+            <label>添加详情描述</label>
+            <textarea name="description" id="" cols="30" rows="3"></textarea>
         </div>
         <div class="main">
             <ul id="question_list"></ul>
@@ -77,6 +82,10 @@
         <div class="popup-op" id="op-sno">学号</div>
         <div class="popup-op" id="op-radio">单选题</div>
     </div>
+</div>
+<div class="alert">
+  <h1>不能有重复标题</h1>
+  <div id="timeOutClose"></div>
 </div>
 {#<script src="../static/file_collecting.js"></script>#}
 <script src="{{ url_for('static', filename='file_collecting.js') }}" type="text/javascript"></script>

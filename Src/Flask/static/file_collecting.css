@@ -63,6 +63,7 @@ body {
   align-self: flex-end;
 }
 
+.alert,
 .popup {
   position: absolute;
   top: -100%;
@@ -73,7 +74,9 @@ body {
   opacity: 0;
 }
 
+.alert.show,
 .popup.show {
+  position: fixed;
   top: 25%;
   opacity: 1;
   pointer-events: auto;
