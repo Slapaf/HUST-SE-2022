@@ -13,11 +13,11 @@
 </head>
 <body>
 <div class="container">
-    <form method="post" onkeydown="if(event.keyCode==13){return false;}">
+    <form id="form" method="post" onkeydown="if(event.keyCode==13){return false;}" name="Form">
         <div class="header">
             <input class="collectionTitle" type="text" value="文件收集" name="collectionTitle"/>
             收集者<input class="collector" type="text" name="collector"/>
-            截止时间<input class="deadLine" type="date" name="deadLine"/>
+            截止时间<input class="deadLine" type="date" name="deadline"/>
         </div>
         <div class="main">
             <ul id="question_list"></ul>
@@ -60,7 +60,7 @@
             <div id="btn-for-add">添加题目</div>
         </div>
         {# ? 此处生成一个收集对象 #}
-        <button type="submit">创建</button>
+        <input type="submit" id="btn-for-submit" vlaue="创建">
         {#        <form method="post">#}
         {#            <input type="submit" name="submit" id="submit" value="创建收集">#}
         {#        </form>#}

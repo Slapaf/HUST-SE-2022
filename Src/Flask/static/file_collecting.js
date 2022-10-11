@@ -8,13 +8,10 @@ const op_radio = document.getElementById("op-radio");
 const btn_for_add = document.querySelector("#btn-for-add");
 const popup = document.querySelector(".popup");
 const cancel = document.querySelector(".popup-header>span");
-var tnum = 1;
 let dragElement = null; //存放拖拽的元素
-
-// 提交按钮
-// const btn_for_submit = document.getElementById("submit")
-
-var question_id = 0;
+const btn_for_submit = document.getElementById("btn-for-submit"); //提交按钮
+var question_id = 0; //（复选框用）id
+const form = document.getElementById("form");
 
 //点击“添加题目”按钮，弹出弹窗
 btn_for_add.onclick = () => {
@@ -47,7 +44,7 @@ op_name.onclick = () => {
   //TODO 增加 id 属性
   newli.id = (++question_id).toString();
   //TODO 增加 name 属性
-  newinput_topic.name = "question_name"+(tnum++);
+  newinput_topic.name = "question_name";
   newinput_topic.type = "text";
   newinput_topic.value = "姓名";
   let newinput_content = document.createElement("input");
@@ -278,7 +275,7 @@ op_radio.onclick = () => {
   newbtn.appendChild(document.createTextNode("删除题目"));
   newh1.appendChild(newinput_topic);
   newli.appendChild(newh1);
-  let newqbox = addRadio(newinput_topic.value);
+  let newqbox = addRadio(newinput_topic.name);
   newli.appendChild(newqbox);
   newli.appendChild(newbtn);
   ul.appendChild(newli);
@@ -358,4 +355,36 @@ function onDrop(e) {
   let dragId = dragElement.id;
   let dropId = dropElement.id;
   for_checkbox("swap", dragId, dropId);
+}
+
+
+form.onsubmit = beforeSubmit;
+function beforeSubmit() {
+  let finalId = 1;
+  for (let i = 0; i < lis.length; i++) {
+    let topic = lis[i].getElementsByClassName("input-topic")[0];
+    lis[i].id = "" + finalId;
+    topic.name = topic.name + finalId; //题目的name
+    let checkBoxes = lis[i].getElementsByClassName("selectTopic")[0];
+    if (checkBoxes) {
+      let c = checkBoxes.children;
+      for (let j = 0; j < c.length; j++) {
+        if (c[j].name) {
+          c[j].name = c[j].name + finalId; //复选框的name
+        }
+      }
+    }
+    let radioBoxes = lis[i].getElementsByClassName("questionBox")[0];
+    if (radioBoxes) {
+      let c = radioBoxes.children;
+      for (let j = 0; j < c.length; j++) {
+        if (c[j].name) {
+          c[j].name = "checked_radio" + finalId; //单选框的name
+          console.log(c[j].name);
+        }
+      }
+    }
+    finalId++;
+  }
+  return true;
 }
