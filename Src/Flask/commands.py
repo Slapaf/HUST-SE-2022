@@ -8,7 +8,7 @@ from init import app, db
 def initdb(drop):
     """Initialize the database."""
     if drop:  # 判断是否输入了选项
-        db.drop_all()
+        db.drop_alflaskl()
     db.create_all()
     click.echo('Initialized database.')  # 输出提示信息
 

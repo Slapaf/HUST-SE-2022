@@ -71,23 +71,23 @@ function addmember() {
     //添加点击事件
     membertitle.onclick = function () {
         //!此处需添加参数，跳转对应收集详情界面
-        window.location.href = 'collect_details.html';
+        window.location.href = 'collection_details.html';
     }
     membername.onclick = function () {
         //!此处需添加参数，跳转对应收集详情界面
-        window.location.href = 'collect_details.html';
+        window.location.href = 'collection_details.html';
     }
     membercondition.onclick = function () {
         //!此处需添加参数，跳转对应收集详情界面
-        window.location.href = 'collect_details.html';
+        window.location.href = 'collection_details.html';
     }
     membertimes.onclick = function () {
         //!此处需添加参数，跳转对应收集详情界面
-        window.location.href = 'collect_details.html';
+        window.location.href = 'collection_details.html';
     }
     memberdate.onclick = function () {
         //!此处需添加参数，跳转对应收集详情界面
-        window.location.href = 'collect_details.html';
+        window.location.href = 'collection_details.html';
     }
     op1.onclick = function () {
         //分享按钮
@@ -102,7 +102,7 @@ function addmember() {
     op2.onclick = function () {
         //!此处需添加参数，跳转对应收集详情界面
         //统计按钮
-        window.location.href = 'collect_details.html';
+        window.location.href = 'collection_details.html';
     }
     op3.onclick = function () {
         //!此处需添加参数，跳转对应收集详情界面

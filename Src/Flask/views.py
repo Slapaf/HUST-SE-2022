@@ -1,14 +1,43 @@
+import datetime
+from models import User
 import time
 from flask import render_template, request, url_for, redirect, flash
 from flask_login import login_user, login_required, logout_user, current_user
 from init import app, db
-from models import User
+from db_manipulation import *
+
+"""
+#     TODO 接口设计
+#         1. 创建收集后，根据获得的信息将收集存入数据库，设置提交文件的存储路径（作为返回值用于 create_link.html 页面设置），
+#             建议用“收集名+随机数”的组合作为收集标识，用于查找定位，防止重名冲突；
+#         2. 用户进入 mycollection.html 页面时，遍历数据库中的所有收集，返回两个列表（命名随意）：list1 和 list2
+#             list1 存放正在进行的收集（比较 end_date 和用户进入页面时的系统时间），list2 存放已经截止的收集；
+#         3. 用户位于 collection_details.html 页面时，如果添加了应交名单，则需要将名单存入对应收集的某个子目录，
+#             并更新 namelist_path 属性；
+#         4. 其他查询接口暂定自由设计。
+"""
 
 
 @app.route('/mycollection', methods=['GET', 'POST'])
 @login_required
 def mycollection():
-    user = current_user._get_current_object()
+    """
+        用户进入 collection_details.html 页面时，遍历数据库中的所有收集，返回两个列表（命名随意）：collection_on 和 collection_end
+        collection_on 存放正在进行的收集（比较 end_date 和用户进入页面时的系统时间），collection_end 存放已经截止的收集；
+    """
+    collection_on = Collection_info.query.filter_by(creator_id=current_user.id, status='0').all()
+    collection_end = Collection_info.query.filter_by(creator_id=current_user.id, status='2').all()
+    print("正在进行的收集：")
+    for v in collection_on: print(v.collection_title)
+    print("已经截止的收集：")
+    for v in collection_end: print(v.collection_title)
+    # Todo 已完成 #
+
+
+@app.route('/collection_details', methods=['GET', 'POST'])
+@login_required
+def collection_details():
+    return render_template('collection_details.html')
 
 
 @app.route('/file_collecting', methods=['GET', 'POST'])
@@ -26,14 +55,12 @@ def generate_collection():
             flash("Transport Error!")  # 获取失败
             return render_template('index.html')
         else:
-            print(question_list)
-            question_list = list(question_list.items(multi=True))  # ! 返回 Python 列表
-            print(question_list)
             # TODO 存入数据库
+            add_FC(question_list.to_dict())
+            flash("Successfully create a collection!")
+            # TODO 已完成
 
-        time.sleep(2)  # ? 调试用，实现后删除
-
-        return render_template('index.html')
+        return redirect(url_for('index'))
     return render_template('file_collecting.html')
 
 
@@ -73,8 +100,7 @@ def login():
 
 
 # 退出登录
-@app.route('/login', methods=['GET', 'POST'])
-@login_required
+@app.route('/logout', methods=['GET', 'POST'])
 def logout():
     logout_user()  # 登出用户
     flash('Goodbye!')
@@ -119,3 +145,9 @@ def register():
 @app.route('/file_collecting')
 def file_collecting():
     return render_template('file_collecting.html')
+
+
+# 收集记录界面
+@app.route('/collect_details')
+def collect_details():
+    return render_template('collection_details.html')
