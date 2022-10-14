@@ -100,8 +100,8 @@ class Question_info(db.Model):
         4. question_type: 问题类型——0:解答题（需上传文件），1:单选，2:多选，3:填空
         5. question_description: 问题描述（不可为空）
         TODO 6. required_flag: 是否为必填项（暂定）
-        7. rename_rule: 文件重命名规则——0:姓名，1:学号，2:无需重命名或其他类型题目
-        8. file_path: 提交文件路径
+        TODO 7. rename_rule: 文件重命名规则
+        TODO 8. file_path: 提交文件路径
     """
     # * 问题类型常量
     FILE_UPLOAD, SINGLE_CHOICE, MULTI_CHOICE, FILL_IN_BLANK = '0', '1', '2', '3'  # ? 解答题，单选，多选，填空
@@ -112,7 +112,8 @@ class Question_info(db.Model):
     question_type = db.Column(db.CHAR)  # 问题类型：0 解答题（需上传文件）;1 单选;2 多选;3 填空
     question_description = db.Column(db.Text, nullable=False)  # 问题描述（不可以为空）
     # required_flag = db.Column(db.BOOLEAN, nullable=False)  # （暂定） 0 必填;1 非必填
-    rename_rule = db.Column(db.CHAR, default='2')  # 若为解答题（需上传文件）,表示文件重命名规则：0 姓名;1 学号;2 无需重命名或其他类型题目
+    # rename_rule = db.Column(db.CHAR, default='2')  # 若为解答题（需上传文件）,表示文件重命名规则：0 姓名;1 学号;2 无需重命名或其他类型题目
+    rename_rule = db.Column(db.String(20))  # 文件重命名规则，其值为题目顺序
     file_path = db.Column(db.String(20))  # 提交文件路径（文件上传题需设置，其余类型不必）
 
 

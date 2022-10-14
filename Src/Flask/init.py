@@ -30,4 +30,5 @@ def load_user(user_id):
 
 
 "以下引用不能移动"
-from Src.Flask import views, commands
+# from Src.Flask import views, commands
+import views, commands

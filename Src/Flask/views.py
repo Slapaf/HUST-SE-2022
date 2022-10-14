@@ -56,7 +56,8 @@ def generate_collection():
             return render_template('index.html')
         else:
             # TODO 存入数据库
-            add_FC(question_list.to_dict())
+            # add_FC(question_list.to_dict())
+            add_FC(list(question_list.items(multi=True)))
             flash("Successfully create a collection!")
             # TODO 已完成
 
