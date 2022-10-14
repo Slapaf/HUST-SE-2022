@@ -64,7 +64,7 @@ class Collection_info(db.Model):
         TODO 9. namelist_path: 应交名单路径
     """
     # * 收集状态常量定义
-    RELEASE, SAVED, FINISHED, OVERDUE = 0, 1, 2, 3  # ? 发布，暂存，已结束，已失效
+    RELEASE, SAVED, FINISHED, OVERDUE = '0', '1', '2', '3'  # ? 发布，暂存，已结束，已失效
 
     id = db.Column(db.Integer, primary_key=True)  # 主键
     creator = db.Column(db.String(20), nullable=False)  # 创建人员名称（不可以为空）
@@ -74,7 +74,7 @@ class Collection_info(db.Model):
     start_date = db.Column(db.DateTime, default=datetime.datetime.now())  # 开始时间自动设置为创建收集的时间
     end_date = db.Column(db.DateTime, nullable=False)  # 收集结束时间（不可以为空）
     status = db.Column(db.CHAR)  # 当前状态：0 发布(正在收集);1 暂存;2 已结束;3 已失效
-    # namelist_path = db.Column(db.String(20))  # 应交名单路径
+    namelist_path = db.Column(db.String(20))  # 应交名单路径
 
     def collection_valid(self):
         """
@@ -113,7 +113,7 @@ class Question_info(db.Model):
     question_description = db.Column(db.Text, nullable=False)  # 问题描述（不可以为空）
     # required_flag = db.Column(db.BOOLEAN, nullable=False)  # （暂定） 0 必填;1 非必填
     rename_rule = db.Column(db.CHAR, default='2')  # 若为解答题（需上传文件）,表示文件重命名规则：0 姓名;1 学号;2 无需重命名或其他类型题目
-    # file_path = db.Column(db.String(20))  # 提交文件路径（文件上传题需设置，其余类型不必）
+    file_path = db.Column(db.String(20))  # 提交文件路径（文件上传题需设置，其余类型不必）
 
 
 class Answer_info(db.Model):
