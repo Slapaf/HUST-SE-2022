@@ -37,28 +37,33 @@ def add_FC(question_dict):
 
     # 更新问题主表和答案表
     for k in question_keylist:
-        # 若为填空题
+        # ? 若为填空题
         if "sno" in k or "name" in k:
-            question = Question_info(collection_id=collection_id, num=int(k[-1]), question_type='3',
+            question = Question_info(collection_id=collection_id,
+                                     num=int(k[-1]),
+                                     question_type=Question_info.FILL_IN_BLANK,
                                      question_description=question_dict[k])
             db.session.add(question)
             db.session.commit()
 
-        # 若为单选题
+        # ? 若为单选题
         if "radio" in k:
-            question = Question_info(collection_id=collection_id, num=int(k[-1]), question_type='1',
+            question = Question_info(collection_id=collection_id,
+                                     num=int(k[-1]),
+                                     question_type=Question_info.SINGLE_CHOICE,
                                      question_description=question_dict[k])
             db.session.add(question)
             db.session.commit()
             # 存选择题答案
-            answer = Answer_info(collection_id=collection_id, question_id=question.id,
+            answer = Answer_info(collection_id=collection_id,
+                                 question_id=question.id,
                                  answer_content=question_dict['checked_radio' + k[-1]])
             db.session.add(answer)
             db.session.commit()
 
-        # 若为文件上传题
+        # ? 若为文件上传题
         if "file" in k:
-            # 确定文件重命名规则
+            # TODO 确定文件重命名规则
             rename_rule = '2'
             index = 'checked_topic' + k[-1]
             if index in key:
@@ -70,7 +75,10 @@ def add_FC(question_dict):
             #    Todo 设置文件存储路径   #
 
             ###########################
-            question = Question_info(collection_id=collection_id, num=int(k[-1]), question_type='1',
-                                     question_description=question_dict[k], rename_rule=rename_rule)
+            question = Question_info(collection_id=collection_id,
+                                     num=int(k[-1]),
+                                     question_type='1',
+                                     question_description=question_dict[k],
+                                     rename_rule=rename_rule)
             db.session.add(question)
             db.session.commit()

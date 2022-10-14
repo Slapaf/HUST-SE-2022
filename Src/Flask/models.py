@@ -46,8 +46,26 @@ class User(db.Model, UserMixin):  # 表名将会是 user（自动生成，小写
         return check_password_hash(self.password_hash, password)  # 返回布尔值
 
 
-# 文件收集主表
 class Collection_info(db.Model):
+    """ 文件收集主表
+
+    Description:
+        记录已创建收集的相关信息。
+
+    Attributes:
+        1. id: 主键
+        2. creator: 创建人员名称（不可为空）
+        3. creator_id: 创建人员 ID
+        4. collection_title: 收集名称（不可为空）
+        5. description: 收集描述（不可为空）
+        6. start_date: 开始时间，自动设置为创建收集的时间
+        7. end_date: 结束时间（不可为空）
+        8. status: 收集的状态（0 发布，1 暂存，2 已结束，3 已失效）
+        TODO 9. namelist_path: 应交名单路径
+    """
+    # * 收集状态常量定义
+    RELEASE, SAVED, FINISHED, OVERDUE = 0, 1, 2, 3  # ? 发布，暂存，已结束，已失效
+
     id = db.Column(db.Integer, primary_key=True)  # 主键
     creator = db.Column(db.String(20), nullable=False)  # 创建人员名称（不可以为空）
     creator_id = db.Column(db.Integer)  # 创建人员ID
@@ -56,7 +74,7 @@ class Collection_info(db.Model):
     start_date = db.Column(db.DateTime, default=datetime.datetime.now())  # 开始时间自动设置为创建收集的时间
     end_date = db.Column(db.DateTime, nullable=False)  # 收集结束时间（不可以为空）
     status = db.Column(db.CHAR)  # 当前状态：0 发布(正在收集);1 暂存;2 已结束;3 已失效
-    namelist_path = db.Column(db.String(20))  # 应交名单路径
+    # namelist_path = db.Column(db.String(20))  # 应交名单路径
 
     def collection_valid(self):
         """
@@ -69,8 +87,25 @@ class Collection_info(db.Model):
         return current_date < self.end_date  # 当前时间小于截止时间时收集有效
 
 
-# 问题主表
 class Question_info(db.Model):
+    """ 问题主表
+
+    Description:
+        记录已创建收集的相关信息。
+
+    Attributes:
+        1. id: 主键
+        2. collection_id: 关联文件收集主表的 id
+        3. num: 问题序号
+        4. question_type: 问题类型——0:解答题（需上传文件），1:单选，2:多选，3:填空
+        5. question_description: 问题描述（不可为空）
+        TODO 6. required_flag: 是否为必填项（暂定）
+        7. rename_rule: 文件重命名规则——0:姓名，1:学号，2:无需重命名或其他类型题目
+        8. file_path: 提交文件路径
+    """
+    # * 问题类型常量
+    FILE_UPLOAD, SINGLE_CHOICE, MULTI_CHOICE, FILL_IN_BLANK = '0', '1', '2', '3'  # ? 解答题，单选，多选，填空
+
     id = db.Column(db.Integer, primary_key=True)  # 主键
     collection_id = db.Column(db.Integer)  # 关联文件收集主表id
     num = db.Column(db.Integer)  # 问题序号
@@ -78,17 +113,27 @@ class Question_info(db.Model):
     question_description = db.Column(db.Text, nullable=False)  # 问题描述（不可以为空）
     # required_flag = db.Column(db.BOOLEAN, nullable=False)  # （暂定） 0 必填;1 非必填
     rename_rule = db.Column(db.CHAR, default='2')  # 若为解答题（需上传文件）,表示文件重命名规则：0 姓名;1 学号;2 无需重命名或其他类型题目
-    file_path = db.Column(db.String(20))  # 提交文件路径（文件上传题需设置，其余类型不必）
+    # file_path = db.Column(db.String(20))  # 提交文件路径（文件上传题需设置，其余类型不必）
 
 
-# 答案表
 class Answer_info(db.Model):
+    """ 答案表
+
+    Description:
+        记录已创建收集的相关信息。
+
+    Attributes:
+        1. id: 主键
+        2. collection_id: 关联文件收集主表 id
+        3. question_id: 关联问题主表 id
+        TODO 4. option_id: 关联选项主表 id
+        5. answer_content: 答案不可为空
+    """
     id = db.Column(db.Integer, primary_key=True)  # 主键
     collection_id = db.Column(db.Integer)  # 关联文件收集主表id
     question_id = db.Column(db.Integer)  # 关联问题主表id
     # option_id = db.Column(db.Integer)  # 关联选项主表id
     answer_content = db.Column(db.CHAR)  # 答案不可为空
-
 
 # # 选项表
 # class option_info(db.Model):

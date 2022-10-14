@@ -16,7 +16,7 @@ deadline = deadline.replace("T", " ")
 format = '%Y-%m-%d %H:%M'
 question_dict['deadline'] = datetime.strptime(deadline, format)
 collection = Collection_info(creator=question_dict['collector'], creator_id=current_user.id,
-                                 collection_title=question_dict['collectionTitle'],
-                                 description=question_dict['description'], end_date=question_dict['deadline'],
-                                 status='1')
+                             collection_title=question_dict['collectionTitle'],
+                             description=question_dict['description'], end_date=question_dict['deadline'],
+                             status='1')
 print(collection.id)
