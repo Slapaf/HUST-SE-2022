@@ -10,20 +10,20 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}" type="text/css">
 </head>
 <body>
-    {% for message in get_flashed_messages() %}
+{% for message in get_flashed_messages() %}
     <div class="alert">{{ message }}</div>
-    {% endfor %}
+{% endfor %}
 <nav>
     <div class="left"></div>
-        <div class="right">
-            {% if current_user.is_authenticated %}
-                <div>{{current_user.name}}</div>
-                <div><a href="{{ url_for('logout') }}">退出登录</a></div>
-            {% else %}
-                <div><a href="{{ url_for('login') }}">登录</a></div>
-                <div><a href="{{ url_for('register') }}">注册</a></div>
-            {% endif %}
-        </div>
+    <div class="right">
+        {% if current_user.is_authenticated %}
+            <div>{{ current_user.name }}</div>
+            <div><a href="{{ url_for('logout') }}">退出登录</a></div>
+        {% else %}
+            <div><a href="{{ url_for('login') }}">登录</a></div>
+            <div><a href="{{ url_for('register') }}">注册</a></div>
+        {% endif %}
+    </div>
 </nav>
 <section class="container">
     <h1>作业收集系统</h1>
@@ -32,7 +32,7 @@
             <a href="{{ url_for('file_collecting') }}">创建收集</a>
         </div>
         <div class="op2">
-            <a href="{{url_for('collection_details')}}">收集记录</a>
+            <a href="{{ url_for('collection_details') }}">收集记录</a>
         </div>
     </div>
 </section>

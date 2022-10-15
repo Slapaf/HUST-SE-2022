@@ -33,10 +33,6 @@ def add_FC(question_dict: list, current_user_name: str):
     format = '%Y-%m-%d %H:%M'
     question_dict['deadline'] = datetime.strptime(deadline, format)
 
-    # ! 调试用，使用完毕删除
-    # print(question_dict)
-    # ! finish
-
     # 创建一个文件收集对象,更新文件收集主表里
     collection = Collection_info(creator=question_dict['collector'],
                                  creator_id=current_user.id,
@@ -102,7 +98,7 @@ def add_FC(question_dict: list, current_user_name: str):
             # print(rename_rule)
 
             # * 生成文件存储路径，将文件存储路径放在用户所属的路径下，引入随机数（需使用 file_counter）
-            print(current_user.userpath)
+            # print(current_user.userpath)
             file_path = current_user.userpath + '/' + str(file_counter) + ''.join(
                 random.sample(string.ascii_letters + string.digits, 8)
             )  # * 总长度为 20 + 1 + 1 + 8 = 30 位

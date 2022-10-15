@@ -12,23 +12,27 @@
 <body>
 <div class="container">
     <div class="part1">
-        <a href="https://www.baidu.com" class="link_box">文件收集</a>
+        <a href="{{ url_for('mycollection') }}" class="link_box">文件收集</a>
     </div>
     <div class="part2">
         <!-- part2为显示区域 -->
         <div class="part2_left">
             <div id="collection_collected">0</div>
+            <!-- TODO 使用数据库接口 -->
             <div>已收问卷数</div>
         </div>
         <div class="part2_middle">
             <div id="file_collected">0</div>
+            <!-- TODO 从数据库中该用户的目录下找到该收集的目录，读取文件数量，或者使用数据库提供的接口 -->
             <div>已收文件数</div>
         </div>
         <div class="part2_right">
             <div id="valid_timer">0</div>
+            <!-- TODO 使用数据库接口 -->
             <div>截止倒计时</div>
         </div>
     </div>
+    <!-- !!! 下面的部分不要动，还要修改 -->
     <div class="part3">
         <div class="tab_list">
             <ul>
