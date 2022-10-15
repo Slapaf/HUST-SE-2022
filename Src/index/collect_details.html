@@ -47,17 +47,26 @@
           </div>
         </div>
         <div class="item">
-          <div class="part4">未完成</div>
+          <div class="part4">
+            <div class="list_head">
+              <div class="list_name">姓名</div>
+              <div class="list_date">提交时间</div>
+              <div class="list_number">文件数量</div>
+              <div class="list_condition" onclick="addmember()">文件详情</div>
+            </div>
+            <div class="list_body" id="list_body"></div>
+          </div>
         </div>
       </div>
     </div>
-    <div class="popup_body" id="popup">
-      <form method="post">
+    <form method="post" action="upload.jsp" target="hidden_frame">
+      <div class="popup_body" id="popup">
         <textarea placeholder="请按行输入姓名，或以英文逗号隔开多个姓名，例如：张三,李四" class="textarea" id="textarea"></textarea>
-      </form>
-      <button class="btn_re" onclick="click1()">确认</button>
-    </div>
-    <!-- 弹窗 -->
+        <button class="btn_re" onclick="click1()">确认</button>
+    </form>
+    <iframe name='hidden_frame' id="hidden_frame" style="display:none"></iframe>
+  </div>
+  <!-- 弹窗 -->
   </div>
   <script src="js/collect_details.js"></script>
 </body>

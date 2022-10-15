@@ -4,6 +4,7 @@ var len = arr.length;
 var tab_list = document.querySelector(".tab_list");
 var lis = tab_list.querySelectorAll("li");
 var items = document.querySelectorAll(".item");
+const x = document.getElementById("list_body");
 
 for (var i = 0; i < lis.length; i++) {
     lis[i].setAttribute("index", i);
@@ -108,3 +109,35 @@ function addname() {
         }
     }
 }//添加名字
+
+function addmember() {
+    //新建元素节点
+    let listmember = document.createElement("div");
+    let membername = document.createElement("div");
+    let memberdate = document.createElement("div");
+    let membernumber = document.createElement("div");
+    let membercondition = document.createElement("div");
+    //连接节点
+    x.appendChild(listmember);
+    listmember.appendChild(membername);
+    listmember.appendChild(memberdate);
+    listmember.appendChild(membernumber);
+    listmember.appendChild(membercondition);
+    //给节点赋值
+    membername.title = "王广凯";
+    memberdate.title = "2022-10-01 23:59";
+    membernumber.title = "211";
+    membercondition.title = "查看";
+    membername.appendChild(document.createTextNode(membername.title));
+    memberdate.appendChild(document.createTextNode(memberdate.title));
+    membernumber.appendChild(document.createTextNode(membernumber.title));
+    membercondition.appendChild(document.createTextNode(membercondition.title));
+    listmember.className = "list_member";
+    membername.className = "member_name";
+    memberdate.className = "member_date";
+    membernumber.className = "member_number";
+    membercondition.className = "member_condition";
+    membercondition.onclick = function () {
+        //弹窗
+    }
+}

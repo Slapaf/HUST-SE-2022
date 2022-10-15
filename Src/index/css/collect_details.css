@@ -180,3 +180,45 @@ li {
     font-weight: bolder;
     display: none;
 }
+
+.list_head {
+    display: flex;
+    height: 60px;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.list_member {
+    display: flex;
+    height: 60px;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.list_date,
+.list_condition,
+.list_number,
+.member_date,
+.member_condition,
+.member_number {
+    margin-left: 8px;
+    margin-right: 8px;
+    width: 15%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.member_condition{
+    color: rgb(0, 225, 255);
+}
+.list_name,
+.member_name {
+    margin-left: 8px;
+    margin-right: 8px;
+    width: 55%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
