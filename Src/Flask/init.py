@@ -26,7 +26,7 @@ def load_user(user_id):
     """
     from models import User
     user = User.query.get(int(user_id))  # 用 ID 作为 User 模型的主键查询对应的用户
-    return user  # 返回用户对象\
+    return user  # 返回用户对象
 
 
 "以下引用不能移动"

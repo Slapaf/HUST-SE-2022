@@ -1,11 +1,14 @@
+import string
 from copy import deepcopy
 from datetime import datetime
+import random
+
 from flask_login import current_user
 from models import Collection_info, Question_info, Answer_info
 from init import db
 
 
-def add_FC(question_dict: list):
+def add_FC(question_dict: list, current_user_name: str):
     """
     将问卷的信息存入数据库
     Args:
@@ -22,7 +25,7 @@ def add_FC(question_dict: list):
 
     # 前端传来的deadLine为string类型，在此转化为datetime类型
     list_of_question_dict = deepcopy(question_dict)  # ! 保存元组的列表，与字典类型的区别在于是否对 key 去重
-    print(list_of_question_dict)
+    # print(list_of_question_dict)
 
     question_dict = dict(question_dict)
     deadline = question_dict['deadline']
@@ -31,17 +34,18 @@ def add_FC(question_dict: list):
     question_dict['deadline'] = datetime.strptime(deadline, format)
 
     # ! 调试用，使用完毕删除
-    print(question_dict)
+    # print(question_dict)
     # ! finish
 
     # 创建一个文件收集对象,更新文件收集主表里
-    collection = Collection_info(creator=question_dict['collector'], creator_id=current_user.id,
+    collection = Collection_info(creator=question_dict['collector'],
+                                 creator_id=current_user.id,
                                  collection_title=question_dict['collectionTitle'],
                                  description=question_dict['description'],
                                  end_date=question_dict['deadline'],
                                  status=Collection_info.SAVED)
     db.session.add(collection)
-    db.session.commit()  # 提交数据库会话，否则id为None
+    db.session.commit()  # 提交数据库会话，否则 id 为None
     collection_id = collection.id
 
     key_list = list(question_dict.keys())
@@ -78,45 +82,35 @@ def add_FC(question_dict: list):
         elif "file" in question_key:
             # TODO 确定文件重命名规则
             file_counter += 1
-            rename_rule = ""
+            rename_rule = []
             rename_rule_list = []  # * 重命名所需的题目
             question_num = question_key[-1]
             for elem in list_of_question_dict:
                 if elem[0] == "checked_topic" + question_num:
                     rename_rule_list.append(elem[1])
-            print(rename_rule_list)
+            # print(rename_rule_list)
 
             # TODO 逻辑有待优化，且 rename_rule 未添加分隔符
-
             cnt = 0
-            # for idx in range(len(tmp)):
-            #     if tmp[idx][1] not in rename_rule_list:
-            #         continue
-            #     rename_rule += tmp[idx][0][-1]
             for elem in list_of_question_dict:
                 if elem[1] not in rename_rule_list:
                     continue
-                rename_rule += elem[0]  # ! 待添加分隔符
+                rename_rule.append(elem[0][-1])  # ! 待添加分隔符
                 cnt += 1
                 if cnt >= len(rename_rule_list):  # * 防止获取到文件后面的重命名规则
                     break
-            print(rename_rule)
-            # return
-            #
-            # rename_rule = '2'
-            # index = 'checked_topic' + question_key[-1]
-            # if index in key_list:
-            #     if question_dict[index] == '姓名':
-            #         rename_rule = '0'
-            #     elif question_dict[index] == '学号':
-            #         rename_rule = '1'
-            ###########################
-            # TODO 生成文件存储路径，将文件存储路径放在用户所属的路径下，引入随机数（需使用 file_counter）
-            ###########################
+            # print(rename_rule)
+
+            # * 生成文件存储路径，将文件存储路径放在用户所属的路径下，引入随机数（需使用 file_counter）
+            print(current_user.userpath)
+            file_path = current_user.userpath + '/' + str(file_counter) + ''.join(
+                random.sample(string.ascii_letters + string.digits, 8)
+            )  # * 总长度为 20 + 1 + 1 + 8 = 30 位
             question = Question_info(collection_id=collection_id,
                                      num=int(question_key[-1]),
                                      question_type=Question_info.FILE_UPLOAD,
                                      question_description=question_dict[question_key],
-                                     rename_rule=rename_rule)
+                                     rename_rule='-'.join(rename_rule),  # * 命名规则用 - 分隔，数字代表题目序号
+                                     file_path=file_path)
             db.session.add(question)
             db.session.commit()

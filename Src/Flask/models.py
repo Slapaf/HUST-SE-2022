@@ -1,3 +1,6 @@
+import random
+import string
+
 from init import db
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -11,15 +14,17 @@ class User(db.Model, UserMixin):  # 表名将会是 user（自动生成，小写
         记录已注册用户的相关信息。
 
     Attributes:
-        id: 主键
-        name: 名字（用户昵称）
-        username: 用户名
-        password_hash: 密码散列值
+        1. id: 主键
+        2. name: 名字（用户昵称）
+        3. username: 用户名
+        4. password_hash: 密码散列值
+        TODO 5. userpath: 用户空间路径
     """
     id = db.Column(db.Integer, primary_key=True)  # 主键
     name = db.Column(db.String(20))  # 名字（用户昵称）
     username = db.Column(db.String(20), unique=True)  # 用户名
     password_hash = db.Column(db.String(128))  # 密码散列值
+    userpath = db.Column(db.String(20), unique=True)  # 用户空间路径
 
     def set_password(self, password):
         """
@@ -44,6 +49,18 @@ class User(db.Model, UserMixin):  # 表名将会是 user（自动生成，小写
             (bool): 匹配结果
         """
         return check_password_hash(self.password_hash, password)  # 返回布尔值
+
+    def set_filepath(self):
+        """
+        用于设置用户空间路径的方法
+
+        Returns:
+            None
+        """
+        # * 将 "用户名" + 随机字符串 作为用户空间路径，总长度为 20 位
+        self.userpath = self.username + ''.join(
+            random.sample(string.ascii_letters + string.digits, 20 - len(self.username))
+        )
 
 
 class Collection_info(db.Model):
@@ -101,7 +118,7 @@ class Question_info(db.Model):
         5. question_description: 问题描述（不可为空）
         TODO 6. required_flag: 是否为必填项（暂定）
         TODO 7. rename_rule: 文件重命名规则
-        TODO 8. file_path: 提交文件路径
+        8. file_path: 提交文件路径
     """
     # * 问题类型常量
     FILE_UPLOAD, SINGLE_CHOICE, MULTI_CHOICE, FILL_IN_BLANK = '0', '1', '2', '3'  # ? 解答题，单选，多选，填空
@@ -114,7 +131,7 @@ class Question_info(db.Model):
     # required_flag = db.Column(db.BOOLEAN, nullable=False)  # （暂定） 0 必填;1 非必填
     # rename_rule = db.Column(db.CHAR, default='2')  # 若为解答题（需上传文件）,表示文件重命名规则：0 姓名;1 学号;2 无需重命名或其他类型题目
     rename_rule = db.Column(db.String(20))  # 文件重命名规则，其值为题目顺序
-    file_path = db.Column(db.String(20))  # 提交文件路径（文件上传题需设置，其余类型不必）
+    file_path = db.Column(db.String(30))  # 提交文件路径（文件上传题需设置，其余类型不必）
 
 
 class Answer_info(db.Model):

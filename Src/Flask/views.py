@@ -56,8 +56,7 @@ def generate_collection():
             return render_template('index.html')
         else:
             # TODO 存入数据库
-            # add_FC(question_list.to_dict())
-            add_FC(list(question_list.items(multi=True)))
+            add_FC(list(question_list.items(multi=True)), current_user.name)  # ! 多传一个参数：当前登录用户名
             flash("Successfully create a collection!")
             # TODO 已完成
 
@@ -134,6 +133,7 @@ def register():
         # 注册成功，将用户信息存入数据库
         user = User(username=username, name=username)  # 初始化时，用户昵称和用户名相同
         user.set_password(psw)
+        user.set_filepath()  # ! 设置用户空间路径
         db.session.add(user)
         db.session.commit()  # 提交数据库会话
         flash('Successfully Registered!')
