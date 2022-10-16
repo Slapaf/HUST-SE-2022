@@ -22,7 +22,7 @@ class User(db.Model, UserMixin):  # 表名将会是 user（自动生成，小写
     """
     id = db.Column(db.Integer, primary_key=True)  # 主键
     name = db.Column(db.String(20))  # 名字（用户昵称）
-    username = db.Column(db.String(20), unique=True)  # 用户名
+    username = db.Column(db.String(20), unique=True)  # 用户名（不可重复）
     password_hash = db.Column(db.String(128))  # 密码散列值
     userpath = db.Column(db.String(20), unique=True)  # 用户空间路径
 
@@ -125,7 +125,7 @@ class Question_info(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)  # 主键
     collection_id = db.Column(db.Integer)  # 关联文件收集主表id
-    num = db.Column(db.Integer)  # 问题序号
+    qno = db.Column(db.Integer)  # 问题序号
     question_type = db.Column(db.CHAR)  # 问题类型：0 解答题（需上传文件）;1 单选;2 多选;3 填空
     question_description = db.Column(db.Text, nullable=False)  # 问题描述（不可以为空）
     # required_flag = db.Column(db.BOOLEAN, nullable=False)  # （暂定） 0 必填;1 非必填
@@ -145,13 +145,32 @@ class Answer_info(db.Model):
         2. collection_id: 关联文件收集主表 id
         3. question_id: 关联问题主表 id
         TODO 4. option_id: 关联选项主表 id
-        5. answer_content: 答案不可为空
+        5. answer_option: 答案不可为空
     """
     id = db.Column(db.Integer, primary_key=True)  # 主键
     collection_id = db.Column(db.Integer)  # 关联文件收集主表id
     question_id = db.Column(db.Integer)  # 关联问题主表id
     # option_id = db.Column(db.Integer)  # 关联选项主表id
-    answer_content = db.Column(db.CHAR)  # 答案不可为空
+    answer_option = db.Column(db.CHAR)  # 答案不可为空
+
+
+class CollectionResult_info(db.Model):
+    """问卷填写结果表
+
+    Description:
+        记录问卷填写情况。
+
+    Attributes:
+        1. id: 主键
+        2. collection_id: 关联文件收集主表id（不可为空）
+        3. question_id: 关联问题主表id（不可为空）
+        4. result: 某个人对这一题的填写结果（若为文件上传题，则此字段存放上传的文件名称）（不可为空）
+    """
+    id = db.Column(db.Integer, primary_key=True)  # 主键
+    collection_id = db.Column(db.Integer, nullable=False)  # 关联文件收集主表id（不可为空）
+    # question_id = db.Column(db.Integer, nullable=False)  # 关联问题主表id（不可为空）
+    qno = db.Column(db.Integer)  # 问题序号
+    result = db.Column(db.String(30), nullable=False)  # 某个人对这一题的填写结果（若为文件上传题，则此字段存放上传的文件名称）（不可为空）
 
 # # 选项表
 # class option_info(db.Model):

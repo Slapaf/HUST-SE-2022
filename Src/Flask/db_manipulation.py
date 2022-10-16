@@ -2,13 +2,14 @@ import string
 from copy import deepcopy
 from datetime import datetime
 import random
-
+import os
 from flask_login import current_user
-from models import Collection_info, Question_info, Answer_info
+from models import Collection_info, Question_info, Answer_info, CollectionResult_info
 from init import db
+from datetime import datetime
 
 
-def add_FC(question_dict: list, current_user_name: str):
+def add_FC(question_dict: list):
     """
     将问卷的信息存入数据库
     Args:
@@ -23,11 +24,11 @@ def add_FC(question_dict: list, current_user_name: str):
     # ! 文件类型可能有多个，设置一个计数器记录是第几个文件
     file_counter = 0  # * 文件计数器
 
-    # 前端传来的deadLine为string类型，在此转化为datetime类型
     list_of_question_dict = deepcopy(question_dict)  # ! 保存元组的列表，与字典类型的区别在于是否对 key 去重
     # print(list_of_question_dict)
 
     question_dict = dict(question_dict)
+    # 前端传来的deadLine为string类型，在此转化为datetime类型
     deadline = question_dict['deadline']
     deadline = deadline.replace("T", " ")
     format = '%Y-%m-%d %H:%M'
@@ -53,7 +54,7 @@ def add_FC(question_dict: list, current_user_name: str):
         # ? 若为填空题
         if "sno" in question_key or "name" in question_key:
             question = Question_info(collection_id=collection_id,
-                                     num=int(question_key[-1]),
+                                     qno=int(question_key[-1]),
                                      question_type=Question_info.FILL_IN_BLANK,
                                      question_description=question_dict[question_key])
             db.session.add(question)
@@ -62,7 +63,7 @@ def add_FC(question_dict: list, current_user_name: str):
         # ? 若为单选题
         elif "radio" in question_key:
             question = Question_info(collection_id=collection_id,
-                                     num=int(question_key[-1]),
+                                     qno=int(question_key[-1]),
                                      question_type=Question_info.SINGLE_CHOICE,
                                      question_description=question_dict[question_key])
             db.session.add(question)
@@ -70,7 +71,7 @@ def add_FC(question_dict: list, current_user_name: str):
             # 存选择题答案
             answer = Answer_info(collection_id=collection_id,
                                  question_id=question.id,
-                                 answer_content=question_dict['checked_radio' + question_key[-1]])
+                                 answer_option=question_dict['checked_radio' + question_key[-1]])
             db.session.add(answer)
             db.session.commit()
 
@@ -103,10 +104,56 @@ def add_FC(question_dict: list, current_user_name: str):
                 random.sample(string.ascii_letters + string.digits, 8)
             )  # * 总长度为 20 + 1 + 1 + 8 = 30 位
             question = Question_info(collection_id=collection_id,
-                                     num=int(question_key[-1]),
+                                     qno=int(question_key[-1]),
                                      question_type=Question_info.FILE_UPLOAD,
                                      question_description=question_dict[question_key],
                                      rename_rule='-'.join(rename_rule),  # * 命名规则用 - 分隔，数字代表题目序号
                                      file_path=file_path)
             db.session.add(question)
             db.session.commit()
+            path = './FileStorage/' + question.file_path
+            os.mkdir(path)  # 创建该题的文件存储目录
+
+
+def count_submission(collection_id: int):
+    """
+    统计问卷提交数量
+    Args:
+        collection_id: int. 问卷的id
+
+    Return:
+        一个int型的数，表示问卷提交数量。
+    """
+    # first_question = Question_info.query.filter_by(collection_id=collection_id, num=1).first()
+    return CollectionResult_info.query.filter_by(collection_id=collection_id, qno=1).count()
+
+
+def count_filenum(collection_id: int, qno: int):
+    """
+    统计一个收集（collection_id）的第qno题的已收文件数
+    Args:
+        collection_id: int. 问卷的id
+        qno: int. 题目序号
+
+    Return:
+        一个int型的数，表示已收文件数。
+    """
+    path = './FileStorage/' + \
+           Question_info.query.filter_by(collection_id=collection_id, qno=qno).first().file_path  # 目标文件夹地址
+    files = os.listdir(path)  # 读入文件夹
+    file_num = len(files)  # 统计文件夹中的文件个数
+    return file_num
+
+
+def deadline_countdown(collection_id: int):
+    """
+    截止倒计时
+    Args:
+        collection_id: int. 问卷的id
+
+    Return:
+        Datetime对象，表示截止倒计时。
+    """
+    current_time = datetime.now()  # 获取当前时间
+    deadline = Collection_info.query.get(collection_id).end_date  # 查询问卷截止时间
+    return deadline - current_time  # 返回倒计时

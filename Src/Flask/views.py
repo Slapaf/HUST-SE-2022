@@ -37,6 +37,11 @@ def mycollection():
 @app.route('/collection_details', methods=['GET', 'POST'])
 @login_required
 def collection_details():
+    # Todo 数据库提供查询已收问卷数、一首文件数量、截止倒计时操作的接口
+    print('已收问卷数:', count_submission(1))
+    print('已收文件数量:', count_filenum(1, 3))
+    print('截止倒计时:', deadline_countdown(1))
+    # Todo 已完成
     return render_template('collection_details.html')
 
 
@@ -56,7 +61,7 @@ def generate_collection():
             return render_template('index.html')
         else:
             # TODO 存入数据库
-            add_FC(list(question_list.items(multi=True)), current_user.name)  # ! 多传一个参数：当前登录用户名
+            add_FC(list(question_list.items(multi=True)))  # ! 多传一个参数：当前登录用户名
             flash("Successfully create a collection!")
             # TODO 已完成
 
@@ -137,6 +142,8 @@ def register():
         db.session.add(user)
         db.session.commit()  # 提交数据库会话
         flash('Successfully Registered!')
+        path = './FileStorage/' + user.userpath
+        os.mkdir(path)  # 创建用户目录
         return redirect(url_for('login'))
 
     return render_template('register.html')
