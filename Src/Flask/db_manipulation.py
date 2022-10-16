@@ -87,7 +87,7 @@ def add_FC(question_dict: list):
                     rename_rule_list.append(elem[1])
             # print(rename_rule_list)
 
-            # TODO 逻辑有待优化，且 rename_rule 未添加分隔符
+            # TODO 逻辑有待优化
             cnt = 0
             for elem in list_of_question_dict:
                 if elem[1] not in rename_rule_list:

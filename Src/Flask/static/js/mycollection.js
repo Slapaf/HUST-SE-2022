@@ -1,6 +1,20 @@
 const x = document.getElementById("list_body");
 
-function addmember() {
+function getData() {
+    let tmp_json = JSON.parse(document.getElementById('json_object').innerHTML);
+    let json_length = document.getElementById('json_length').innerHTML;
+    for (let i = 0; i < json_length; i++) {
+        addmember(tmp_json[i].collection_title, tmp_json[i].username, tmp_json[i].collection_status, tmp_json[i].submit_count, tmp_json[i].deadline);
+    }
+}
+
+// collection_title, username, collection_status, submit_count, time_before_ddl
+function addmember(collection_title, username, collection_status, submit_count, deadline) {
+    // let collection_title = document.getElementById('data-id').getAttribute('collection_title')
+    // let username = document.getElementById('data-id').getAttribute('username')
+    // let collection_status = document.getElementById('data-id').getAttribute('collection_status')
+    // let submit_count = document.getElementById('data-id').getAttribute('submit_count')
+    // let time_before_ddl = document.getElementById('data-id').getAttribute('time_before_ddl')
     //新建元素节点
     let listmember = document.createElement("div");
     let membertitle = document.createElement("div");
@@ -28,11 +42,16 @@ function addmember() {
     memberoperate.appendChild(op4);
     memberoperate.appendChild(op5);
     //给节点赋值
-    membertitle.title = "CS2003软工作业收集";//! 更改为membertitle的值
-    membername.title = "王广凯";//! 更改为membername的值
-    membercondition.title = "进行中";//! 更改为membercondition的值(只能填"进行中"和"已截止"！！！)
-    membertimes.title = "10份";//! 更改为membertimes的值
-    memberdate.title = "2022-10-01 23:59";//! 更改为memberdate的值
+    // membertitle.title = "CS2003软工作业收集";//! 更改为membertitle的值
+    // membername.title = "王广凯";//! 更改为membername的值
+    // membercondition.title = "进行中";//! 更改为membercondition的值(只能填"进行中"和"已截止"！！！)
+    // membertimes.title = "10份";//! 更改为membertimes的值
+    // memberdate.title = "2022-10-01 23:59";//! 更改为memberdate的值
+    membertitle.title = collection_title;//! 更改为membertitle的值
+    membername.title = username;//! 更改为membername的值
+    membercondition.title = collection_status;//! 更改为membercondition的值(只能填"进行中"和"已截止"！！！)
+    membertimes.title = submit_count + "份";//! 更改为membertimes的值
+    memberdate.title = deadline;//! 更改为memberdate的值
     membertitle.appendChild(document.createTextNode(membertitle.title));
     membername.appendChild(document.createTextNode(membername.title));
     membercondition.appendChild(document.createTextNode(membercondition.title));
@@ -147,3 +166,4 @@ function closebox() {
     popLayer.style.display = "none";
 }
 
+getData();

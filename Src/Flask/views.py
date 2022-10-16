@@ -1,4 +1,6 @@
 import datetime
+import json
+
 from models import User
 import time
 from flask import render_template, request, url_for, redirect, flash
@@ -18,6 +20,32 @@ from db_manipulation import *
 """
 
 
+# ! 写错地方了，先留着
+def time_format(time_to_format):
+    """
+    将 datetime.timedelta 类型的数据转换成网页上显示的格式，按“天”、“小时”、“分”、“秒”的优先级显示
+
+    Args:
+        time_to_format: datetime.timedelta
+
+    Returns:
+        time_formatted: str
+    """
+    if time_to_format.days < 0:
+        return ""
+    if time_to_format.days > 0:
+        return str(time_to_format.days) + "天"
+    seconds = time_to_format.seconds
+    hours = seconds // 360
+    if hours > 0:
+        return str(hours) + "小时"
+    minute = seconds // 60
+    if minute > 0:
+        return str(minute) + "分"
+    seconds = seconds % 60
+    return str(seconds) + "秒"
+
+
 @app.route('/mycollection', methods=['GET', 'POST'])
 @login_required
 def mycollection():
@@ -25,24 +53,62 @@ def mycollection():
         用户进入 collection_details.html 页面时，遍历数据库中的所有收集，返回两个列表（命名随意）：collection_on 和 collection_end
         collection_on 存放正在进行的收集（比较 end_date 和用户进入页面时的系统时间），collection_end 存放已经截止的收集；
     """
+    # ? 根据当前时间更新各个收集的状态
+    for collection in Collection_info.query.filter_by(creator_id=current_user.id):
+        if collection.end_date <= datetime.now():
+            collection.status = '2'  # * 标记为已截止
+        else:
+            collection.status = '0'  # * 标记为进行中
+    db.session.commit()
+    # ? 查询进行中的收集
     collection_on = Collection_info.query.filter_by(creator_id=current_user.id, status='0').all()
+    # ? 查询已截止的收集
     collection_end = Collection_info.query.filter_by(creator_id=current_user.id, status='2').all()
-    print("正在进行的收集：")
-    for v in collection_on: print(v.collection_title)
-    print("已经截止的收集：")
-    for v in collection_end: print(v.collection_title)
-    # Todo 已完成 #
+    # print("正在进行的收集：")
+    # for v in collection_on:
+    #     print(v.collection_title)
+    # print("已经截止的收集：")
+    # for v in collection_end:
+    #     print(v.collection_title)
+
+    collection_list = Collection_info.query.filter_by(creator_id=current_user.id)
+    parameter_dict_list = []
+    for collection in collection_list:
+        # ? 对时间进行格式化处理
+        # tmp_time: datetime.timedelta = deadline_countdown(collection.id)
+        # ? 获取已收集文件数
+        file_count = 0
+        question_list = Question_info.query.filter_by(collection_id=collection.id).all()
+        for question in question_list:
+            if question.file_path is not None:  # * 有文件路径，说明此题为文件收集题
+                file_count += count_filenum(collection.id, question.qno)
+        # * 创建一个字典类型，用于传参，可删除
+        tmp_dict = {'username': current_user.name,
+                    'collection_title': collection.collection_title,
+                    'collection_status': "进行中" if collection.status == '0' else "已截止",
+                    'submit_count': count_submission(collection.id),
+                    'file_collected': file_count,
+                    'deadline': collection.end_date.strftime('%Y-%m-%d %H:%M:%S')
+                    }
+        parameter_dict_list.append(tmp_dict)
+        # print(tmp_dict)
+
+    return render_template('mycollection.html',
+                           username=current_user.name,
+                           json_object=json.dumps(parameter_dict_list),
+                           json_length=len(parameter_dict_list)
+                           )
 
 
-@app.route('/collection_details', methods=['GET', 'POST'])
-@login_required
-def collection_details():
-    # Todo 数据库提供查询已收问卷数、一首文件数量、截止倒计时操作的接口
-    print('已收问卷数:', count_submission(1))
-    print('已收文件数量:', count_filenum(1, 3))
-    print('截止倒计时:', deadline_countdown(1))
-    # Todo 已完成
-    return render_template('collection_details.html')
+# @app.route('/collection_details', methods=['GET', 'POST'])
+# @login_required
+# def collection_details():
+#     # Todo 数据库提供查询已收问卷数、一首文件数量、截止倒计时操作的接口
+#     print('已收问卷数:', count_submission(1))
+#     print('已收文件数量:', count_filenum(1, 3))
+#     print('截止倒计时:', deadline_countdown(1))
+#     # Todo 已完成
+#     return render_template('collection_details.html')
 
 
 @app.route('/file_collecting', methods=['GET', 'POST'])
