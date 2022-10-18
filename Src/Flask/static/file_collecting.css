@@ -106,3 +106,7 @@ body {
 .popup-op:hover {
     cursor: pointer;
 }
+
+textarea {
+  resize: none;
+}

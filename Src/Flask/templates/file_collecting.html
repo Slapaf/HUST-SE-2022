@@ -16,9 +16,19 @@
     <form id="form" method="post" onkeydown="if(event.keyCode==13){return false;}" name="Form">
         <div class="header">
             <label>收集标题</label>
-            <input class="collectionTitle" type="text" value="文件收集" name="collectionTitle"/>
+            <input class="collectionTitle"
+                   type="text"
+                   value="文件收集"
+                   name="collectionTitle"
+                   maxlength="20"
+                   placeholder="请输入不超过20个字符的标题"/>
             <label>收集者</label>
-            <input class="collector" type="text" name="collector" required/>
+            <input class="collector"
+                   type="text"
+                   name="collector"
+                   maxlength="20"
+                   placeholder="请输入不超过20个字符的姓名"
+                   required/>
             <label>截止时间</label>
             <input class="deadline" type="datetime-local" name="deadline" required/>
             <label>添加详情描述</label>
@@ -29,6 +39,7 @@
             <!-- 下面这些便于观察结构和属性，勿删 -->
             <!-- <li id="1(变化的)">
               <h1><input class="input-topic" type="text" value="姓名" name="question_name"/></h1>
+              <textarea>描述</textarea>
               <input
                 class="input-content"
                 type="text"
@@ -39,6 +50,7 @@
             </li>
             <li id="2">
               <h1><input class="input-topic" type="text" value="文件" name="question_file"/></h1>
+              <textarea>描述</textarea>
               <div class="selectTopic">
                 <input type="checkbox" id="对应题目id"/>
                 <span>姓名</span>
@@ -50,17 +62,32 @@
             </li>
             <li id="3">
               <h1><input class="input-topic" type="text" value="单选" name="question_radio"/></h1>
+              <textarea>描述</textarea>
               <div class="questionBox">          
-                <input type="radio" name="此题目的value" />
+                <input type="radio" name="checked_radio+编号" />
                 <span>A</span>
-                <input type="radio" name="此题目的value" />
+                <input type="radio" name="checked_radio+编号" />
                 <span>B</span>
-                <input type="radio" name="此题目的value" />
+                <input type="radio" name="checked_radio+编号" />
                 <span>C</span>
-                <input type="radio" name="此题目的value" />
+                <input type="radio" name="checked_radio+编号" />
                 <span>D</span>
               </div>
               <button class="removeTopic">删除题目</button>
+            </li>
+            <li id=""4>
+              <h1><input class="input-topic" type="text" value="多选" name="question_multipleChoice"/></h1>
+              <textarea>描述</textarea>
+              <div class="questionBox">          
+                <input type="checkbox" name="此题目的value" />
+                <span>A</span>
+                <input type="checkbox" name="此题目的value" />
+                <span>B</span>
+                <input type="checkbox" name="此题目的value" />
+                <span>C</span>
+                <input type="checkbox" name="此题目的value" />
+                <span>D</span>
+              </div>
             </li> -->
             <div id="btn-for-add">添加题目</div>
         </div>
@@ -81,10 +108,11 @@
         <div class="popup-op" id="op-file">文件</div>
         <div class="popup-op" id="op-sno">学号</div>
         <div class="popup-op" id="op-radio">单选题</div>
+        <div class="popup-op" id ="op-multipleChoice">多选题</div>
     </div>
 </div>
 <div class="alert">
-  <h1>不能有重复标题</h1>
+  <h1></h1>
   <div id="timeOutClose"></div>
 </div>
 {#<script src="../static/file_collecting.js"></script>#}
