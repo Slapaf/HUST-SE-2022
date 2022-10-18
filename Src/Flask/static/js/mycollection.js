@@ -142,6 +142,15 @@ function addmember(collection_title, username, collection_status, submit_count, 
     op5.onclick = function () {
         if (membercondition.title == "进行中") {
             //停止按钮
+            let date = new Date();
+            alert(date);
+            let year = date.getFullYear();
+            let month = date.getMonth() + 1;
+            let day = date.getDate();
+            let hour = date.getHours();
+            let minute = date.getMinutes();
+            let second = date.getSeconds();
+            let showtime = year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + second;
             op3.innerHTML = "重启";
             op5.innerHTML = "删除";
             membertitle.style.color = "gray";
@@ -151,6 +160,7 @@ function addmember(collection_title, username, collection_status, submit_count, 
             memberdate.style.color = "gray";
             membercondition.title = "已截止";
             membercondition.innerHTML = "已截止";
+            memberdate.innerHTML = showtime;
         }
         else {
             //删除按钮
