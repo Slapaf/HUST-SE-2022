@@ -71,7 +71,7 @@ def mycollection():
                     'collection_title': collection.collection_title,
                     'collection_status': "进行中" if collection.status == '0' else "已截止",
                     'submit_count': count_submission(collection_id=collection.id),
-                    'deadl1ine': collection.end_date.strftime('%Y-%m-%d %H:%M:%S')
+                    'deadline': collection.end_date.strftime('%Y-%m-%d %H:%M:%S')
                     }
         parameter_dict_list.append(tmp_dict)
         # print(tmp_dict)
