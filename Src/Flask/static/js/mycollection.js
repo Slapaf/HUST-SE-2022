@@ -64,8 +64,7 @@ function addmember(collection_title, username, collection_status, submit_count, 
         op3.appendChild(document.createTextNode("编辑"));
         op5.appendChild(document.createTextNode("停止"));
         membercondition.style.color = "green";
-    }
-    else {
+    } else {
         op3.appendChild(document.createTextNode("重启"));
         op5.appendChild(document.createTextNode("删除"));
         membertitle.style.color = "gray";
@@ -128,8 +127,7 @@ function addmember(collection_title, username, collection_status, submit_count, 
         if (membercondition.title == "进行中") {
             //编辑按钮
             window.location.href = 'file_collecting.html';
-        }
-        else {
+        } else {
             //重启按钮
             window.location.href = 'file_collecting.html';
         }
@@ -161,8 +159,7 @@ function addmember(collection_title, username, collection_status, submit_count, 
             membercondition.title = "已截止";
             membercondition.innerHTML = "已截止";
             memberdate.innerHTML = showtime;
-        }
-        else {
+        } else {
             //删除按钮
             x.removeChild(listmember);
         }
