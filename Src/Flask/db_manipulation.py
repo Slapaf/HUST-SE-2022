@@ -8,6 +8,7 @@ from models import Collection_info, Question_info, Answer_info, Submit_Content_i
 from init import db
 from datetime import datetime
 from werkzeug.datastructures import MultiDict
+import shutil
 
 
 def add_FC(question_dict: list):
@@ -286,3 +287,23 @@ def deadline_countdown(collection_id: int):
     current_time = datetime.now()  # 获取当前时间
     deadline = Collection_info.query.get(collection_id).end_date  # 查询问卷截止时间
     return deadline - current_time  # 返回倒计时
+
+
+def delete_collection(collection_id=None):
+    if collection_id != None:
+        Submit_Content_info.query.filter_by(collection_id=collection_id).delete()
+        Submission_info.query.filter_by(collection_id=collection_id).delete()
+        Option_info.query.filter_by(collection_id=collection_id).delete()
+        Answer_info.query.filter_by(collection_id=collection_id).delete()
+
+        # 删除该收集中所有文件上传题的文件存储路径下的文件
+        file_path = Question_info.query.filter_by(collection_id=collection_id,
+                                                  question_type=Question_info.FILE_UPLOAD).with_entities(
+            Question_info.file_path).all()
+        for fp in file_path:
+            path = './FileStorage/' + fp
+            shutil.rmtree(path)
+
+        Question_info.query.filter_by(collection_id=collection_id).delete()
+        Collection_info.query.filter_by(collection_id=collection_id).delete()
+        db.session.commit()
