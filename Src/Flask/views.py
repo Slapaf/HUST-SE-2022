@@ -192,7 +192,7 @@ def register():
         db.session.commit()  # 提交数据库会话
         flash('Successfully Registered!')
         path = './FileStorage/' + user.userpath
-        os.mkdir(path)  # 创建用户目录
+        os.makedirs(path)  # 创建用户目录
         return redirect(url_for('login'))
 
     return render_template('register.html')
