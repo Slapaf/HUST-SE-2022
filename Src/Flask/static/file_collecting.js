@@ -1,10 +1,12 @@
 const ul = document.querySelector(".main>ul");
 const lis = ul.getElementsByTagName("li");
 const rem = ul.getElementsByClassName("removeTopic");
+const deadline = document.getElementsByClassName("deadline")[0];
 const op_name = document.getElementById("op-name");
 const op_file = document.getElementById("op-file");
 const op_sno = document.getElementById("op-sno");
 const op_radio = document.getElementById("op-radio");
+const op_multipleChoice = document.getElementById("op-multipleChoice");
 const btn_for_add = document.querySelector("#btn-for-add");
 const popup = document.querySelector(".popup");
 const myalert = document.querySelector(".alert");
@@ -25,6 +27,7 @@ cancel.onclick = () => {
   btn_for_add.onclick();
 };
 
+//将需要文档加载完毕后执行的函数加到执行队列
 function addLoadEvent(func) {
   var oldonload = window.onload;
   if (typeof window.onload != "function") {
@@ -37,6 +40,36 @@ function addLoadEvent(func) {
   }
 }
 
+//获取当前时间
+function getCurrentDatetime() {   
+  var now = new Date();  
+  var year = now.getFullYear();       //年  
+  var month = now.getMonth() + 1;     //月  
+  var day = now.getDate();            //日  
+  var hh = now.getHours();            //时  
+  var mm = now.getMinutes();          //分  
+  var clock = year + "-";  
+  if(month < 10)  
+    clock += "0";  
+  clock += month + "-";  
+  if(day < 10)  
+    clock += "0";  
+  clock += day + "T";  
+  if(hh < 10)  
+    clock += "0";  
+  clock += hh + ":";  
+  if (mm < 10) clock += '0';   
+  clock += mm;   
+  return clock;      
+} 
+
+//限制截止日期不能比当前时间早
+function deadline_limit() {
+  let currentDatetime = getCurrentDatetime();
+  deadline.min = currentDatetime;
+} 
+
+//姓名
 op_name.onclick = () => {
   //新建一些元素节点
   let newli = document.createElement("li");
@@ -50,6 +83,11 @@ op_name.onclick = () => {
   newinput_topic.name = "question_name";
   newinput_topic.type = "text";
   newinput_topic.value = "姓名";
+  newinput_topic.maxLength = "20";
+  newinput_topic.placeholder = "请输入不超过20个字符的题目";
+  let newdetail = document.createElement("textarea");
+  newdetail.placeholder = "添加详情描述";
+  newdetail.name = "detail";
   let newinput_content = document.createElement("input");
   newinput_content.className = "input-content";
   newinput_content.type = "text";
@@ -61,6 +99,7 @@ op_name.onclick = () => {
   newbtn.appendChild(document.createTextNode("删除题目"));
   newh1.appendChild(newinput_topic);
   newli.appendChild(newh1);
+  newli.appendChild(newdetail);
   newli.appendChild(newinput_content);
   newli.appendChild(newbtn);
   ul.appendChild(newli);
@@ -84,6 +123,7 @@ op_name.onclick = () => {
   newli.ondrop = onDrop;
 };
 
+//学号
 op_sno.onclick = () => {
   //新建一些元素节点
   let newli = document.createElement("li");
@@ -97,6 +137,11 @@ op_sno.onclick = () => {
   newinput_topic.name = "question_sno";
   newinput_topic.type = "text";
   newinput_topic.value = "学号";
+  newinput_topic.maxLength = "20";
+  newinput_topic.placeholder = "请输入不超过20个字符的题目";
+  let newdetail = document.createElement("textarea");
+  newdetail.placeholder = "添加详情描述";
+  newdetail.name = "detail";
   let newinput_content = document.createElement("input");
   newinput_content.className = "input-content";
   newinput_content.type = "text";
@@ -108,6 +153,7 @@ op_sno.onclick = () => {
   newbtn.appendChild(document.createTextNode("删除题目"));
   newh1.appendChild(newinput_topic);
   newli.appendChild(newh1);
+  newli.appendChild(newdetail);
   newli.appendChild(newinput_content);
   newli.appendChild(newbtn);
   ul.appendChild(newli);
@@ -131,6 +177,7 @@ op_sno.onclick = () => {
   newli.ondrop = onDrop;
 };
 
+//文件
 op_file.onclick = () => {
   //新建一些元素节点
   let newli = document.createElement("li");
@@ -144,6 +191,11 @@ op_file.onclick = () => {
   newinput_topic.name = "question_file";
   newinput_topic.type = "text";
   newinput_topic.value = "文件";
+  newinput_topic.maxLength = "20";
+  newinput_topic.placeholder = "请输入不超过20个字符的题目";
+  let newdetail = document.createElement("textarea");
+  newdetail.placeholder = "添加详情描述";
+  newdetail.name = "detail";
   let newspan = document.createElement("span");
   newspan.appendChild(document.createTextNode("重命名规则："));
   let newselect = document.createElement("div");
@@ -158,6 +210,7 @@ op_file.onclick = () => {
   newbtn.appendChild(document.createTextNode("删除题目"));
   newh1.appendChild(newinput_topic);
   newli.appendChild(newh1);
+  newli.appendChild(newdetail);
   newli.appendChild(newspan);
   //维护复选框
   updateCheckbox(newselect);
@@ -268,6 +321,7 @@ function for_checkbox(option, id, value) {
   }
 }
 
+//单选
 op_radio.onclick = () => {
   let newli = document.createElement("li");
   let newh1 = document.createElement("h1");
@@ -280,12 +334,18 @@ op_radio.onclick = () => {
   newinput_topic.name = "question_radio";
   newinput_topic.type = "text";
   newinput_topic.value = "单选题";
+  newinput_topic.maxLength = "20";
+  newinput_topic.placeholder = "请输入不超过20个字符的题目";
+  let newdetail = document.createElement("textarea");
+  newdetail.placeholder = "添加详情描述";
+  newdetail.name = "detail";
   let newbtn = document.createElement("button");
   newbtn.className = "removeTopic";
   newbtn.appendChild(document.createTextNode("删除题目"));
   newh1.appendChild(newinput_topic);
   newli.appendChild(newh1);
-  let newqbox = addRadio();
+  newli.appendChild(newdetail);
+  let newqbox = addChoice(0);
   newli.appendChild(newqbox);
   newli.appendChild(newbtn);
   ul.appendChild(newli);
@@ -302,17 +362,19 @@ op_radio.onclick = () => {
   newli.ondrop = onDrop;
 };
 
-//添加单选题
-function addRadio() {
+//添加单选题/多选题
+function addChoice(op) {
   let newqbox = document.createElement("div");
   newqbox.className = "questionBox";
   let optionArr = ["A", "B", "C", "D"];
   for (let i = 0; i < 4; i++) {
     let newinput_radio = document.createElement("input");
-    newinput_radio.type = "radio";
+    newinput_radio.type =(op===0?"radio":"checkbox");  //op=0是单选，op=1是多选
     newinput_radio.name = qnum.toString();
     newinput_radio.value = optionArr[i];
-    newinput_radio.required = "required";
+    if(op === 0) {  //单选必须选择一个
+      newinput_radio.required = "required";
+    }
     let newop = document.createElement("span");
     newop.appendChild(document.createTextNode(optionArr[i]));
     newqbox.appendChild(newinput_radio);
@@ -322,8 +384,46 @@ function addRadio() {
   return newqbox;
 }
 
-addLoadEvent(op_name.onclick);
-addLoadEvent(op_file.onclick);
+//多选
+op_multipleChoice.onclick = () => {
+  let newli = document.createElement("li");
+  let newh1 = document.createElement("h1");
+  let newinput_topic = document.createElement("input");
+  newinput_topic.className = "input-topic";
+  newinput_topic.required = "required";
+  //TODO 增加 id 属性
+  newli.id = (++question_id).toString();
+  //TODO 增加 name 属性
+  newinput_topic.name = "question_multipleChoice";
+  newinput_topic.type = "text";
+  newinput_topic.value = "多选题";
+  newinput_topic.maxLength = "20";
+  newinput_topic.placeholder = "请输入不超过20个字符的题目";
+  let newdetail = document.createElement("textarea");
+  newdetail.placeholder = "添加详情描述";
+  newdetail.name = "detail";
+  let newbtn = document.createElement("button");
+  newbtn.className = "removeTopic";
+  newbtn.appendChild(document.createTextNode("删除题目"));
+  newh1.appendChild(newinput_topic);
+  newli.appendChild(newh1);
+  newli.appendChild(newdetail);
+  let newqbox = addChoice(1);
+  newli.appendChild(newqbox);
+  newli.appendChild(newbtn);
+  ul.appendChild(newli);
+  //使弹窗消失
+  btn_for_add.onclick();
+  //给新增的题目添加删除事件
+  newbtn.addEventListener("click", () => {
+    ul.removeChild(newli);
+  });
+  //添加拖拽效果
+  newli.draggable = "true";
+  newli.ondragstart = onDragStart;
+  newli.ondragover = onDragOver;
+  newli.ondrop = onDrop;
+};
 
 function onDragStart(e) {
   // 获取当前拖拽元素
@@ -345,7 +445,7 @@ function onDrop(e) {
   let dropId = dropElement.id;
   let dragElementType = dragElement.getElementsByClassName("input-topic")[0].name;
   let dropElementType = dropElement.getElementsByClassName("input-topic")[0].name;
-  if(dragElementType!="question_file" && dragElementType!="question_radio") {
+  if(dragElementType ==="question_name" || dragElementType ==="question_sno") {
     if(dropElementType==="question_name"||dropElementType==="question_sno") {
       for_checkbox("swap", dragId, dropId);
     }else {
@@ -376,6 +476,8 @@ function numberQuestion() {
     let topic = lis[i].getElementsByClassName("input-topic")[0];
     lis[i].id = "" + finalId;
     topic.name = topic.name + finalId; //题目的name
+    let detail = lis[i].getElementsByTagName("textarea")[0];
+    detail.name = detail.name + finalId;  //textarea的name
     let checkBoxes = lis[i].getElementsByClassName("selectTopic")[0];
     if (checkBoxes) {
       let c = checkBoxes.children;
@@ -390,7 +492,16 @@ function numberQuestion() {
       let c = radioBoxes.children;
       for (let j = 0; j < c.length; j++) {
         if (c[j].name) {
-          c[j].name = "checked_radio" + finalId; //单选框的name
+          c[j].name = "checked_radio" + finalId; //单选题选项的name
+        }
+      }
+    }
+    let mulBoxes = lis[i].getElementsByClassName("questionBox")[0];
+    if(mulBoxes) {
+      let c = mulBoxes.children;
+      for (let j = 0; j < c.length; j++) {
+        if (c[j].name) {
+          c[j].name = "checked_mulans" + finalId; //多选题选项的name
         }
       }
     }
@@ -399,20 +510,44 @@ function numberQuestion() {
   return true;
 }
 
-//检查是否有重复题目
+//提交前检查
 function check() {
+  //检查是否有重复题目
+  let errorNum = 0;
   let arr=[];
   let topics = document.getElementsByClassName("input-topic");
   for(let i=0;i<topics.length;i++) {
     if(arr.indexOf(topics[i].value)==-1) {
       arr.push(topics[i].value);
     }else {
-      myalert.classList.toggle("show");
-      btn_for_submit.disabled = "disabled";
-      countdown = 3;
-      timeOutClose();
-      return false;
+      errorNum = 1;
     }
+  }
+  //检查多选是否至少选了两个
+  for(let i=0;i<topics.length;i++) {
+    if(topics[i].name != "question_multipleChoice") continue;
+    let checkBoxes = lis[i].querySelectorAll("input[type='checkbox']");
+    let cnt = 0;
+    for(let i=0;i<checkBoxes.length;i++) {
+      if(checkBoxes[i].checked) cnt++;
+    }
+    if(cnt < 2) {
+      errorNum = 2;
+    }
+  }
+  //出错提示弹窗
+  if(errorNum) {
+    let h1 = myalert.getElementsByTagName("h1")[0];
+    if(errorNum === 1) {
+      h1.innerHTML = "不能有重复标题";
+    }else if(errorNum === 2){
+      h1.innerHTML = "多选题至少选择两个选项";
+    }
+    myalert.classList.toggle("show");
+    btn_for_submit.disabled = "disabled";
+    countdown = 3;
+    timeOutClose();
+    return false;
   }
   return true;
 }
@@ -437,3 +572,7 @@ function timeOutClose() {
   }
   countdown--;
 }
+
+addLoadEvent(op_name.onclick);
+addLoadEvent(op_file.onclick);
+addLoadEvent(deadline_limit);

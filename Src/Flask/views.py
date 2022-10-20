@@ -53,42 +53,25 @@ def mycollection():
         用户进入 collection_details.html 页面时，遍历数据库中的所有收集，返回两个列表（命名随意）：collection_on 和 collection_end
         collection_on 存放正在进行的收集（比较 end_date 和用户进入页面时的系统时间），collection_end 存放已经截止的收集；
     """
-    # ? 根据当前时间更新各个收集的状态
-    for collection in Collection_info.query.filter_by(creator_id=current_user.id):
-        if collection.end_date <= datetime.now():
-            collection.status = '2'  # * 标记为已截止
-        else:
-            collection.status = '0'  # * 标记为进行中
-    db.session.commit()
-    # ? 查询进行中的收集
-    collection_on = Collection_info.query.filter_by(creator_id=current_user.id, status='0').all()
-    # ? 查询已截止的收集
-    collection_end = Collection_info.query.filter_by(creator_id=current_user.id, status='2').all()
-    # print("正在进行的收集：")
-    # for v in collection_on:
-    #     print(v.collection_title)
-    # print("已经截止的收集：")
-    # for v in collection_end:
-    #     print(v.collection_title)
+    update_status(current_user.id)  # 更新当前用户所有收集的status字段
 
-    collection_list = Collection_info.query.filter_by(creator_id=current_user.id)
+    collection_list = Collection_info.query.filter_by(creator_id=current_user.id).all()
     parameter_dict_list = []
     for collection in collection_list:
         # ? 对时间进行格式化处理
         # tmp_time: datetime.timedelta = deadline_countdown(collection.id)
         # ? 获取已收集文件数
-        file_count = 0
-        question_list = Question_info.query.filter_by(collection_id=collection.id).all()
-        for question in question_list:
-            if question.file_path is not None:  # * 有文件路径，说明此题为文件收集题
-                file_count += count_filenum(collection.id, question.qno)
+        # file_count = 0
+        # question_list = Question_info.query.filter_by(collection_id=collection.id).all()
+        # for question in question_list:
+        #     if question.file_path is not None:  # * 有文件路径，说明此题为文件收集题
+        #         file_count += count_filenum(collection.id, question.qno)
         # * 创建一个字典类型，用于传参，可删除
-        tmp_dict = {'username': current_user.name,
+        tmp_dict = {'username': current_user.username,
                     'collection_title': collection.collection_title,
                     'collection_status': "进行中" if collection.status == '0' else "已截止",
                     'submit_count': count_submission(collection.id),
-                    'file_collected': file_count,
-                    'deadline': collection.end_date.strftime('%Y-%m-%d %H:%M:%S')
+                    'deadl1ine': collection.end_date.strftime('%Y-%m-%d %H:%M:%S')
                     }
         parameter_dict_list.append(tmp_dict)
         # print(tmp_dict)
