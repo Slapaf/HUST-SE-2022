@@ -7,6 +7,10 @@ const op_file = document.getElementById("op-file");
 const op_sno = document.getElementById("op-sno");
 const op_radio = document.getElementById("op-radio");
 const op_multipleChoice = document.getElementById("op-multipleChoice");
+<<<<<<< HEAD
+=======
+const op_qnaire = document.getElementById("op-qnaire");
+>>>>>>> 91b7411f9fa970b6bc9097a65cc7394a5004ee7c
 const btn_for_add = document.querySelector("#btn-for-add");
 const popup = document.querySelector(".popup");
 const myalert = document.querySelector(".alert");
@@ -454,7 +458,7 @@ function onDrop(e) {
       let flag = 0;
       while(next) {
         nextType = next.getElementsByClassName("input-topic")[0].name;
-        if(nextType&&nextType!="question_file"&&nextType!="question_radio") {
+        if(nextType && (nextType === "question_file"||nextType === "question_radio")) {
           for_checkbox("swap", dragId, next.id);
           flag = 1;
           break;
@@ -493,6 +497,18 @@ function numberQuestion() {
       for (let j = 0; j < c.length; j++) {
         if (c[j].name) {
           c[j].name = "checked_radio" + finalId; //单选题选项的name
+<<<<<<< HEAD
+        }
+      }
+    }
+    let mulBoxes = lis[i].getElementsByClassName("questionBox")[0];
+    if(mulBoxes) {
+      let c = mulBoxes.children;
+      for (let j = 0; j < c.length; j++) {
+        if (c[j].name) {
+          c[j].name = "checked_mulans" + finalId; //多选题选项的name
+=======
+>>>>>>> 91b7411f9fa970b6bc9097a65cc7394a5004ee7c
         }
       }
     }
@@ -503,6 +519,21 @@ function numberQuestion() {
         if (c[j].name) {
           c[j].name = "checked_mulans" + finalId; //多选题选项的name
         }
+      }
+    }
+    let qn_options = lis[i].getElementsByClassName("qnaire_textarea");
+    if(qn_options) {
+      for (let j = 0; j < qn_options.length; j++) {
+        if (qn_options[j].name) {
+          qn_options[j].name = qn_options[j].name + finalId; //问卷选项的name
+        }
+      }
+    }
+    let choose_type = lis[i].querySelectorAll("input[name='choose_type']");
+    if(choose_type) {
+      console.log(choose_type.length);
+      for(let i=0;i<choose_type.length;i++) {
+        choose_type[i].name = "choose_type" + finalId;
       }
     }
     finalId++;
@@ -575,4 +606,126 @@ function timeOutClose() {
 
 addLoadEvent(op_name.onclick);
 addLoadEvent(op_file.onclick);
+<<<<<<< HEAD
 addLoadEvent(deadline_limit);
+=======
+addLoadEvent(deadline_limit);
+
+//问卷
+op_qnaire.onclick = () => {
+  let newli = document.createElement("li");
+  let newh1 = document.createElement("h1");
+  let newinput_topic = document.createElement("input");
+  newinput_topic.className = "input-topic";
+  //TODO 增加 id 属性
+  newli.id = (++question_id).toString();
+  //TODO 增加 name 属性
+  newinput_topic.name = "question_qnaire";
+  newinput_topic.type = "text";
+  newinput_topic.value = "问卷题目";
+  newinput_topic.maxLength = "20";
+  newinput_topic.placeholder = "请输入不超过20个字符的题目";
+  let newdetail = document.createElement("textarea");
+  newdetail.placeholder = "添加详情描述";
+  newdetail.name = "detail";
+  let newqbox = document.createElement("div");
+  newqbox.className = "questionBox";
+  let newbtn = document.createElement("button");
+  newbtn.className = "removeTopic";
+  newbtn.appendChild(document.createTextNode("删除题目"));
+  let newadd = document.createElement("div");
+  newadd.appendChild(document.createTextNode("添加选项"));
+  let newdiv = document.createElement("div");
+  let if_multi = document.createElement("input");
+  if_multi.type = "checkbox";
+  let newlabel = document.createElement("label");
+  newlabel.appendChild(document.createTextNode("多选"));
+  let hidden_radio1 = document.createElement("input");
+  let hidden_radio2 = document.createElement("input");
+  hidden_radio1.type = "radio";
+  hidden_radio2.type = "radio";
+  hidden_radio1.className = "hidden hidden_radio";
+  hidden_radio2.className = "hidden hidden_radio";
+  hidden_radio1.value = "single";
+  hidden_radio2.value = "multiple";
+  hidden_radio1.name = "choose_type" + newli.id;
+  hidden_radio2.name = "choose_type" + newli.id;
+  hidden_radio1.checked = "checked";
+  newh1.appendChild(newinput_topic);
+  newli.appendChild(newh1);
+  newli.appendChild(newdetail);
+  newli.appendChild(newqbox);  //qbox里动态添加选项
+  newli.appendChild(newadd);
+  newdiv.appendChild(if_multi);
+  newdiv.appendChild(newlabel);
+  newdiv.appendChild(hidden_radio1);
+  newdiv.appendChild(hidden_radio2);
+  newli.appendChild(newdiv);
+  newli.appendChild(newbtn);
+  ul.appendChild(newli);
+  //使弹窗消失
+  btn_for_add.onclick();
+  //默认添加两个选项
+  newqbox.appendChild(addQuestion(if_multi.checked));
+  newqbox.appendChild(addQuestion(if_multi.checked));
+  //给新增的题目添加删除事件
+  newbtn.addEventListener("click", () => {
+    ul.removeChild(newli);
+  });
+  //给“添加选项”按钮添加事件
+  newadd.onclick = () => {
+    newqbox.appendChild(addQuestion(if_multi.checked));
+  };
+  //给“多选”复选框添加事件
+  if_multi.onclick = () => {
+    let qnaire_check = newli.getElementsByClassName("qnaire_check");
+    if(if_multi.checked) {
+      for(let i=0;i<qnaire_check.length;i++) {
+        qnaire_check[i].type = "checkbox";
+      }
+      hidden_radio1.removeAttribute("checked");
+      hidden_radio2.checked = "checked";
+    }else {
+      for(let i=0;i<qnaire_check.length;i++) {
+        qnaire_check[i].type = "radio";
+      }
+      hidden_radio2.removeAttribute("checked");
+      hidden_radio1.checked = "checked";
+    }
+  }
+  //添加拖拽效果
+  newli.draggable = "true";
+  newli.ondragstart = onDragStart;
+  newli.ondragover = onDragOver;
+  newli.ondrop = onDrop;
+};
+
+//添加一个问卷选项
+function addQuestion(check_status) {
+  let newoption = document.createElement("div");
+  newoption.className = "qnaire_option";
+  let newcheck = document.createElement("input");
+  if(check_status == false) {
+    newcheck.type = "radio";
+  }else {
+    newcheck.type = "checkbox";  //新增的选项要改type
+  }
+  newcheck.className = "qnaire_check";
+  newcheck.disabled = "disabled";
+  let newta = document.createElement("textarea");
+  newta.className = "qnaire_textarea";
+  newta.placeholder = "请输入选项的内容";
+  newta.name = "qn_option";
+  let newremove = document.createElement("span");
+  newremove.className = "qnaire_removeop";
+  newremove.appendChild(document.createTextNode("X"));
+  newoption.appendChild(newcheck);
+  newoption.appendChild(newta);
+  newoption.appendChild(newremove);
+  newremove.onclick = () => {
+    newoption.parentNode.removeChild(newoption);
+  }
+  return newoption;
+}
+
+>>>>>>> 91b7411f9fa970b6bc9097a65cc7394a5004ee7c
