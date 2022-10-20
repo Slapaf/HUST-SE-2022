@@ -7,10 +7,7 @@ const op_file = document.getElementById("op-file");
 const op_sno = document.getElementById("op-sno");
 const op_radio = document.getElementById("op-radio");
 const op_multipleChoice = document.getElementById("op-multipleChoice");
-<<<<<<< HEAD
-=======
 const op_qnaire = document.getElementById("op-qnaire");
->>>>>>> 91b7411f9fa970b6bc9097a65cc7394a5004ee7c
 const btn_for_add = document.querySelector("#btn-for-add");
 const popup = document.querySelector(".popup");
 const myalert = document.querySelector(".alert");
@@ -497,18 +494,6 @@ function numberQuestion() {
       for (let j = 0; j < c.length; j++) {
         if (c[j].name) {
           c[j].name = "checked_radio" + finalId; //单选题选项的name
-<<<<<<< HEAD
-        }
-      }
-    }
-    let mulBoxes = lis[i].getElementsByClassName("questionBox")[0];
-    if(mulBoxes) {
-      let c = mulBoxes.children;
-      for (let j = 0; j < c.length; j++) {
-        if (c[j].name) {
-          c[j].name = "checked_mulans" + finalId; //多选题选项的name
-=======
->>>>>>> 91b7411f9fa970b6bc9097a65cc7394a5004ee7c
         }
       }
     }
@@ -606,9 +591,6 @@ function timeOutClose() {
 
 addLoadEvent(op_name.onclick);
 addLoadEvent(op_file.onclick);
-<<<<<<< HEAD
-addLoadEvent(deadline_limit);
-=======
 addLoadEvent(deadline_limit);
 
 //问卷
@@ -728,4 +710,3 @@ function addQuestion(check_status) {
   return newoption;
 }
 
->>>>>>> 91b7411f9fa970b6bc9097a65cc7394a5004ee7c

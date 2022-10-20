@@ -20,3 +20,13 @@ collection = Collection_info(creator=question_dict['collector'], creator_id=curr
                              description=question_dict['description'], end_date=question_dict['deadline'],
                              status='1')
 print(collection.id)
+
+question_dict = [('collectionTitle', '文件收集'), ('collector', 'jsx'), ('deadline', '2022-10-20T16:43'),
+                 ('description', 'wwf'),
+                 ('question_name1', '姓名'), ('detail1', '123'), ('question_file2', '文件'), ('detail2', '456'),
+                 ('question_qnaire3', '问卷题目'), ('detail3', '123'), ('qn_option3', 'a'), ('qn_option3', 'b'),
+                 ('choose_type3', 'single'), ('question_multipleChoice4', '多选题'), ('detail4', '12312'),
+                 ('checked_mulans4', 'A'),
+                 ('checked_mulans4', 'C'), ('question_qnaire5', '问卷题'), ('detail5', 'erg'), ('qn_option5', ''),
+                 ('qn_option5', ''),
+                 ('choose_type6', 'multiple')]

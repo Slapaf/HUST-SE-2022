@@ -4,9 +4,10 @@ from datetime import datetime
 import random
 import os
 from flask_login import current_user
-from models import Collection_info, Question_info, Answer_info, CollectionResult_info
+from models import Collection_info, Question_info, Answer_info, Submit_Content_info, Option_info, Submission_info
 from init import db
 from datetime import datetime
+from werkzeug.datastructures import MultiDict
 
 
 def add_FC(question_dict: list):
@@ -27,7 +28,7 @@ def add_FC(question_dict: list):
     list_of_question_dict = deepcopy(question_dict)  # ! 保存元组的列表，与字典类型的区别在于是否对 key 去重
     # print(list_of_question_dict)
 
-    question_dict = dict(question_dict)
+    question_dict = MultiDict(question_dict)
     # 前端传来的deadLine为string类型，在此转化为datetime类型
     deadline = question_dict['deadline']
     deadline = deadline.replace("T", " ")
@@ -56,7 +57,8 @@ def add_FC(question_dict: list):
             question = Question_info(collection_id=collection_id,
                                      qno=int(question_key[-1]),
                                      question_type=Question_info.FILL_IN_BLANK,
-                                     question_description=question_dict[question_key])
+                                     question_title=question_dict[question_key],
+                                     question_description=question_dict['detail' + question_key[-1]])
             db.session.add(question)
             db.session.commit()
 
@@ -65,14 +67,59 @@ def add_FC(question_dict: list):
             question = Question_info(collection_id=collection_id,
                                      qno=int(question_key[-1]),
                                      question_type=Question_info.SINGLE_CHOICE,
-                                     question_description=question_dict[question_key])
+                                     question_title=question_dict[question_key],
+                                     question_description=question_dict['detail' + question_key[-1]])
             db.session.add(question)
             db.session.commit()
             # 存选择题答案
             answer = Answer_info(collection_id=collection_id,
                                  question_id=question.id,
-                                 answer_option=question_dict['checked_radio' + question_key[-1]])
+                                 qno=int(question_key[-1]),
+                                 answer_option=question_dict['question_radio' + question_key[-1]])
             db.session.add(answer)
+            db.session.commit()
+
+        # ? 若为多选题
+        elif "multipleChoice" in question_key:
+            question = Question_info(collection_id=collection_id,
+                                     qno=int(question_key[-1]),
+                                     question_type=Question_info.MULTI_CHOICE,
+                                     question_title=question_dict[question_key],
+                                     question_description=question_dict['detail' + question_key[-1]])
+            db.session.add(question)
+            db.session.commit()
+            # 存选择题答案
+            ano_list = question_dict.getlist('checked_mulans' + question_key[-1])
+            for ano in ano_list:
+                answer = Answer_info(collection_id=collection_id,
+                                     question_id=question.id,
+                                     qno=int(question_key[-1]),
+                                     answer_option=ano)
+                db.session.add(answer)
+            db.session.commit()
+
+        # ? 若为问卷题
+        elif "question_qnaire" in question_key:
+            if question_dict['choose_type' + question_key[-1]] == 'single':
+                qn_type = Question_info.SINGLE_QUESTIONNAIRE
+            else:
+                qn_type = Question_info.MULTI_QUESTIONNAIRE
+            question = Question_info(collection_id=collection_id,
+                                     qno=int(question_key[-1]),
+                                     question_type=qn_type,
+                                     question_title=question_dict[question_key],
+                                     question_description=question_dict['detail' + question_key[-1]])
+            db.session.add(question)
+            db.session.commit()
+            # 存问卷题目各选项的内容
+            option_content = question_dict.getlist('qn_option' + question_key[-1])
+            for i in range(len(option_content)):
+                option = Option_info(collection_id=collection_id,
+                                     question_id=question.id,
+                                     qno=int(question_key[-1]),
+                                     option_sn=i,
+                                     option_content=option_content[i])
+                db.session.add(option)
             db.session.commit()
 
         # ? 若为文件上传题
@@ -106,7 +153,8 @@ def add_FC(question_dict: list):
             question = Question_info(collection_id=collection_id,
                                      qno=int(question_key[-1]),
                                      question_type=Question_info.FILE_UPLOAD,
-                                     question_description=question_dict[question_key],
+                                     question_title=question_dict[question_key],
+                                     question_description=question_dict['detail' + question_key[-1]],
                                      rename_rule='-'.join(rename_rule),  # * 命名规则用 - 分隔，数字代表题目序号
                                      file_path=file_path)
             db.session.add(question)
@@ -149,21 +197,20 @@ def count_submission(user_id=None, collection_id=None):
 
     # 先看是否给了参数collection_id
     if collection_id != None:
-        return CollectionResult_info.query.filter_by(collection_id=collection_id, qno=1).count()
+        return Submission_info.query.filter_by(collection_id=collection_id).count()
 
     # 若没给参数collection_id，但给了参数user_id
     if user_id != None:
         collection_id_list = Collection_info.query.filter_by(creator_id=user_id).with_entities(Collection_info.id).all()
         submission_dict = {}
         for collection_id in collection_id_list:
-            submission_dict[collection_id] = CollectionResult_info.query.filter_by(collection_id=collection_id,
-                                                                                   qno=1).count()
+            submission_dict[collection_id] = Submission_info.query.filter_by(collection_id=collection_id).count()
         return submission_dict
 
     return None
 
 
-def count_filenum(user_id=None, collection_id=None, question_id=None):
+def count_filenum(user_id=None, collection_id=None, question_id=None, qno=None):
     """
     统计一个收集（collection_id）的第qno题的已收文件数
     Args:
@@ -172,7 +219,7 @@ def count_filenum(user_id=None, collection_id=None, question_id=None):
         qno（可选参数）: int类型，表示题目序号。
 
     Return:
-        若question_id不为None，则返回该题的已收文件数，是一个整数。
+        若question_id不为None，或collection_id、qno不为None，则返回该题的已收文件数，是一个整数。
         若question_id为None，collection_id不为None，则返回该问卷的已收文件数，是一个整数。
         若question_id为None、collection_id为None，user_id不为None，则返回该用户所有问卷的已收文件数，是一个字典，键为问卷id，值为该问卷的已收文件数。
         若都为None，则返回None。
@@ -180,6 +227,13 @@ def count_filenum(user_id=None, collection_id=None, question_id=None):
 
     # 若给了参数question_id
     if question_id != None:
+        path = './FileStorage/' + Question_info.query.filter_by(id=question_id).first().file_path
+        files = os.listdir(path)
+        file_num = len(files)
+        return file_num
+
+    # 若给了collection_id和qno
+    if collection_id != None and qno != None:
         path = './FileStorage/' + Question_info.query.filter_by(id=question_id).first().file_path
         files = os.listdir(path)
         file_num = len(files)

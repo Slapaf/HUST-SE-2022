@@ -1,6 +1,6 @@
 import datetime
 import json
-
+from werkzeug.datastructures import MultiDict
 from models import User
 import time
 from flask import render_template, request, url_for, redirect, flash
@@ -70,7 +70,7 @@ def mycollection():
         tmp_dict = {'username': current_user.username,
                     'collection_title': collection.collection_title,
                     'collection_status': "进行中" if collection.status == '0' else "已截止",
-                    'submit_count': count_submission(collection.id),
+                    'submit_count': count_submission(collection_id=collection.id),
                     'deadl1ine': collection.end_date.strftime('%Y-%m-%d %H:%M:%S')
                     }
         parameter_dict_list.append(tmp_dict)
@@ -109,10 +109,10 @@ def generate_collection():
             flash("Transport Error!")  # 获取失败
             return render_template('index.html')
         else:
-            # TODO 存入数据库
-            add_FC(list(question_list.items(multi=True)))  # ! 多传一个参数：当前登录用户名
+            a = list(question_list.items(multi=True))
+            print(a)
+            add_FC(a)  # ! 多传一个参数：当前登录用户名
             flash("Successfully create a collection!")
-            # TODO 已完成
 
         return redirect(url_for('index'))
     return render_template('file_collecting.html')
