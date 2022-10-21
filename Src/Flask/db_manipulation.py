@@ -259,17 +259,17 @@ def count_filenum(user_id=None, collection_id=None, question_id=None, qno=None):
         collection_id_list = Collection_info.query.filter_by(creator_id=user_id).with_entities(Collection_info.id).all()
         file_num_dict = {}
         # 遍历该用户的所有收集
-        for id in collection_id_list:
+        for id1 in collection_id_list:
             # 查询收集中所有文件上传题
             question_id_list = Question_info.query.filter_by(
-                collection_id=collection_id, question_type=Question_info.FILE_UPLOAD
+                collection_id=id1, question_type=Question_info.FILE_UPLOAD
             ).with_entities(Question_info.id).all()
             file_num = 0
-            for id in question_id_list:
-                path = './FileStorage/' + Question_info.query.filter_by(id=id).first().file_path
+            for id2 in question_id_list:
+                path = './FileStorage/' + Question_info.query.filter_by(id=id2).first().file_path
                 files = os.listdir(path)
                 file_num += len(files)
-            file_num_dict[id] = file_num
+            file_num_dict[id1] = file_num
         return file_num_dict
 
     return None
