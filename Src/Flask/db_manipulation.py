@@ -33,8 +33,8 @@ def add_FC(question_dict: list):
     # 前端传来的deadLine为string类型，在此转化为datetime类型
     deadline = question_dict['deadline']
     deadline = deadline.replace("T", " ")
-    format = '%Y-%m-%d %H:%M'
-    question_dict['deadline'] = datetime.strptime(deadline, format)
+    ddl_format = '%Y-%m-%d %H:%M'
+    question_dict['deadline'] = datetime.strptime(deadline, ddl_format)
 
     # 创建一个文件收集对象,更新文件收集主表里
     collection = Collection_info(creator=question_dict['collector'],
@@ -167,11 +167,11 @@ def add_FC(question_dict: list):
 def update_status(user_id=None):
     """
     更新用户各个收集的状态
+
     Args:
         user_id: int类型，表示用户id。
-    Return: 无
     """
-    if user_id != None:
+    if user_id is not None:
         collection_list = Collection_info.query.filter_by(creator_id=current_user.id).all()
         # ? 根据当前时间更新各个收集的状态
         for collection in collection_list:
@@ -184,8 +184,8 @@ def update_status(user_id=None):
 
 
 def count_submission(user_id=None, collection_id=None):
-    """
-    统计问卷提交数量
+    """统计问卷提交数量
+
     Args:
         user_id（可选参数）: int类型，表示用户的id。
         collection_id（可选参数）: int类型，表示问卷的id。
@@ -197,11 +197,11 @@ def count_submission(user_id=None, collection_id=None):
     """
 
     # 先看是否给了参数collection_id
-    if collection_id != None:
+    if collection_id is not None:
         return Submission_info.query.filter_by(collection_id=collection_id).count()
 
     # 若没给参数collection_id，但给了参数user_id
-    if user_id != None:
+    if user_id is not None:
         collection_id_list = Collection_info.query.filter_by(creator_id=user_id).with_entities(Collection_info.id).all()
         submission_dict = {}
         for collection_id in collection_id_list:
@@ -212,8 +212,8 @@ def count_submission(user_id=None, collection_id=None):
 
 
 def count_filenum(user_id=None, collection_id=None, question_id=None, qno=None):
-    """
-    统计一个收集（collection_id）的第qno题的已收文件数
+    """统计一个收集（collection_id）的第qno题的已收文件数
+
     Args:
         user_id（可选参数）: int类型，表示用户的id。
         collection_id（可选参数）: int类型，表示问卷的id。
@@ -227,50 +227,50 @@ def count_filenum(user_id=None, collection_id=None, question_id=None, qno=None):
     """
 
     # 若给了参数question_id
-    if question_id != None:
+    if question_id is not None:
         path = './FileStorage/' + Question_info.query.filter_by(id=question_id).first().file_path
         files = os.listdir(path)
         file_num = len(files)
         return file_num
 
     # 若给了collection_id和qno
-    if collection_id != None and qno != None:
+    if collection_id is not None and qno is not None:
         path = './FileStorage/' + Question_info.query.filter_by(id=question_id).first().file_path
         files = os.listdir(path)
         file_num = len(files)
         return file_num
 
     # 若没给参数question_id，但给了参数collection_id
-    if collection_id != None:
+    if collection_id is not None:
         # 查询收集中所有文件上传题的id
-        question_id_list = Question_info.query.filter_by(collection_id=collection_id,
-                                                         question_type=Question_info.FILE_UPLOAD).with_entities(
-            Question_info.id).all()
+        question_id_list = Question_info.query.filter_by(
+            collection_id=collection_id, question_type=Question_info.FILE_UPLOAD
+        ).with_entities(Question_info.id).all()
         file_num = 0
         # 遍历该收集中所有文件上传题，统计已收文件总数
-        for id in question_id_list:
-            path = './FileStorage/' + Question_info.query.filter_by(id=id).first().file_path
+        for q_id in question_id_list:
+            path = './FileStorage/' + Question_info.query.filter_by(id=q_id).first().file_path
             files = os.listdir(path)
             file_num += len(files)
         return file_num
 
     # 若没给参数question_id、collection_id，但给了参数user_id
-    if user_id != None:
+    if user_id is not None:
         collection_id_list = Collection_info.query.filter_by(creator_id=user_id).with_entities(Collection_info.id).all()
         file_num_dict = {}
         # 遍历该用户的所有收集
         for id in collection_id_list:
             # 查询收集中所有文件上传题
-            question_id_list = Question_info.query.filter_by(collection_id=collection_id,
-                                                             question_type=Question_info.FILE_UPLOAD).with_entities(
-                Question_info.id).all()
+            question_id_list = Question_info.query.filter_by(
+                collection_id=collection_id, question_type=Question_info.FILE_UPLOAD
+            ).with_entities(Question_info.id).all()
             file_num = 0
             for id in question_id_list:
                 path = './FileStorage/' + Question_info.query.filter_by(id=id).first().file_path
                 files = os.listdir(path)
                 file_num += len(files)
             file_num_dict[id] = file_num
-    return file_num_dict
+        return file_num_dict
 
     return None
 
