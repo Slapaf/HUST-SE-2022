@@ -489,7 +489,7 @@ function numberQuestion() {
       }
     }
     let radioBoxes = lis[i].getElementsByClassName("questionBox")[0];
-    if (radioBoxes) {
+    if (radioBoxes && radioBoxes.children[0].type == "radio") {
       let c = radioBoxes.children;
       for (let j = 0; j < c.length; j++) {
         if (c[j].name) {
@@ -498,7 +498,7 @@ function numberQuestion() {
       }
     }
     let mulBoxes = lis[i].getElementsByClassName("questionBox")[0];
-    if(mulBoxes) {
+    if(mulBoxes && mulBoxes.children[0].type == "checkbox") {
       let c = mulBoxes.children;
       for (let j = 0; j < c.length; j++) {
         if (c[j].name) {
