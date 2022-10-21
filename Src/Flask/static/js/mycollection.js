@@ -141,7 +141,6 @@ function addmember(collection_title, username, collection_status, submit_count, 
         if (membercondition.title == "进行中") {
             //停止按钮
             let date = new Date();
-            alert(date);
             let year = date.getFullYear();
             let month = date.getMonth() + 1;
             let day = date.getDate();

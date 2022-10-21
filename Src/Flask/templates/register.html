@@ -13,13 +13,15 @@
     {% endfor %}
 	<div class="register_box">
 		<h1 class="title">欢迎注册</h1>
-		<form method="post">
+		<form method="post" onsubmit="return checkAll()">
 			<input class="input_box" type="text" name="username" id="username" placeholder="设置用户名" onblur="checkUser()" required>
 			<span class="tip_box" id="tip1"></span>
 			<input class="input_box" type="password" name="psw" id="input1" placeholder="设置密码" onblur="checkKey_1()" required>
 			<span class="tip_box" id="tip2"></span>
 			<input class="input_box" type="password" name="psw_confirm" id="input2" placeholder="确认密码" onblur="checkKey_2()" required>
 			<span class="tip_box" id="tip3"></span>
+			<input class="input_box" type="email" id="input3" placeholder="设置邮箱" required>
+			<span class="tip_box" id="tip4"></span>
 			<input class="button_box" type="submit" name="submit" onclick="checkAll()" value="注册">
 		</form>
 	</div>
@@ -62,7 +64,9 @@
 			var Ukey2 = input2.value;
 			if (Uname.match(/^[\u4E00-\u9FA5a-zA-Z0-9_]{4,12}$/) && Ukey1.match(/^[a-zA-Z0-9]{6,16}$/) && Ukey1 == Ukey2) {
 				window.location.href = 'login.html';
+				return true;
 			}
+			return false;
 		}
 	</script>
 </body>

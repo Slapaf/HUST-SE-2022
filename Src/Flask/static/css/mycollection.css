@@ -251,13 +251,22 @@ li {
     position: absolute;
     display: block;
     margin-top: 20px;
-    margin-left: 160px;
+    margin-left: 185px;
     padding-left: 60px;
     font-size: 14px;
     color: rgb(255, 0, 0);
     font-family: sans-serif;
 }
-
+.tip_box1 {
+    position: absolute;
+    display: block;
+    margin-top: 20px;
+    margin-left: 165px;
+    padding-left: 60px;
+    font-size: 14px;
+    color: rgb(255, 0, 0);
+    font-family: sans-serif;
+}
 a {
     position: absolute;
     top: 0;
