@@ -1,5 +1,6 @@
 <!doctype html>
-<link rel="stylesheet" href="../static/css/mycollection.css">
+{#<link rel="stylesheet" href="../static/css/mycollection.css">#}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/mycollection.css') }}">
 <html lang="zh-CN">
 
 <head>
@@ -25,25 +26,28 @@
             {#     input中value的值用变量替代   #}
             <div id="data1">
                 <div class="input_box"> 用户名称：<input type="text" name="username" class="input" readonly
-                                                    value={{ username }}>
+                                                        value={{ username }}>
                 </div>
-                <div class="input_box"> 用户手机：<input type="text" name="phone" class="input" readonly value="未设置"></div>
+                <div class="input_box"> 用户手机：<input type="text" name="phone" class="input" readonly value="未设置">
+                </div>
                 <div class="input_box"> 用户邮箱：<input type="email" name="email" class="input" readonly
-                                                    value="1234567@7654321.hust.edu.cn"></div>
+                                                        value="1234567@7654321.hust.edu.cn"></div>
                 <button class="btn" onclick="changedata()">修改信息</button>
             </div>
             <div id="data2" style="display:none">
                 <form method="post" onsubmit="return checkAll2()">
                     {#div中value的值用变量替代#}
-                    <div class="input_box"> 用户名称：<input type="text" name="username" class="input" id="input4" onblur="checkKey_3()"
-                                                        value={{ username }}>
+                    <div class="input_box"> 用户名称：<input type="text" name="username" class="input" id="input4"
+                                                            onblur="checkKey_3()"
+                                                            value={{ username }}>
                     </div>
                     <span class="tip_box1" id="tip4"></span>
-                    <div class="input_box"> 用户手机：<input type="text" name="phone" class="input" id="input5" value="未设置" onblur="checkKey_4()">
+                    <div class="input_box"> 用户手机：<input type="text" name="phone" class="input" id="input5"
+                                                            value="未设置" onblur="checkKey_4()">
                     </div>
                     <span class="tip_box1" id="tip5"></span>
                     <div class="input_box"> 用户邮箱：<input type="email" name="email" class="input" id="input6"
-                                                        value="1234567@7654321.hust.edu.cn"></div>
+                                                            value="1234567@7654321.hust.edu.cn"></div>
                     <span class="tip_box1" id="tip6"></span>
                     <button type="submit" class="btn">确认修改</button>
                 </form>
@@ -52,17 +56,18 @@
     </div>
     <div class="item">
         <div class="user_data" onsubmit="return checkAll1()">
-            <div class="input_box"> 输入原密码：<input type="password" id="input0" placeholder="设置密码" onblur="checkKey_0()"
-                                                 class="input"></div>
+            <div class="input_box"> 输入原密码：<input type="password" id="input0" placeholder="设置密码"
+                                                      onblur="checkKey_0()"
+                                                      class="input"></div>
             <span class="tip_box" id="tip1"></span>
             <div class="input_box"> 输入新密码：<input type="password" name="psw" id="input1" placeholder="设置密码"
-                                                 onblur="checkKey_1()"
-                                                 class="input"></div>
+                                                      onblur="checkKey_1()"
+                                                      class="input"></div>
             <span class="tip_box" id="tip2"></span>
             <form method="post" id="form2">
                 <div class="input_box"> 确认新密码：<input type="password" name="psw_confirm" id="input2" class="input"
-                                                     placeholder="确认密码"
-                                                     onblur="checkKey_2()"></div>
+                                                          placeholder="确认密码"
+                                                          onblur="checkKey_2()"></div>
                 <span class="tip_box" id="tip3"></span>
                 <button class="btn" id="btn2" type="submit" name="submit" onclick="checkAll()">修改密码</button>
             </form>
@@ -104,11 +109,11 @@
         </div>
     </div>
 </div>
-</div>
 <textarea id="input"></textarea>
 
 </body>
-<script src="../static/js/mycollection.js"></script>
+{#<script src="../static/js/mycollection.js"></script>#}
+<script src="{{ url_for('static', filename='js/mycollection.js') }}"></script>
 <script>
     let n = document.getElementById("link");
     n.title = document.getElementById("link").innerText;
@@ -189,7 +194,7 @@
     function checkKey_4() {
         let k = document.getElementById("tip5");
         let U5 = input5.value;
-        if (U5.match(/^[0-9_]{11}/)||U5==="未设置"||U5==="") {
+        if (U5.match(/^[0-9_]{11}/) || U5 === "未设置" || U5 === "") {
             k.innerHTML = "";
         } else {
             k.innerHTML = "请输入正确的11位手机号或不填此栏！";
@@ -206,10 +211,11 @@
         }
         return false;
     }
-        function checkAll2() {
+
+    function checkAll2() {
         let U4 = input3.value;
         let U5 = input4.value;
-        if (U4.match(/^[\u4E00-\u9FA5a-zA-Z0-9_]{1,12}$/) && (U5.match(/^[0-9_]{11}/)||U5==="未设置"||U5==="")) {
+        if (U4.match(/^[\u4E00-\u9FA5a-zA-Z0-9_]{1,12}$/) && (U5.match(/^[0-9_]{11}/) || U5 === "未设置" || U5 === "")) {
             return true;
         }
         return false;

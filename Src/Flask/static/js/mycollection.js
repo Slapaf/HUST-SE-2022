@@ -89,23 +89,24 @@ function addmember(collection_title, username, collection_status, submit_count, 
     //添加点击事件
     membertitle.onclick = function () {
         //!此处需添加参数，跳转对应收集详情界面
-        window.location.href = 'collection_details.html';
+        // window.location.href = '../templates/collection_details.html';
+        window.location.href = 'collection_details';
     }
     membername.onclick = function () {
         //!此处需添加参数，跳转对应收集详情界面
-        window.location.href = 'collection_details.html';
+        window.location.href = 'collection_details';
     }
     membercondition.onclick = function () {
         //!此处需添加参数，跳转对应收集详情界面
-        window.location.href = 'collection_details.html';
+        window.location.href = 'collection_details';
     }
     membertimes.onclick = function () {
         //!此处需添加参数，跳转对应收集详情界面
-        window.location.href = 'collection_details.html';
+        window.location.href = 'collection_details';
     }
     memberdate.onclick = function () {
         //!此处需添加参数，跳转对应收集详情界面
-        window.location.href = 'collection_details.html';
+        window.location.href = 'collection_details';
     }
     op1.onclick = function () {
         //分享按钮
@@ -120,22 +121,22 @@ function addmember(collection_title, username, collection_status, submit_count, 
     op2.onclick = function () {
         //!此处需添加参数，跳转对应收集详情界面
         //统计按钮
-        window.location.href = 'collection_details.html';
+        window.location.href = 'collection_details';
     }
     op3.onclick = function () {
         //!此处需添加参数，跳转对应收集详情界面
         if (membercondition.title == "进行中") {
             //编辑按钮
-            window.location.href = 'file_collecting.html';
+            window.location.href = 'file_collecting';
         } else {
             //重启按钮
-            window.location.href = 'file_collecting.html';
+            window.location.href = 'file_collecting';
         }
     }
     op4.onclick = function () {
         //!此处需添加参数，跳转对应收集详情界面
         //复制按钮
-        window.location.href = 'file_collecting.html';
+        window.location.href = 'file_collecting';
     }
     op5.onclick = function () {
         if (membercondition.title == "进行中") {

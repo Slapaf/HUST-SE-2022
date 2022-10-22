@@ -6,13 +6,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>收集详情</title>
-    <link rel="stylesheet" href="css/collect_details.css"/>
+    {#    <link rel="stylesheet" href="css/collect_details.css"/>#}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/collect_details.css') }}" type="text/css"/>
 </head>
 
 <body>
 <div class="container">
     <div class="part1">
-        <a href="https://www.baidu.com" class="link_box">文件收集</a>
+        <a href="{{ url_for('mycollection') }}" class="link_box">文件收集</a>
     </div>
     <div class="part2">
         <!-- part2为显示区域 -->
@@ -59,17 +60,22 @@
             </div>
         </div>
     </div>
-    <form method="post" action="upload.jsp" target="hidden_frame">
+    {#    <form method="post" action="http://127.0.0.1:5000/index" enctype="text/plain">#}
+    <form method="post" target="hidden_frame">
         <div class="popup_body" id="popup">
             <textarea placeholder="请按行输入姓名，或以英文逗号隔开多个姓名，例如：张三,李四" class="textarea"
                       id="textarea"></textarea>
-            <button class="btn_re" onclick="click1()">确认</button>
+            {# 用于传输应交名单数据 #}
+            <textarea style="display: none" name="name_data" id="name_data"></textarea>
+            {# <button class="btn_re" onclick="click1()">确认</button> #}
+            <input type="submit" class="btn_re" id="btn-for-submit" value="确认" onclick="click1()">
+        </div>
     </form>
     <iframe name='hidden_frame' id="hidden_frame" style="display:none"></iframe>
 </div>
 <!-- 弹窗 -->
-</div>
-<script src="js/collect_details.js"></script>
+{#<script src="js/collect_details.js"></script>#}
+<script src="{{ url_for('static', filename='js/collect_details.js') }}"></script>
 </body>
 
 </html>

@@ -121,6 +121,7 @@ def generate_collection():
 # 主界面
 @app.route('/')
 @app.route('/index')
+# @app.route('/index', methods=['GET', 'POST'])
 def index():
     return render_template('index.html')
 
@@ -205,6 +206,10 @@ def file_collecting():
 
 
 # 收集记录界面
-@app.route('/collect_details')
-def collect_details():
+@app.route('/collection_details', methods=['GET', 'POST'])
+def collection_details():
+    if request.method == 'POST':
+        tmp_data = request.form
+        print(tmp_data)
+        return redirect(url_for('collection_details'))
     return render_template('collection_details.html')
