@@ -1,5 +1,5 @@
 <!doctype html>
-<link rel="stylesheet" href="static/register.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='register.css') }}">
 <html lang="zh-CN">
 
 <head>
@@ -51,7 +51,7 @@
 			x = document.getElementById("tip3");
 			var Ukey1 = input1.value;
 			var Ukey2 = input2.value;
-			if (Ukey1 == Ukey2) {
+			if (Ukey1 === Ukey2) {
 				x.innerHTML = "";
 			} else {
 				x.innerHTML = "两次密码不一致,请重新输入！";
@@ -62,7 +62,7 @@
 			var Uname = username.value;
 			var Ukey1 = input1.value;
 			var Ukey2 = input2.value;
-			if (Uname.match(/^[\u4E00-\u9FA5a-zA-Z0-9_]{4,12}$/) && Ukey1.match(/^[a-zA-Z0-9]{6,16}$/) && Ukey1 == Ukey2) {
+			if (Uname.match(/^[\u4E00-\u9FA5a-zA-Z0-9_]{1,12}$/) && Ukey1.match(/^[a-zA-Z0-9]{6,16}$/) && Ukey1 === Ukey2) {
 				window.location.href = 'login.html';
 				return true;
 			}
