@@ -36,12 +36,20 @@ def add_FC(question_dict: list):
     ddl_format = '%Y-%m-%d %H:%M'
     question_dict['deadline'] = datetime.strptime(deadline, ddl_format)
 
+    # * 生成应交名单路径
+    # collection_counter = TODO 获取当前用户创建的收集总数
+    # collection_counter += 1 TODO 数据库要更新
+    # namelist_path = current_user.userpath + '/' + str(collection_counter) + ''.join(
+    #     random.sample(string.ascii_letters + string.digits, 8)
+    # )  # * 总长度为 20 + 1 + 1 + 8 = 30 位
+
     # 创建一个文件收集对象,更新文件收集主表里
     collection = Collection_info(creator=question_dict['collector'],
                                  creator_id=current_user.id,
                                  collection_title=question_dict['collectionTitle'],
                                  description=question_dict['description'],
                                  end_date=question_dict['deadline'],
+                                 # TODO namelist_path=namelist_path,
                                  status=Collection_info.SAVED)
     db.session.add(collection)
     db.session.commit()  # 提交数据库会话，否则 id 为None

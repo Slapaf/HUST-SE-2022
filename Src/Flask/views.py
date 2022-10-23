@@ -209,7 +209,9 @@ def file_collecting():
 @app.route('/collection_details', methods=['GET', 'POST'])
 def collection_details():
     if request.method == 'POST':
-        tmp_data = request.form
-        print(tmp_data)
+        # tmp_data = request.form
+        # print(tmp_data)
+        namelist_data = request.form  # * 获取应交名单数据（元组）
+        print(namelist_data)
         return redirect(url_for('collection_details'))
     return render_template('collection_details.html')
