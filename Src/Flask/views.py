@@ -108,7 +108,7 @@ def generate_collection():
             return render_template('index.html')
         else:
             a = list(question_list.items(multi=True))
-            print(a)
+            print(a)  # ! 调试用，最后删除
             add_FC(a, current_user.id)
             flash("Successfully create a collection!")
 

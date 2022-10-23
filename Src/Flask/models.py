@@ -18,7 +18,7 @@ class User(db.Model, UserMixin):  # 表名将会是 user（自动生成，小写
         2. name: 名字（用户昵称）
         3. username: 用户名
         4. password_hash: 密码散列值
-        TODO 5. userpath: 用户空间路径
+        5. userpath: 用户空间路径
     """
     id = db.Column(db.Integer, primary_key=True)  # 主键
     name = db.Column(db.String(20))  # 名字（用户昵称）
