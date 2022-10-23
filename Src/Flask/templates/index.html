@@ -6,8 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='all.css') }}" type="text/css">
-    <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}" type="text/css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/all.css') }}" type="text/css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}" type="text/css">
 </head>
 <body>
 {% for message in get_flashed_messages() %}
@@ -32,8 +32,6 @@
             <a href="{{ url_for('file_collecting') }}">创建收集</a>
         </div>
         <div class="op2">
-            {#            <a href="{{ url_for('collection_details') }}">收集记录</a>#}
-            {#            <a href="{{ url_for('collect_details') }}">收集记录</a>#}
             <a href="{{ url_for('mycollection') }}">收集记录</a>
         </div>
     </div>
