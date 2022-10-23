@@ -3,6 +3,7 @@ import json
 from werkzeug.datastructures import MultiDict
 from models import User
 import time
+import pandas as pd
 from flask import render_template, request, url_for, redirect, flash
 from flask_login import login_user, login_required, logout_user, current_user
 from init import app, db
@@ -206,9 +207,15 @@ def file_collecting():
 @app.route('/collection_details', methods=['GET', 'POST'])
 def collection_details():
     if request.method == 'POST':
-        # tmp_data = request.form
-        # print(tmp_data)
-        namelist_data = request.form  # * 获取应交名单数据（元组）
-        print(namelist_data)
+        namelist_data = request.form.to_dict()  # * 获取应交名单数据
+        name_list = namelist_data['name_data'].split(' ')
+        # TODO 若输入名单最后多按下了回车，则最后一个名字末尾有多余的 \r\n
+        namelist_csv = pd.DataFrame(columns=["姓名"], data=name_list)
+        # print(namelist_csv)
+        namelist_path = './FileStorage/' + Collection_info.query.filter_by(
+            creator_id=current_user.id).first().namelist_path
+        # print(namelist_path)
+        os.mkdir(namelist_path)
+        namelist_csv.to_csv(namelist_path + "/应交名单.csv", encoding='utf-8')  # * 保存为 csv 文件
         return redirect(url_for('collection_details'))
     return render_template('collection_details.html')

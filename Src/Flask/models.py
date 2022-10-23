@@ -94,7 +94,7 @@ class Collection_info(db.Model):
     start_date = db.Column(db.DateTime, default=datetime.datetime.now())  # 开始时间自动设置为创建收集的时间
     end_date = db.Column(db.DateTime, nullable=False)  # 收集结束时间（不可以为空）
     status = db.Column(db.CHAR)  # 当前状态：0 发布(正在收集);1 暂存;2 已结束;3 已失效
-    namelist_path = db.Column(db.String(20))  # 应交名单路径
+    namelist_path = db.Column(db.String(30))  # 应交名单路径
 
     def collection_valid(self):
         """
