@@ -98,10 +98,7 @@ def mycollection():
 @login_required
 def generate_collection():
     """
-    TODO 生成一个收集对象
-
-    Returns:
-        None
+    生成一个收集对象
     """
     if request.method == 'POST':  # 点击了提交按钮
         question_list = request.form  # 获取题目信息列表
@@ -111,7 +108,7 @@ def generate_collection():
         else:
             a = list(question_list.items(multi=True))
             print(a)
-            add_FC(a)  # ! 多传一个参数：当前登录用户名
+            add_FC(a, current_user.id)
             flash("Successfully create a collection!")
 
         return redirect(url_for('index'))

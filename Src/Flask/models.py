@@ -81,7 +81,7 @@ class Collection_info(db.Model):
         6. start_date: 开始时间，自动设置为创建收集的时间
         7. end_date: 结束时间（不可为空）
         8. status: 收集的状态（0 发布，1 暂存，2 已结束，3 已失效）
-        TODO 9. namelist_path: 应交名单路径
+        9. namelist_path: 应交名单路径
     """
     # * 收集状态常量定义
     RELEASE, SAVED, FINISHED, OVERDUE = '0', '1', '2', '3'  # ? 发布，暂存，已结束，已失效
@@ -120,7 +120,7 @@ class Question_info(db.Model):
         4. question_type: 问题类型——0:解答题（需上传文件），1:单选，2:多选，3:填空
         5. question_description: 问题描述（不可为空）
         TODO 6. required_flag: 是否为必填项（暂定）
-        TODO 7. rename_rule: 文件重命名规则
+        7. rename_rule: 文件重命名规则
         8. file_path: 提交文件路径
     """
     # * 问题类型常量
@@ -145,8 +145,10 @@ class Answer_info(db.Model):
 
     Attributes:
         1. id: 主键
-        2. question_id: 关联问题主表 id
-        3. answer_option: 答案不可为空
+        2、collection_id：关联文件收集主表id
+        3. question_id: 关联问题主表 id、
+        4、qno：关联问题主表问题序号
+        5. answer_option: 答案不可为空
     """
     id = db.Column(db.Integer, primary_key=True)  # 主键
     collection_id = db.Column(db.Integer)  # 关联文件收集主表id
@@ -155,8 +157,18 @@ class Answer_info(db.Model):
     answer_option = db.Column(db.CHAR, nullable=False)  # 答案不可为空
 
 
-# 问卷题目选项表
 class Option_info(db.Model):
+    """
+    问卷题目选项表
+
+    Attributes:
+        1、id：主键
+        2、collection_id：关联文件收集主表id
+        3、question_id：关联问题主表id
+        4、qno：关联问题主表问题序号
+        5、option_sn：选项序号
+        6、option_content：选项内容（不可以为空）
+    """
     id = db.Column(db.Integer, primary_key=True)  # 主键
     collection_id = db.Column(db.Integer)  # 关联文件收集主表id
     question_id = db.Column(db.Integer)  # 关联问题主表id
@@ -168,9 +180,14 @@ class Option_info(db.Model):
 class Submission_info(db.Model):
     """
     问卷提交信息
-    1、id: 主键
-    2、collection_id: 关联文件收集主表id（不可为空）
-    3、
+
+    Attributes:
+        1、id: 主键
+        2、collection_id: 关联文件收集主表id（不可为空）
+        3、collection_title：关联文件收集主表收集名称（不可以为空）
+        4、submitter_id：提交者的用户id
+        5、submitter_name：提交者的用户名username
+        6、submit_time：提交时间（不可以为空）
     """
     id = db.Column(db.Integer, primary_key=True)  # 主键
     collection_id = db.Column(db.Integer)  # 关联文件收集主表id
@@ -181,16 +198,16 @@ class Submission_info(db.Model):
 
 
 class Submit_Content_info(db.Model):
-    """提交内容信息表
-
-    Description:
-        记录问卷填写情况。
+    """
+    提交内容信息表，记录问卷填写情况。
 
     Attributes:
         1. id: 主键
-        2. collection_id: 关联文件收集主表id（不可为空）
-        3. question_id: 关联问题主表id（不可为空）
-        4. result: 某个人对这一题的填写结果（若为文件上传题，则此字段存放上传的文件名称）（不可为空）
+        2. Submission_id: 关联问卷提交信息表id
+        3. collection_id: 关联文件收集主表id（不可为空）
+        4. question_id: 关联问题主表id（不可为空）
+        5、qno：问题序号
+        6、result：某个人对这一题的填写结果（若为文件上传题，则此字段存放上传的文件名称）（不可为空）
     """
     id = db.Column(db.Integer, primary_key=True)  # 主键
     Submission_id = db.Column(db.Integer)  # 关联问卷提交信息表id

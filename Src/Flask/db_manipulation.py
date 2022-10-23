@@ -11,7 +11,7 @@ from werkzeug.datastructures import MultiDict
 import shutil
 
 
-def add_FC(question_dict: list):
+def add_FC(question_dict: list, user_id: int):
     """
     将问卷的信息存入数据库
     Args:
@@ -21,6 +21,7 @@ def add_FC(question_dict: list):
                  'question_file3': '文','checked_topic3': '学', 'question_sno4': '学', 'question_sno5': '学号',
                  'question_name6': '姓','question_radio7': '单选','checked_radio7': 'A', 'question_radio8': '单选题',
                  'checked_radio8': 'B'}
+        user_id: int类型，表示用户的id。
     Return:None
     """
     # ! 文件类型可能有多个，设置一个计数器记录是第几个文件
@@ -37,8 +38,8 @@ def add_FC(question_dict: list):
     question_dict['deadline'] = datetime.strptime(deadline, ddl_format)
 
     # * 生成应交名单路径
-    # collection_counter = TODO 获取当前用户创建的收集总数
-    # collection_counter += 1 TODO 数据库要更新
+    # collection_counter = Collection_info.query.filter_by(creator_id=user_id).count() # 获取当前用户创建的收集总数
+    # collection_counter += 1
     # namelist_path = current_user.userpath + '/' + str(collection_counter) + ''.join(
     #     random.sample(string.ascii_letters + string.digits, 8)
     # )  # * 总长度为 20 + 1 + 1 + 8 = 30 位
