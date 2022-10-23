@@ -30,8 +30,11 @@
                 </div>
                 <div class="input_box"> 用户手机：<input type="text" name="phone" class="input" readonly value="未设置">
                 </div>
+                {#                <div class="input_box"> 用户邮箱：<input type="email" name="email" class="input" readonly#}
+                {#                                                        value="1234567@7654321.hust.edu.cn"></div>#}
                 <div class="input_box"> 用户邮箱：<input type="email" name="email" class="input" readonly
-                                                        value="1234567@7654321.hust.edu.cn"></div>
+                                                        value="{{ user_email }}"></div>
+
                 <button class="btn" onclick="changedata()">修改信息</button>
             </div>
             <div id="data2" style="display:none">
@@ -46,9 +49,11 @@
                                                             value="未设置" onblur="checkKey_4()">
                     </div>
                     <span class="tip_box1" id="tip5"></span>
+                    {#                    <div class="input_box"> 用户邮箱：<input type="email" name="email" class="input" id="input6"#}
+                    {#                                                            value="1234567@7654321.hust.edu.cn"></div>#}
+                    {#                    <span class="tip_box1" id="tip6"></span>#}
                     <div class="input_box"> 用户邮箱：<input type="email" name="email" class="input" id="input6"
-                                                            value="1234567@7654321.hust.edu.cn"></div>
-                    <span class="tip_box1" id="tip6"></span>
+                                                            value="{{ user_email }}"></div>
                     <button type="submit" class="btn">确认修改</button>
                 </form>
             </div>

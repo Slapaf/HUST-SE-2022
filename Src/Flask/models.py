@@ -25,8 +25,8 @@ class User(db.Model, UserMixin):  # 表名将会是 user（自动生成，小写
     username = db.Column(db.String(20), unique=True)  # 用户名（不可重复）
     password_hash = db.Column(db.String(128))  # 密码散列值
     userpath = db.Column(db.String(20), unique=True)  # 用户空间路径
+    email = db.Column(db.String(20), nullable=False, unique=True)  # 用户邮箱
 
-    # email = db.Column(db.String(20), nullable=False, unique=True)  # 用户邮箱
     # authorization_code = db.Column(db.String(20), nullable=False, unique=True)  # 邮箱授权码
 
     def set_password(self, password):
@@ -64,6 +64,15 @@ class User(db.Model, UserMixin):  # 表名将会是 user（自动生成，小写
         self.userpath = self.username + ''.join(
             random.sample(string.ascii_letters + string.digits, 20 - len(self.username))
         )
+
+    def set_email(self, email):
+        """
+        用于设置用户邮箱的方法
+
+        Returns:
+            None
+        """
+        self.email = email
 
 
 class Collection_info(db.Model):

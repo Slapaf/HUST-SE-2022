@@ -79,6 +79,7 @@ def mycollection():
 
     return render_template('mycollection.html',
                            username=current_user.name,
+                           user_email=current_user.email,
                            json_object=json.dumps(parameter_dict_list),
                            json_length=len(parameter_dict_list)
                            )
@@ -166,6 +167,7 @@ def register():
     if request.method == 'POST':
         username = request.form['username']
         psw = request.form['psw']
+        email = request.form['email']
         psw_confirm = request.form['psw_confirm']
         # 检查输入是否为空
         if not username or not psw or not psw_confirm:
@@ -187,6 +189,7 @@ def register():
         user = User(username=username, name=username)  # 初始化时，用户昵称和用户名相同
         user.set_password(psw)
         user.set_filepath()  # ! 设置用户空间路径
+        user.set_email(email)  # * 设置用户邮箱
         db.session.add(user)
         db.session.commit()  # 提交数据库会话
         flash('Successfully Registered!')
