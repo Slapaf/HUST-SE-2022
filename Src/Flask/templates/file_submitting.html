@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/all.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/file_submitting.css') }}">
+</head>
+<div class="container">
+    <div class="header">
+        <h3>收集标题</h3>
+        <!-- 后台获取 -->
+        <div id="collectionTitle"></div>
+        <h3>收集者</h3>
+        <!-- 后台获取 -->
+        <div id="collector"></div>
+        <h3>截止时间</h3>
+        <!-- 后台获取 -->
+        <div id="deadline"></div>
+        <h3>详情</h3>
+        <!-- 后台获取 -->
+        <div id="discription"></div>
+    </div>
+    <div class="main">
+        <form action="">
+            <ul id="question_list">
+                <!-- 姓名/学号 -->
+                 <!-- <li>
+                    <h1><input type="text" value="后台获取" class="disabledInput"disabled></h1>
+                    <div class="detail"></div>
+                    <input type="text" class="inputContent">
+                </li> -->
+                <!-- 文件 -->
+                <!-- <li>
+                    <h1><input type="text" value="后台获取" class="disabledInput"disabled></h1>
+                    <div class="detail"></div>
+                    <input type="file" class="inputContent">
+                </li> -->
+                <!-- 单选 -->
+                <!-- <li>
+                    <h1><input type="text" value="后台获取" class="disabledInput"disabled></h1>
+                    <div class="detail"></div>
+                    <div class="singleQuestionBox">
+                        <div class="radioOption">
+                            <input type="radio" name="checked_radio">
+                            <label>A</label>
+                        </div>
+                        <div class="radioOption">
+                            <input type="radio" name="checked_radio">
+                            <label>B</label>
+                        </div>
+                        <div class="radioOption">
+                            <input type="radio" name="checked_radio">
+                            <label>C</label>
+                        </div>
+                        <div class="radioOption">
+                            <input type="radio" name="checked_radio">
+                            <label>D</label>
+                        </div>
+                    </div>
+                </li> -->
+                <!-- 多选 -->
+                <!-- <li>
+                    <h1><input type="text" value="后台获取" class="disabledInput"disabled></h1>
+                    <div class="detail"></div>
+                    <div class="multiQuestionBox">
+                        <div class="multiOption">
+                            <input type="checkbox" name="checked_mulans">
+                            <label>A</label>
+                        </div>
+                        <div class="multiOption">
+                            <input type="checkbox" name="checked_mulans">
+                            <label>B</label>
+                        </div>
+                        <div class="multiOption">
+                            <input type="checkbox" name="checked_mulans">
+                            <label>C</label>
+                        </div>
+                        <div class="multiOption">
+                            <input type="checkbox" name="checked_mulans">
+                            <label>D</label>
+                        </div>
+                    </div>
+                </li> -->
+                <!-- 问卷题目 -->
+                <!-- <li>
+                    <h1><input type="text" value="后台获取" class="disabledInput"disabled></h1>
+                    <div class="detail"></div>
+                    <div class="qnQuestionBox">
+                        <div class="qnOption">
+                            <input type="radio" name="checked_qn">
+                            <div class="qnOptionContent"></div>
+                        </div>
+                        <div class="qnOption">
+                            <input type="radio" name="checked_qn">
+                            <div class="qnOptionContent"></div>
+                        </div>
+                        <div class="qnOption">
+                            <input type="radio" name="checked_qn">
+                            <div class="qnOptionContent"></div>
+                        </div>
+                    </div>
+                </li> -->
+            </ul>
+            <input type="submit" value="提交">
+        </form>
+    </div>
+</div>
+<script src="{{ url_for('static', filename='js/file_submitting.js') }}"></script>
+</body>
+</html>
