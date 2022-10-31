@@ -6,6 +6,19 @@ var lis = tab_list.querySelectorAll("li");
 var items = document.querySelectorAll(".item");
 const x = document.getElementById("list_body");
 
+Array.prototype.indexOf = function (val) {
+    for (var i = 0; i < this.length; i++) {
+        if (this[i] == val) return i;
+    }
+    return -1;
+};
+Array.prototype.remove = function (val) {
+    var index = this.indexOf(val);
+    if (index > -1) {
+        this.splice(index, 1);
+    }
+};
+
 for (var i = 0; i < lis.length; i++) {
     lis[i].setAttribute("index", i);
     lis[i].onclick = function () {
@@ -47,11 +60,8 @@ function addname() {
         while (flag < n.length) {
             if (n[flag] != "") {
                 if (arr.includes(n[flag])) {
-                    let i = 1;
-                    while (arr.includes(n[flag] + "(" + i + ")")) {
-                        i++;
-                    }
-                    n[flag] = n[flag] + "(" + i + ")";
+                    flag++;
+                    continue;
                 }
                 arr.push(n[flag]);
                 let para = document.createElement("div");
@@ -59,7 +69,8 @@ function addname() {
                 let node2 = document.createTextNode(n[flag]);
                 let delbtn = document.createElement("button");
                 //生成子节点
-                para.className = "name";
+                para.className = "paraname";
+                para.id = n[flag];
                 node1.className = "div1";
                 delbtn.className = "del";
                 node1.title = n[flag];
@@ -78,6 +89,9 @@ function addname() {
                 }//光标移动至相应元素外则按钮隐藏
                 delbtn.onclick = function () {
                     d1.removeChild(para);
+                    document.getElementById("delete").value = "delete " + node1.title;
+                    arr.remove(node1.title);
+                    document.getElementById("delete-form").submit();
                 }//点击删除节点
             }
             flag++;
