@@ -514,7 +514,7 @@ function numberQuestion() {
         }
       }
     }
-    let choose_type = lis[i].querySelectorAll("input[name='choose_type']");
+    let choose_type = lis[i].querySelectorAll(".hidden_radio");
     if(choose_type) {
       console.log(choose_type.length);
       for(let i=0;i<choose_type.length;i++) {
