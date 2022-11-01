@@ -7,7 +7,8 @@
         - question_list：问题信息列表
         - user_id：创建收集的用户id
         
-        Returns: None
+        Returns: 
+        - collection_id：添加的收集的id
         
     2、update_status(user_id: int)
         Function: 更新id为user_id的用户的所有收集的状态（进行中or已截止）
@@ -98,6 +99,20 @@
         - collection_id：int类型，表示收集id
         
         Returns: None
+    
+    7、get_question_MultiDict(collection_id: int)
+        Function: 返回id为collection_id的收集的信息，包括收集标题、创建人、截止时间、收集描述、题目等信息
+        
+        Inputs:
+        - collection_id：int类型，表示收集id
+        
+        Returns: 
+        - question：defaultdict(<class 'list'>类型
+        
+        Example：
+            /* 假设要得到id为1的收集的信息 */
+            >>> a = get_question_MultiDict(1)
+            >>> a   
 '''''
 
 import string
@@ -111,6 +126,7 @@ from init import db
 from datetime import datetime
 from werkzeug.datastructures import MultiDict
 import shutil
+from collections import defaultdict
 
 
 def add_FC(question_list: list, user_id: int):
@@ -273,6 +289,8 @@ def add_FC(question_list: list, user_id: int):
             path = './FileStorage/' + question.file_path
             os.mkdir(path)  # 创建该题的文件存储目录
 
+    return collection_id
+
 
 def update_status(user_id: int):
     """
@@ -415,3 +433,44 @@ def delete_collection(collection_id: int):
     Question_info.query.filter_by(collection_id=collection_id).delete()
     Collection_info.query.filter_by(collection_id=collection_id).delete()
     db.session.commit()
+
+
+def get_question_MultiDict(collection_id: int):
+    question = defaultdict(list)
+    collection = Collection_info.query.get(collection_id)
+    question['collectionTitle'] = collection.collection_title
+    question['collector'] = collection.creator
+    question['deadline'] = collection.end_date
+    question['description'] = collection.description
+    question_list = Question_info.query.filter_by(collection_id=collection_id).order_by("qno").all()
+    for q in question_list:
+        # 若是填空题
+        if q.question_type == Question_info.FILL_IN_BLANK:
+            question[f'question_fill{q.qno}'] = q.question_title
+
+        # 若是文件上传题
+        if q.question_type == Question_info.FILE_UPLOAD:
+            question[f'question_file{q.qno}'] = q.question_title
+
+        # 若是单选题
+        if q.question_type == Question_info.SINGLE_CHOICE:
+            question[f'question_radio{q.qno}'] = q.question_title
+
+        # 若是多选题
+        if q.question_type == Question_info.MULTI_CHOICE:
+            question[f'question_multipleChoice{q.qno}'] = q.question_title
+
+        # 若是问卷题
+        if q.question_type == Question_info.SINGLE_QUESTIONNAIRE or Question_info.SINGLE_QUESTIONNAIRE:
+            question[f'question_qnaire{q.qno}'] = q.question_title
+            if q.question_type == Question_info.SINGLE_QUESTIONNAIRE:
+                question[f'choose_type{q.qno}'] = "single"
+            else:
+                question[f'choose_type{q.qno}'] = "multiple"
+            option_list = Option_info.query.filter_by(question_id=q.id).order_by("option_sn").all()
+            for option in option_list:
+                question[f'qn_option{q.qno}'].append(option.option_content)
+
+        question[f'detail{q.qno}'] = q.question_description
+
+    return question

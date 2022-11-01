@@ -109,8 +109,10 @@ def generate_collection():
             return render_template('index.html')
         else:
             a = list(question_list.items(multi=True))
-            print(a)  # ! 调试用，最后删除
-            add_FC(a, current_user.id)
+            print(a)
+            t = add_FC(a, current_user.id)
+            question = get_question_MultiDict(t)
+            print(question)
             flash("Successfully create a collection!")
 
         return redirect(url_for('index'))

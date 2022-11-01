@@ -127,6 +127,7 @@ class Question_info(db.Model):
         2. collection_id: 关联文件收集主表的 id
         3. num: 问题序号
         4. question_type: 问题类型——0:解答题（需上传文件），1:单选，2:多选，3:填空
+        5、question_title：问题标题
         5. question_description: 问题描述（不可为空）
         TODO 6. required_flag: 是否为必填项（暂定）
         7. rename_rule: 文件重命名规则
