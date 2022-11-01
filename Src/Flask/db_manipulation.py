@@ -1,3 +1,105 @@
+'''''
+数据库接口函数：
+    1、add_FC(question_list: list, user_id: int)
+        Function: 添加文件收集（add FileCollection)
+        
+        Inputs:
+        - question_list：问题信息列表
+        - user_id：创建收集的用户id
+        
+        Returns: None
+        
+    2、update_status(user_id: int)
+        Function: 更新id为user_id的用户的所有收集的状态（进行中or已截止）
+        
+        Inputs:
+        - user_id：用户id
+        
+        Returns: None
+    
+    3、count_submission(user_id=None, collection_id=None)
+        Function: 统计提交数量
+        
+        Inputs:
+        - user_id：int类型，表示用户id，缺省默认值为None
+        - collection_id：int类型，表示收集id，缺省默认值为None
+        
+        Returns:
+        - 若参数collection_id不为None，则返回一个int，表示id为collection_id的收集的已提交数量。
+        - 若参数collection_id为None，参数user_id不为Non，则返回一个dict，表示id为user_id的用户创建的所有收集，及对应的提交数量。
+        - 若参数都为None，返回None
+        
+        Example:
+            /* 若只想统计1个收集的提交数量，则需给出参数collection_id的值 */
+            >>> a=count_submission(collection_id=1)
+            >>> a
+            5
+            
+            /* 若想统计个用户创建的所有收集的提交数量，则需给出参数user_id的值 */
+            /* 假设id为1的用户创建的收集的id集合为{1,2,3} */
+            >>> a=count_submission(user_id=1)
+            >>> a
+            {1:5,2:6,3:5} # 表示id为1的收集已提交了5份…………
+
+    4、count_filenum(user_id=None, collection_id=None, question_id=None, qno=None)
+        Function: 统计已收文件数
+        
+        Inputs:
+        - user_id：int类型，表示用户id，缺省默认值为None
+        - collection_id：int类型，表示收集id，缺省默认值为None
+        - question_id：int类型，表示问题id，缺省默认值为None
+        - qno：int类型，表示问题序号，缺省默认值为None
+        
+        Returns:
+        - 若参数question_id不为None，或collection_id、qno不为None，则返回一个int，表示该题的已收文件数。
+        - 若参数question_id为None，collection_id不为None，则返回一个int，表示该问卷的已收文件数。
+        - 若question_id为None、collection_id为None，user_id不为None，则返回一个dict，表示该用户创建的所有收集的id，及对应已收文件数。
+        - 若都为None，则返回None。
+        
+        Example：
+            /* 若只想统计1个问题的已收文件数，则需给出参数question_id的值，或参数collection_id和qno的值 */
+            /* 假设id为3的问题是id为1的收集的第3题 */
+            >>> a=count_filenum(question_id=3) 或 a=count_filenum(collection_id=1,qno=3)
+            >>> a
+            5
+            
+            /* 若想统计1个收集的已收文件数，则需给出参数collection_id的值 */
+            >>> a=count_filenum(collection_id=1)
+            >>> a
+            5
+            
+            /* 若想统计1个用户创建的所有收集的已收文件数，则需给出参数user_id的值 */
+            /* 假设id为1的用户创建的收集的id集合为{1,2,3} */
+            >>> a=count_submission(user_id=1)
+            >>> a
+            {1:5,2:6,3:5}  # 表示id为1的收集已收文件数为5…………
+            
+    5、deadline_countdown(collection_id: int)
+        Function: 计算一个收集的截止倒计时
+        
+        Inputs:
+        - collection_id：int类型，表示收集id
+        
+        Returns:
+        - 倒计时，timedelta类型
+        
+        Example:
+            /* 假设id为1的收集截止时间为2022-11-3 1:11:0，当前时间为2022-11-1 0:0:0 */
+            >>> delta=deadline_countdown(1)
+            >>> delta
+            2 days, 1:11:00
+    
+    
+    6、delete_collection(collection_id=None)
+        ！未测试正确性
+        Function: 删除id为collection_id的收集在数据库中的相关数据（包括收集的文件）
+        
+        Inputs:
+        - collection_id：int类型，表示收集id
+        
+        Returns: None
+'''''
+
 import string
 from copy import deepcopy
 from datetime import datetime
@@ -11,12 +113,12 @@ from werkzeug.datastructures import MultiDict
 import shutil
 
 
-def add_FC(question_dict: list, user_id: int):
+def add_FC(question_list: list, user_id: int):
     """
     将问卷的信息存入数据库
     Args:
-        question_dict:字典类型
-        例如：question_dict = {'collectionTitle': '文件收集', 'collector': 'jsx', 'deadline': '2022-10-13T15:18',
+        question_list:题目信息列表
+        例如：question_multidict = {'collectionTitle': '文件收集', 'collector': 'jsx', 'deadline': '2022-10-13T15:18',
                  'description': 'teset','question_name1': '姓名', 'question_file2': '文件', 'checked_topic2': '学号',
                  'question_file3': '文','checked_topic3': '学', 'question_sno4': '学', 'question_sno5': '学号',
                  'question_name6': '姓','question_radio7': '单选','checked_radio7': 'A', 'question_radio8': '单选题',
@@ -27,15 +129,15 @@ def add_FC(question_dict: list, user_id: int):
     # ! 文件类型可能有多个，设置一个计数器记录是第几个文件
     file_counter = 0  # * 文件计数器
 
-    list_of_question_dict = deepcopy(question_dict)  # ! 保存元组的列表，与字典类型的区别在于是否对 key 去重
+    list_of_question_dict = deepcopy(question_list)  # ! 保存元组的列表，与字典类型的区别在于是否对 key 去重
     # print(list_of_question_dict)
 
-    question_dict = MultiDict(question_dict)
+    question_multidict = MultiDict(question_list)
     # 前端传来的deadLine为string类型，在此转化为datetime类型
-    deadline = question_dict['deadline']
+    deadline = question_multidict['deadline']
     deadline = deadline.replace("T", " ")
     ddl_format = '%Y-%m-%d %H:%M'
-    question_dict['deadline'] = datetime.strptime(deadline, ddl_format)
+    question_multidict['deadline'] = datetime.strptime(deadline, ddl_format)
 
     # * 生成应交名单路径
     collection_counter = Collection_info.query.filter_by(creator_id=user_id).count()  # 获取当前用户创建的收集总数
@@ -44,18 +146,18 @@ def add_FC(question_dict: list, user_id: int):
     )  # * 总长度为 20 + 1 + 1 + 8 = 30 位
 
     # 创建一个文件收集对象,更新文件收集主表里
-    collection = Collection_info(creator=question_dict['collector'],
+    collection = Collection_info(creator=question_multidict['collector'],
                                  creator_id=current_user.id,
-                                 collection_title=question_dict['collectionTitle'],
-                                 description=question_dict['description'],
-                                 end_date=question_dict['deadline'],
+                                 collection_title=question_multidict['collectionTitle'],
+                                 description=question_multidict['description'],
+                                 end_date=question_multidict['deadline'],
                                  namelist_path=namelist_path,
                                  status=Collection_info.SAVED)
     db.session.add(collection)
     db.session.commit()  # 提交数据库会话，否则 id 为None
     collection_id = collection.id
 
-    key_list = list(question_dict.keys())
+    key_list = list(question_multidict.keys())
     # 问题的键列表
     question_key_list = [question_key for question_key in key_list if "question" in question_key]
 
@@ -66,8 +168,8 @@ def add_FC(question_dict: list, user_id: int):
             question = Question_info(collection_id=collection_id,
                                      qno=int(question_key[-1]),
                                      question_type=Question_info.FILL_IN_BLANK,
-                                     question_title=question_dict[question_key],
-                                     question_description=question_dict['detail' + question_key[-1]])
+                                     question_title=question_multidict[question_key],
+                                     question_description=question_multidict['detail' + question_key[-1]])
             db.session.add(question)
             db.session.commit()
 
@@ -76,15 +178,15 @@ def add_FC(question_dict: list, user_id: int):
             question = Question_info(collection_id=collection_id,
                                      qno=int(question_key[-1]),
                                      question_type=Question_info.SINGLE_CHOICE,
-                                     question_title=question_dict[question_key],
-                                     question_description=question_dict['detail' + question_key[-1]])
+                                     question_title=question_multidict[question_key],
+                                     question_description=question_multidict['detail' + question_key[-1]])
             db.session.add(question)
             db.session.commit()
             # 存选择题答案
             answer = Answer_info(collection_id=collection_id,
                                  question_id=question.id,
                                  qno=int(question_key[-1]),
-                                 answer_option=question_dict['question_radio' + question_key[-1]])
+                                 answer_option=question_multidict['checked_radio' + question_key[-1]])
             db.session.add(answer)
             db.session.commit()
 
@@ -93,12 +195,12 @@ def add_FC(question_dict: list, user_id: int):
             question = Question_info(collection_id=collection_id,
                                      qno=int(question_key[-1]),
                                      question_type=Question_info.MULTI_CHOICE,
-                                     question_title=question_dict[question_key],
-                                     question_description=question_dict['detail' + question_key[-1]])
+                                     question_title=question_multidict[question_key],
+                                     question_description=question_multidict['detail' + question_key[-1]])
             db.session.add(question)
             db.session.commit()
             # 存选择题答案
-            ano_list = question_dict.getlist('checked_mulans' + question_key[-1])
+            ano_list = question_multidict.getlist('checked_mulans' + question_key[-1])
             for ano in ano_list:
                 answer = Answer_info(collection_id=collection_id,
                                      question_id=question.id,
@@ -109,19 +211,19 @@ def add_FC(question_dict: list, user_id: int):
 
         # ? 若为问卷题
         elif "question_qnaire" in question_key:
-            if question_dict['choose_type' + question_key[-1]] == 'single':
+            if question_multidict['choose_type' + question_key[-1]] == 'single':
                 qn_type = Question_info.SINGLE_QUESTIONNAIRE
             else:
                 qn_type = Question_info.MULTI_QUESTIONNAIRE
             question = Question_info(collection_id=collection_id,
                                      qno=int(question_key[-1]),
                                      question_type=qn_type,
-                                     question_title=question_dict[question_key],
-                                     question_description=question_dict['detail' + question_key[-1]])
+                                     question_title=question_multidict[question_key],
+                                     question_description=question_multidict['detail' + question_key[-1]])
             db.session.add(question)
             db.session.commit()
             # 存问卷题目各选项的内容
-            option_content = question_dict.getlist('qn_option' + question_key[-1])
+            option_content = question_multidict.getlist('qn_option' + question_key[-1])
             for i in range(len(option_content)):
                 option = Option_info(collection_id=collection_id,
                                      question_id=question.id,
@@ -162,8 +264,8 @@ def add_FC(question_dict: list, user_id: int):
             question = Question_info(collection_id=collection_id,
                                      qno=int(question_key[-1]),
                                      question_type=Question_info.FILE_UPLOAD,
-                                     question_title=question_dict[question_key],
-                                     question_description=question_dict['detail' + question_key[-1]],
+                                     question_title=question_multidict[question_key],
+                                     question_description=question_multidict['detail' + question_key[-1]],
                                      rename_rule='-'.join(rename_rule),  # * 命名规则用 - 分隔，数字代表题目序号
                                      file_path=file_path)
             db.session.add(question)
@@ -172,23 +274,22 @@ def add_FC(question_dict: list, user_id: int):
             os.mkdir(path)  # 创建该题的文件存储目录
 
 
-def update_status(user_id=None):
+def update_status(user_id: int):
     """
     更新用户各个收集的状态
 
     Args:
         user_id: int类型，表示用户id。
     """
-    if user_id is not None:
-        collection_list = Collection_info.query.filter_by(creator_id=current_user.id).all()
-        # ? 根据当前时间更新各个收集的状态
-        for collection in collection_list:
-            if collection.end_date <= datetime.now():
-                new_status = Collection_info.FINISHED  # * 标记为已截止
-            else:
-                new_status = Collection_info.RELEASE  # * 标记为进行中
-            Collection_info.query.filter_by(id=collection.id).update({'status': new_status})
-        db.session.commit()
+    collection_list = Collection_info.query.filter_by(creator_id=user_id).all()
+    # ? 根据当前时间更新各个收集的状态
+    for collection in collection_list:
+        if collection.end_date <= datetime.now():
+            new_status = Collection_info.FINISHED  # * 标记为已截止
+        else:
+            new_status = Collection_info.RELEASE  # * 标记为进行中
+        Collection_info.query.filter_by(id=collection.id).update({'status': new_status})
+    db.session.commit()
 
 
 def count_submission(user_id=None, collection_id=None):
@@ -297,21 +398,20 @@ def deadline_countdown(collection_id: int):
     return deadline - current_time  # 返回倒计时
 
 
-def delete_collection(collection_id=None):
-    if collection_id is not None:
-        Submit_Content_info.query.filter_by(collection_id=collection_id).delete()
-        Submission_info.query.filter_by(collection_id=collection_id).delete()
-        Option_info.query.filter_by(collection_id=collection_id).delete()
-        Answer_info.query.filter_by(collection_id=collection_id).delete()
+def delete_collection(collection_id: int):
+    Submit_Content_info.query.filter_by(collection_id=collection_id).delete()
+    Submission_info.query.filter_by(collection_id=collection_id).delete()
+    Option_info.query.filter_by(collection_id=collection_id).delete()
+    Answer_info.query.filter_by(collection_id=collection_id).delete()
 
-        # 删除该收集中所有文件上传题的文件存储路径下的文件
-        file_path = Question_info.query.filter_by(collection_id=collection_id,
-                                                  question_type=Question_info.FILE_UPLOAD).with_entities(
-            Question_info.file_path).all()
-        for fp in file_path:
-            path = './FileStorage/' + fp
-            shutil.rmtree(path)
+    # 删除该收集中所有文件上传题的文件存储路径下的文件
+    file_path = Question_info.query.filter_by(collection_id=collection_id,
+                                              question_type=Question_info.FILE_UPLOAD).with_entities(
+        Question_info.file_path).all()
+    for fp in file_path:
+        path = './FileStorage/' + fp
+        shutil.rmtree(path)
 
-        Question_info.query.filter_by(collection_id=collection_id).delete()
-        Collection_info.query.filter_by(collection_id=collection_id).delete()
-        db.session.commit()
+    Question_info.query.filter_by(collection_id=collection_id).delete()
+    Collection_info.query.filter_by(collection_id=collection_id).delete()
+    db.session.commit()

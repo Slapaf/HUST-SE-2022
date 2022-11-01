@@ -1,8 +1,4 @@
-from init import db
-from flask import flash
-from datetime import datetime
-from flask_login import current_user
-from models import Collection_info, Question_info, Answer_info
+import datetime
 
 question_dict = {'collectionTitle': '文件收集', 'collector': 'jsx', 'deadline': '2022-10-13T15:18',
                  'description': 'teset',
@@ -11,15 +7,6 @@ question_dict = {'collectionTitle': '文件收集', 'collector': 'jsx', 'deadlin
                  'question_radio7': '单选',
                  'checked_radio7': 'A', 'question_radio8': '单选题', 'checked_radio8': 'B'}
 
-deadline = question_dict['deadline']
-deadline = deadline.replace("T", " ")
-format = '%Y-%m-%d %H:%M'
-question_dict['deadline'] = datetime.strptime(deadline, format)
-collection = Collection_info(creator=question_dict['collector'], creator_id=current_user.id,
-                             collection_title=question_dict['collectionTitle'],
-                             description=question_dict['description'], end_date=question_dict['deadline'],
-                             status='1')
-print(collection.id)
 
 question_dict = [('collectionTitle', '文件收集'), ('collector', 'jsx'), ('deadline', '2022-10-20T16:43'),
                  ('description', 'wwf'),
@@ -30,3 +17,13 @@ question_dict = [('collectionTitle', '文件收集'), ('collector', 'jsx'), ('de
                  ('checked_mulans4', 'C'), ('question_qnaire5', '问卷题'), ('detail5', 'erg'), ('qn_option5', ''),
                  ('qn_option5', ''),
                  ('choose_type6', 'multiple')]
+
+def text(t):
+    if t is not None:
+        print(t)
+    else:
+        print("t is None")
+
+start = datetime.datetime.strptime("2022-11-1 0:0:0",'%Y-%m-%d %H:%M:%S')
+end  = datetime.datetime.strptime("2022-11-3 1:11:0",'%Y-%m-%d %H:%M:%S')
+print(end-start)
