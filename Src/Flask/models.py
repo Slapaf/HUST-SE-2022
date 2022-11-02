@@ -1,10 +1,12 @@
 import random
 import string
+import datetime
+import re
+import yagmail
 
 from init import db
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
-import datetime
 
 
 class User(db.Model, UserMixin):  # 表名将会是 user（自动生成，小写处理）
@@ -73,6 +75,60 @@ class User(db.Model, UserMixin):  # 表名将会是 user（自动生成，小写
             None
         """
         self.email = email
+
+    def user_authentication(self, user_email: str, user_pwd: str, host='smtp.sina.com'):
+        """
+        用户认证
+
+        Args:
+            user_email(str): 用户邮箱
+            user_pwd(str): 邮箱授权码
+            host(str): 发送邮件服务器地址
+
+        Returns:
+            None
+        """
+        self.yag = yagmail.SMTP(
+            user=user_email,
+            password=user_pwd,
+            host=host
+        )
+
+    def send_email(self, to_email: str or list, email_title: str, email_message: str):
+        """
+        发送邮件，可以单发也可以群发，取决于传入参数 to_email 的类型
+
+        Args:
+            to_email(str or list): 目标邮箱地址，若为列表则代表群发
+            email_title(str): 邮件标题
+            email_message(str): 邮件正文，可以使用 HTML 格式的字符串
+
+        Returns:
+
+        """
+        if self.yag is None:
+            return False
+        if type(to_email) == "str":  # 单发
+            if re.match("^.+\\@(\\[?)[a-zA-Z0-9\\-\\.]+\\.([a-zA-Z]{2,3}|[0-9]{1,3})(\\]?)$", to_email) is None:
+                print("目标邮箱地址错误！")
+                return False
+            self.yag.send(
+                to=to_email,
+                subject=email_title,
+                contents=email_message
+            )
+            return True
+        else:
+            for email_addr in to_email:  # 群发
+                if re.match("^.+\\@(\\[?)[a-zA-Z0-9\\-\\.]+\\.([a-zA-Z]{2,3}|[0-9]{1,3})(\\]?)$", email_addr) is None:
+                    print("目标邮箱地址错误！")
+                    return False
+                self.yag.send(
+                    to=email_addr,
+                    subject=email_title,
+                    contents=email_message
+                )
+            return True
 
 
 class Collection_info(db.Model):
