@@ -112,7 +112,23 @@
         Example：
             /* 假设要得到id为1的收集的信息 */
             >>> a = get_question_MultiDict(1)
-            >>> a   
+            >>> a  
+            
+    8、 modify_password(user_id: int, original_pswd: str, new_pswd: str)
+        ！未验证正确性
+        Function: 修改id为user_id的用户的密码
+        
+        Inputs:
+        - user_id：int类型，表示用户id
+        - original_pswd：string类型，表示原密码
+        - new_pswd：string类型，表示新密码
+        
+        Returns: 
+        一个整数，取值范围和含义如下：
+        - 1：修改成功
+        - 0：原密码错误
+        - -1：user_id错误，即该用户不存在
+    
 '''''
 
 import string
@@ -121,7 +137,7 @@ from datetime import datetime
 import random
 import os
 from flask_login import current_user
-from models import Collection_info, Question_info, Answer_info, Submit_Content_info, Option_info, Submission_info
+from models import User, Collection_info, Question_info, Answer_info, Submit_Content_info, Option_info, Submission_info
 from init import db
 from datetime import datetime
 from werkzeug.datastructures import MultiDict
@@ -474,3 +490,20 @@ def get_question_MultiDict(collection_id: int):
         question[f'detail{q.qno}'] = q.question_description
 
     return question
+
+
+def modify_password(user_id: int, original_pswd: str, new_pswd: str):
+    user = User.query.filter_by(id=user_id).first()  # 在数据库中查询用户
+
+    # 该用户id不存在
+    if user is None:
+        return -1
+
+    # 验证原密码
+    if not user.validate_password(original_pswd):
+        return 0
+
+    # 修改密码
+    user.set_password(new_pswd)
+    db.session.commit()
+    return 1  # 修改成功
