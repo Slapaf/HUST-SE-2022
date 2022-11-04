@@ -21,6 +21,12 @@ from db_manipulation import *
 """
 
 
+@app.route('/file_submitting', methods=['GET', 'POST'])
+@login_required
+def file_submitting():
+    question_multidict = get_question_MultiDict();
+
+
 # ! 写错地方了，先留着
 def time_format(time_to_format):
     """
@@ -111,8 +117,8 @@ def generate_collection():
             a = list(question_list.items(multi=True))
             print(a)
             t = add_FC(a, current_user.id)
-            question = get_question_MultiDict(t)
-            print(question)
+            # question = get_question_MultiDict(t)
+            # print(question)
             flash("Successfully create a collection!")
 
         return redirect(url_for('index'))
