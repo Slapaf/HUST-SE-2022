@@ -1,5 +1,7 @@
-var arr = [];
+var arr = [];//存放应交名单
 var len = arr.length;
+var arr2 = [];//存放文件名
+arr2 = ["wgk.pdf", "wgk.docx", "wgk.xls"];
 
 var tab_list = document.querySelector(".tab_list");
 var lis = tab_list.querySelectorAll("li");
@@ -36,16 +38,28 @@ for (var i = 0; i < lis.length; i++) {
 
 // * 添加姓名弹窗
 function click0() {
-    var popup = document.getElementById("popup");
+    let popLayer = document.getElementById('popLayer');
+    popLayer.style.display = "block";
+    let popup = document.getElementById("popup");
     popup.style.display = "block";
 }
 
 // * 在 namebox 中添加名字，关闭弹窗
 function click1() {
-    var popup = document.getElementById("popup");
+    let popup = document.getElementById("popup");
     popup.style.display = "none";
     addname();
     document.getElementById("textarea").value = "";
+    let popLayer = document.getElementById('popLayer');
+    popLayer.style.display = "none";
+}
+
+function click2() {
+    let popup1 = document.getElementById("popup1");
+    arr2 = [];
+    popup1.style.display = "none";
+    let popLayer = document.getElementById('popLayer');
+    popLayer.style.display = "none";
 }
 
 // * 添加名字
@@ -88,14 +102,27 @@ function addname() {
                     delbtn.style.display = "none";
                 }//光标移动至相应元素外则按钮隐藏
                 delbtn.onclick = function () {
-                    d1.removeChild(para);
-                    document.getElementById("delete").value = "delete " + node1.title;
+                    document.getElementById("hidden-input").value = "delete " + node1.title;
                     arr.remove(node1.title);
-                    document.getElementById("delete-form").submit();
+                    d1.removeChild(para);
+                    document.getElementById("hidden").submit();
                 }//点击删除节点
             }
             flag++;
         }
+    }
+}
+
+function addfile() {
+    let popup = document.getElementById("popup-content");
+    let i = 0;
+    while (i < arr2.length) {
+        let para = document.createElement("div");
+        para.title = arr2[i];
+        para.className = "filelist";
+        popup.appendChild(para);
+        para.appendChild(document.createTextNode(para.title));
+        i++;
     }
 }
 
@@ -128,6 +155,12 @@ function addmember() {
     membernumber.className = "member_number";
     membercondition.className = "member_condition";
     membercondition.onclick = function () {
-        //弹窗
+        let popup1 = document.getElementById("popup1");
+        popup1.style.display = "block";
+        let popLayer = document.getElementById('popLayer');
+        popLayer.style.display = "block";
+        document.getElementById("hidden-input").value = "check " + membername.title;
+        document.getElementById("hidden").submit();
+        addfile();
     }
 }
