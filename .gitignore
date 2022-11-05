@@ -22,3 +22,6 @@ Src/Flask/data.db
 # Project files, i.e. `.project`, `.actionScriptProperties` and `.flexProperties`
 # should NOT be excluded as they contain compiler settings and other important
 # information for Eclipse / Flash Builder.
+
+# addded by ZJY
+__pycache__
