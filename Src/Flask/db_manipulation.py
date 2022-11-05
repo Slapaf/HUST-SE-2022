@@ -90,7 +90,6 @@
             >>> delta
             2 days, 1:11:00
     
-    
     6、delete_collection(collection_id=None)
         ！未测试正确性
         Function: 删除id为collection_id的收集在数据库中的相关数据（包括收集的文件）
@@ -468,9 +467,10 @@ def delete_collection(collection_id: int):
 def get_question_MultiDict(collection_id: int):
     question = defaultdict(list)
     collection = Collection_info.query.get(collection_id)
+    print(collection)
     question['collectionTitle'] = collection.collection_title
     question['collector'] = collection.creator
-    question['deadline'] = collection.end_date
+    question['deadline'] = collection.end_date.strftime("%Y-%m-%d %H:%M")
     question['description'] = collection.description
     question_list = Question_info.query.filter_by(collection_id=collection_id).order_by("qno").all()
     for q in question_list:

@@ -21,10 +21,12 @@ from db_manipulation import *
 """
 
 
-@app.route('/file_submitting', methods=['GET', 'POST'])
-@login_required
-def file_submitting():
-    question_multidict = get_question_MultiDict();
+@app.route('/file_submitting/<int:collection_id>', methods=['GET', 'POST'])
+def file_submitting(collection_id):
+    print(collection_id)
+    question_multidict = get_question_MultiDict(collection_id);
+    return render_template("file_submitting.html",
+                           collection=question_multidict);
 
 
 # ! 写错地方了，先留着
