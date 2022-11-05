@@ -281,4 +281,5 @@ class Submit_Content_info(db.Model):
     collection_id = db.Column(db.Integer, nullable=False)  # 关联文件收集主表id（不可为空）
     question_id = db.Column(db.Integer, nullable=False)  # 关联问题主表id（不可为空）
     qno = db.Column(db.Integer)  # 问题序号
+    # is_FileUpload = db.Column(db.CHAR)  # 表示是否是文件上传题：0 否;1 是
     result = db.Column(db.String(30), nullable=False)  # 某个人对这一题的填写结果（若为文件上传题，则此字段存放上传的文件名称）（不可为空）

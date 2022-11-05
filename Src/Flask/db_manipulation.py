@@ -141,12 +141,22 @@
         一个整数，取值范围和含义如下：
         - 1：修改成功
         - -1：user_id错误，即该用户不存在
-
+    
+    10、submission_record(collection_id: int)
+        Function: 获取id为collection_id的收集的提交信息
+        
+        Inputs:
+        - collection_id：int类型，表示收集id
+        
+        Returns: 
+        一个元组列表，元组按Submission.id排序，每个元组格式为（姓名，提交时间，文件数量，文件详情）。
+        例如：
+        [('计胜翔', datetime.datetime(2022, 11, 5, 20, 25, 32, 142115), 2, ['jsx1.pdf', 'jsx2.doc']), 
+        ('张隽翊', datetime.datetime(2022, 11, 5, 20, 25, 32, 142115), 1, ['zjy1.pdf'])]
 '''''
 
 import string
 from copy import deepcopy
-from datetime import datetime
 import random
 import os
 from flask_login import current_user
@@ -156,6 +166,8 @@ from datetime import datetime
 from werkzeug.datastructures import MultiDict
 import shutil
 from collections import defaultdict
+from operator import itemgetter
+from sqlalchemy import func
 
 
 def add_FC(question_list: list, user_id: int):
@@ -535,3 +547,53 @@ def modify_personal_info(user_id: int, new_name: str, new_email: str):
     user.email = new_email
     db.session.commit()
     return 1  # 修改成功
+
+
+def submission_record(collection_id: int):
+    # 获取提交名单列表
+    name_list = Submission_info.query. \
+        filter_by(collection_id=collection_id). \
+        order_by("id"). \
+        with_entities(Submission_info.submitter_name). \
+        all()
+    name_list = list(map(itemgetter(0), name_list))
+
+    # 获取提交时间列表
+    time_list = Submission_info.query. \
+        filter_by(collection_id=collection_id). \
+        order_by("id"). \
+        with_entities(Submission_info.submit_time). \
+        all()
+    time_list = list(map(itemgetter(0), time_list))
+
+    # 获取提交信息id列表
+    submission_id_list = Submission_info.query. \
+        filter_by(collection_id=collection_id). \
+        order_by("submit_time"). \
+        with_entities(Submission_info.id). \
+        all()
+    submission_id_list = list(map(itemgetter(0), submission_id_list))
+
+    # 获取文件上传题的问题id列表
+    question_id_list = Question_info.query. \
+        filter_by(collection_id=collection_id, question_type=Question_info.FILE_UPLOAD). \
+        with_entities(Question_info.id).all()
+    question_id_list = list(map(itemgetter(0), question_id_list))
+
+    file_num_list = []
+    for id in submission_id_list:
+        num = Submit_Content_info.query. \
+            filter(Submit_Content_info.Submission_id == id,
+                   Submit_Content_info.question_id.in_(question_id_list)).count()
+        file_num_list.append(num)
+
+    # 构建文件详情列表
+    file_list = []
+    for id in submission_id_list:
+        file = Submit_Content_info.query.filter_by(Submission_id=id). \
+            with_entities(Submit_Content_info.result). \
+            all()
+        file = list(map(itemgetter(0), file))
+        file_list.append(file)
+
+    return list(zip(name_list, time_list, file_num_list, file_list))

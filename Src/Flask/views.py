@@ -20,6 +20,12 @@ from db_manipulation import *
 #         4. 其他查询接口暂定自由设计。
 """
 
+# 用于测试数据库接口函数
+@app.route('/test')
+def test():
+    submission_record(3)
+    return redirect(url_for('index'))
+
 
 @app.route('/file_submitting/<int:collection_id>', methods=['GET', 'POST'])
 def file_submitting(collection_id):
