@@ -153,6 +153,16 @@
         例如：
         [('计胜翔', datetime.datetime(2022, 11, 5, 20, 25, 32, 142115), 2, ['jsx1.pdf', 'jsx2.doc']), 
         ('张隽翊', datetime.datetime(2022, 11, 5, 20, 25, 32, 142115), 1, ['zjy1.pdf'])]
+        
+    11、stop_collection(collection_id: int, action_list)
+        Function: 将id为collection_id的收集的状态修改为“截止”
+        
+        Inputs:
+        - collection_id：int类型，表示收集id
+        - action_list：list类型，元素类型为string
+        
+        Returns: None
+        
 '''''
 
 import string
@@ -329,6 +339,7 @@ def add_FC(question_list: list, user_id: int):
             db.session.add(question)
             db.session.commit()
             path = './FileStorage/' + question.file_path
+            # print(path)
             os.mkdir(path)  # 创建该题的文件存储目录
 
     return collection_id
@@ -465,58 +476,72 @@ def delete_collection(collection_id: int):
     Answer_info.query.filter_by(collection_id=collection_id).delete()
 
     # 删除该收集中所有文件上传题的文件存储路径下的文件
-    file_path = Question_info.query.filter_by(collection_id=collection_id,
-                                              question_type=Question_info.FILE_UPLOAD).with_entities(
-        Question_info.file_path).all()
+    file_path = Question_info.query. \
+        filter_by(collection_id=collection_id, question_type=Question_info.FILE_UPLOAD). \
+        with_entities(Question_info.file_path). \
+        all()
+    file_path = list(map(itemgetter(0), file_path))
     for fp in file_path:
-        print(file_path)
-        print(fp[0])
-        path = './FileStorage/' + fp[0]
+        print(fp)
+        path = './FileStorage/' + fp
         shutil.rmtree(path)
 
     Question_info.query.filter_by(collection_id=collection_id).delete()
-    Collection_info.query.filter_by(collection_id=collection_id).delete()
+    Collection_info.query.filter_by(id=collection_id).delete()
     db.session.commit()
 
 
-def get_question_MultiDict(collection_id: int):
-    question = defaultdict(list)
+def get_question_Dict(collection_id: int):
+    seq = 0
+    question = {}
     collection = Collection_info.query.get(collection_id)
-    print(collection)
-    question['collectionTitle'] = collection.collection_title
-    question['collector'] = collection.creator
-    question['deadline'] = collection.end_date.strftime("%Y-%m-%d %H:%M")
-    question['description'] = collection.description
+    seq += 1
+    question[f'{seq}_collectionTitle'] = collection.collection_title
+    seq += 1
+    question[f'{seq}_collector'] = collection.creator
+    seq += 1
+    question[f'{seq}_deadline'] = collection.end_date.strftime("%Y-%m-%d %H:%M")
+    seq += 1
+    question[f'{seq}_description'] = collection.description
     question_list = Question_info.query.filter_by(collection_id=collection_id).order_by("qno").all()
     for q in question_list:
         # 若是填空题
         if q.question_type == Question_info.FILL_IN_BLANK:
-            question[f'question_fill{q.qno}'] = q.question_title
+            seq += 1
+            question[f'{seq}_question_fill{q.qno}'] = q.question_title
 
         # 若是文件上传题
         if q.question_type == Question_info.FILE_UPLOAD:
-            question[f'question_file{q.qno}'] = q.question_title
+            seq += 1
+            question[f'{seq}_question_file{q.qno}'] = q.question_title
 
         # 若是单选题
         if q.question_type == Question_info.SINGLE_CHOICE:
-            question[f'question_radio{q.qno}'] = q.question_title
+            seq += 1
+            question[f'{seq}_question_radio{q.qno}'] = q.question_title
 
         # 若是多选题
         if q.question_type == Question_info.MULTI_CHOICE:
-            question[f'question_multipleChoice{q.qno}'] = q.question_title
+            seq += 1
+            question[f'{seq}_question_multipleChoice{q.qno}'] = q.question_title
 
         # 若是问卷题
         if q.question_type == Question_info.SINGLE_QUESTIONNAIRE or Question_info.SINGLE_QUESTIONNAIRE:
-            question[f'question_qnaire{q.qno}'] = q.question_title
+            seq += 1
+            question[f'{seq}_question_qnaire{q.qno}'] = q.question_title
             if q.question_type == Question_info.SINGLE_QUESTIONNAIRE:
-                question[f'choose_type{q.qno}'] = "single"
+                seq += 1
+                question[f'{seq}_choose_type{q.qno}'] = "single"
             else:
-                question[f'choose_type{q.qno}'] = "multiple"
+                seq += 1
+                question[f'{seq}_choose_type{q.qno}'] = "multiple"
             option_list = Option_info.query.filter_by(question_id=q.id).order_by("option_sn").all()
             for option in option_list:
-                question[f'qn_option{q.qno}'].append(option.option_content)
+                seq += 1
+                question[f'{seq}_qn_option{q.qno}'] = option.option_content
 
-        question[f'detail{q.qno}'] = q.question_description
+        seq += 1
+        question[f'{seq}_detail{q.qno}'] = q.question_description
 
     return question
 
@@ -586,7 +611,7 @@ def submission_record(collection_id: int):
     file_num_list = []
     for id in submission_id_list:
         num = Submit_Content_info.query. \
-            filter(Submit_Content_info.Submission_id == id,
+            filter(Submit_Content_info.submission_id == id,
                    Submit_Content_info.question_id.in_(question_id_list)).count()
         file_num_list.append(num)
 
@@ -600,3 +625,12 @@ def submission_record(collection_id: int):
         file_list.append(file)
 
     return list(zip(name_list, time_list, file_num_list, file_list))
+
+
+def stop_collection(collection_id: int, action_list):
+    collection = Collection_info.query.filter_by(id=collection_id)
+    collection.update({'status': Collection_info.FINISHED})  # 状态标记为已截止
+    new_ddl = action_list[2]
+    new_ddl = datetime.strptime(new_ddl, '%Y-%m-%d %H:%M:%S')
+    collection.update({'end_date': new_ddl})
+    db.session.commit()

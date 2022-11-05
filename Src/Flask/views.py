@@ -20,19 +20,21 @@ from db_manipulation import *
 #         4. 其他查询接口暂定自由设计。
 """
 
+
 # 用于测试数据库接口函数
 @app.route('/test')
 def test():
-    submission_record(3)
+    # submission_record(3)
+    delete_collection(1)
     return redirect(url_for('index'))
 
 
 @app.route('/file_submitting/<int:collection_id>', methods=['GET', 'POST'])
 def file_submitting(collection_id):
-    print(collection_id)
-    question_multidict = get_question_MultiDict(collection_id);
+    question_dict = get_question_Dict(collection_id);
+    print(question_dict)
     return render_template("file_submitting.html",
-                           collection=question_multidict);
+                           collection=question_dict);
 
 
 # ! 写错地方了，先留着
@@ -71,9 +73,9 @@ def mycollection():
     # * 如果检测到对收集的操作
     if request.method == 'POST':
         user_action = request.form['hidden-input']  # 获取用户操作的相关信息
-        print(user_action)
+        # print(user_action)
         user_action_list = user_action.split('$')
-        print(user_action_list)
+        # print(user_action_list)
         collection_id = user_action_list[1]  # 待操作的收集 id
         # * 根据第一个参数确定操作类型
         if user_action_list[0] == 'share':  # 分享
@@ -88,12 +90,7 @@ def mycollection():
         elif user_action_list[0] == 'copy':  # 复制
             pass
         elif user_action_list[0] == 'stop':  # 停止
-            collection = Collection_info.query.filter_by(id=collection_id)
-            collection.update({'status': Collection_info.FINISHED})  # 状态标记为已截止
-            new_ddl = user_action_list[2]
-            new_ddl = datetime.strptime(new_ddl, '%Y-%m-%d %H:%M:%S')
-            collection.update({'end_date': new_ddl})
-            db.session.commit()
+            stop_collection(int(collection_id), user_action_list)
         elif user_action_list[0] == 'del':  # 删除
             delete_collection(int(collection_id))  # TODO 有问题
         return redirect(url_for('mycollection'))
@@ -155,6 +152,7 @@ def generate_collection():
             flash("Transport Error!")  # 获取失败
             return render_template('index.html')
         else:
+            print(question_list)
             a = list(question_list.items(multi=True))
             print(a)  # ! 调试用
             t = add_FC(a, current_user.id)

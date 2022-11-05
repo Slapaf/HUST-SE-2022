@@ -277,7 +277,7 @@ class Submit_Content_info(db.Model):
         6、result：某个人对这一题的填写结果（若为文件上传题，则此字段存放上传的文件名称）（不可为空）
     """
     id = db.Column(db.Integer, primary_key=True)  # 主键
-    Submission_id = db.Column(db.Integer)  # 关联问卷提交信息表id
+    submission_id = db.Column(db.Integer)  # 关联问卷提交信息表id
     collection_id = db.Column(db.Integer, nullable=False)  # 关联文件收集主表id（不可为空）
     question_id = db.Column(db.Integer, nullable=False)  # 关联问题主表id（不可为空）
     qno = db.Column(db.Integer)  # 问题序号

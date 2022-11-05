@@ -136,7 +136,7 @@ function creatQuestionnaire(
 let jsonFromHtml = {
   "1_collectionTitle": "文件收集",
   "2_collector": "凯",
-  "3_deadline": "2022-10-28T14:55",
+  "3_deadline": "2022-10-28 14:55",
   "4_description": "描述",
   "5_question_name1": "姓名lala",
   "6_detail1": "",
