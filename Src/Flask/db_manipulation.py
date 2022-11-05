@@ -180,8 +180,9 @@ def add_FC(question_list: list, user_id: int):
     question_multidict = MultiDict(question_list)
     # 前端传来的deadLine为string类型，在此转化为datetime类型
     deadline = question_multidict['deadline']
+    print(deadline)
     deadline = deadline.replace("T", " ")
-    ddl_format = '%Y-%m-%d %H:%M'
+    ddl_format = '%Y-%m-%d %H:%M:%S'
     question_multidict['deadline'] = datetime.strptime(deadline, ddl_format)
 
     # * 生成应交名单路径
@@ -456,7 +457,9 @@ def delete_collection(collection_id: int):
                                               question_type=Question_info.FILE_UPLOAD).with_entities(
         Question_info.file_path).all()
     for fp in file_path:
-        path = './FileStorage/' + fp
+        print(file_path)
+        print(fp[0])
+        path = './FileStorage/' + fp[0]
         shutil.rmtree(path)
 
     Question_info.query.filter_by(collection_id=collection_id).delete()

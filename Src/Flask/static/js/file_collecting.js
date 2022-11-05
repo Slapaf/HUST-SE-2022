@@ -1,6 +1,7 @@
 const ul = document.querySelector(".main>ul");
 const lis = ul.getElementsByTagName("li");
 const rem = ul.getElementsByClassName("removeTopic");
+// const deadline = document.getElementsByClassName("deadline")[0];
 const deadline = document.getElementsByClassName("deadline")[0];
 const op_name = document.getElementById("op-name");
 const op_file = document.getElementById("op-file");
@@ -42,13 +43,14 @@ function addLoadEvent(func) {
 }
 
 //获取当前时间
-function getCurrentDatetime() {   
+function getCurrentDatetime() {
   var now = new Date();  
   var year = now.getFullYear();       //年  
   var month = now.getMonth() + 1;     //月  
   var day = now.getDate();            //日  
   var hh = now.getHours();            //时  
-  var mm = now.getMinutes();          //分  
+  var mm = now.getMinutes();          //分
+  var ss = now.getSeconds();          //秒
   var clock = year + "-";  
   if(month < 10)  
     clock += "0";  
@@ -60,8 +62,10 @@ function getCurrentDatetime() {
     clock += "0";  
   clock += hh + ":";  
   if (mm < 10) clock += '0';   
-  clock += mm;   
-  return clock;      
+  clock += mm;
+  if (ss < 10) clock += '0';
+  clock += ss;
+  return clock;
 } 
 
 //限制截止日期不能比当前时间早

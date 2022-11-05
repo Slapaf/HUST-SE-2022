@@ -62,7 +62,37 @@ def mycollection():
         用户进入 collection_details.html 页面时，遍历数据库中的所有收集，返回两个列表（命名随意）：collection_on 和 collection_end
         collection_on 存放正在进行的收集（比较 end_date 和用户进入页面时的系统时间），collection_end 存放已经截止的收集；
     """
-    update_status(current_user.id)  # 更新当前用户所有收集的status字段
+    # * 如果检测到对收集的操作
+    if request.method == 'POST':
+        user_action = request.form['hidden-input']  # 获取用户操作的相关信息
+        print(user_action)
+        user_action_list = user_action.split('$')
+        print(user_action_list)
+        collection_id = user_action_list[1]  # 待操作的收集 id
+        # * 根据第一个参数确定操作类型
+        if user_action_list[0] == 'share':  # 分享
+            pass
+        elif user_action_list[0] == 'collect-details':  # 统计
+            # TODO
+            pass
+        elif user_action_list[0] == 'edit':  # 编辑
+            pass
+        elif user_action_list[0] == 'restart':  # 重启
+            pass
+        elif user_action_list[0] == 'copy':  # 复制
+            pass
+        elif user_action_list[0] == 'stop':  # 停止
+            collection = Collection_info.query.filter_by(id=collection_id)
+            collection.update({'status': Collection_info.FINISHED})  # 状态标记为已截止
+            new_ddl = user_action_list[2]
+            new_ddl = datetime.strptime(new_ddl, '%Y-%m-%d %H:%M:%S')
+            collection.update({'end_date': new_ddl})
+            db.session.commit()
+        elif user_action_list[0] == 'del':  # 删除
+            delete_collection(int(collection_id))  # TODO 有问题
+        return redirect(url_for('mycollection'))
+
+    update_status(current_user.id)  # 更新当前用户所有收集的 status 字段
 
     collection_list = Collection_info.query.filter_by(creator_id=current_user.id).all()
     parameter_dict_list = []
@@ -120,7 +150,7 @@ def generate_collection():
             return render_template('index.html')
         else:
             a = list(question_list.items(multi=True))
-            print(a)
+            print(a)  # ! 调试用
             t = add_FC(a, current_user.id)
             # question = get_question_MultiDict(t)
             # print(question)
