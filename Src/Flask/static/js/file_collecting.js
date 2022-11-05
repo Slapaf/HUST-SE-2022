@@ -1,7 +1,6 @@
 const ul = document.querySelector(".main>ul");
 const lis = ul.getElementsByTagName("li");
 const rem = ul.getElementsByClassName("removeTopic");
-// const deadline = document.getElementsByClassName("deadline")[0];
 const deadline = document.getElementsByClassName("deadline")[0];
 const op_name = document.getElementById("op-name");
 const op_file = document.getElementById("op-file");
@@ -12,6 +11,7 @@ const op_qnaire = document.getElementById("op-qnaire");
 const btn_for_add = document.querySelector("#btn-for-add");
 const popup = document.querySelector(".popup");
 const myalert = document.querySelector(".alert");
+const myblur = document.querySelector("#blur");
 const cancel = document.querySelector(".popup-header>span");
 const btn_for_submit = document.getElementById("btn-for-submit"); //提交按钮
 const form = document.getElementById("form");
@@ -21,12 +21,15 @@ let question_id = 0; //（复选框用）id
 let countdown = 3;
 //点击“添加题目”按钮，弹出弹窗
 btn_for_add.onclick = () => {
-  popup.classList.toggle("show");
+  popup.style.display = "block";
+  myblur.style.display = "block";
 };
 
 //点击“x"，取消选择
 cancel.onclick = () => {
-  btn_for_add.onclick();
+  // btn_for_add.onclick();
+  popup.style.display = "none";
+  myblur.style.display = "none";
 };
 
 //将需要文档加载完毕后执行的函数加到执行队列
@@ -43,13 +46,13 @@ function addLoadEvent(func) {
 }
 
 //获取当前时间
-function getCurrentDatetime() {
+function getCurrentDatetime() {   
   var now = new Date();  
   var year = now.getFullYear();       //年  
   var month = now.getMonth() + 1;     //月  
   var day = now.getDate();            //日  
   var hh = now.getHours();            //时  
-  var mm = now.getMinutes();          //分
+  var mm = now.getMinutes();          //分  
   var ss = now.getSeconds();          //秒
   var clock = year + "-";  
   if(month < 10)  
@@ -62,10 +65,10 @@ function getCurrentDatetime() {
     clock += "0";  
   clock += hh + ":";  
   if (mm < 10) clock += '0';   
-  clock += mm;
-  if (ss < 10) clock += '0';
-  clock += ss;
-  return clock;
+  clock += mm;   
+  if (ss < 10) clock += '0';   
+  clock += ss; 
+  return clock;      
 } 
 
 //限制截止日期不能比当前时间早
@@ -89,7 +92,7 @@ op_name.onclick = () => {
   newinput_topic.type = "text";
   newinput_topic.value = "姓名";
   newinput_topic.maxLength = "20";
-  newinput_topic.placeholder = "请输入不超过20个字符的题目";
+  newinput_topic.placeholder = "添加题目名称";
   let newdetail = document.createElement("textarea");
   newdetail.placeholder = "添加详情描述";
   newdetail.name = "detail";
@@ -108,7 +111,8 @@ op_name.onclick = () => {
   newli.appendChild(newinput_content);
   newli.appendChild(newbtn);
   ul.appendChild(newli);
-  btn_for_add.onclick();
+  // btn_for_add.onclick();
+  cancel.onclick();
   //更新checkbox;
   for_checkbox("add", newli.id, newinput_topic.value);
   //给新增的题目添加删除事件
@@ -143,7 +147,7 @@ op_sno.onclick = () => {
   newinput_topic.type = "text";
   newinput_topic.value = "学号";
   newinput_topic.maxLength = "20";
-  newinput_topic.placeholder = "请输入不超过20个字符的题目";
+  newinput_topic.placeholder = "添加题目名称";
   let newdetail = document.createElement("textarea");
   newdetail.placeholder = "添加详情描述";
   newdetail.name = "detail";
@@ -164,7 +168,8 @@ op_sno.onclick = () => {
   ul.appendChild(newli);
   //更新checkbox
   for_checkbox("add", newli.id, newinput_topic.value);
-  btn_for_add.onclick();
+  // btn_for_add.onclick();
+  cancel.onclick();
   //给新增的题目添加删除事件
   newbtn.addEventListener("click", () => {
     //删除对应复选框
@@ -197,11 +202,13 @@ op_file.onclick = () => {
   newinput_topic.type = "text";
   newinput_topic.value = "文件";
   newinput_topic.maxLength = "20";
-  newinput_topic.placeholder = "请输入不超过20个字符的题目";
+  newinput_topic.placeholder = "添加题目名称";
   let newdetail = document.createElement("textarea");
   newdetail.placeholder = "添加详情描述";
   newdetail.name = "detail";
   let newspan = document.createElement("span");
+  newspan.className = "nameRules";
+  newspan.setAttribute("data-hint","提交的文件将按照勾选的选项自动重命名");
   newspan.appendChild(document.createTextNode("重命名规则："));
   let newselect = document.createElement("div");
   newselect.className = "selectTopic";
@@ -223,7 +230,8 @@ op_file.onclick = () => {
   newli.appendChild(newinput_content);
   newli.appendChild(newbtn);
   ul.appendChild(newli);
-  btn_for_add.onclick();
+  // btn_for_add.onclick();
+  cancel.onclick();
   //给新增的题目添加删除事件
   newbtn.addEventListener("click", () => {
     ul.removeChild(newli);
@@ -340,7 +348,7 @@ op_radio.onclick = () => {
   newinput_topic.type = "text";
   newinput_topic.value = "单选题";
   newinput_topic.maxLength = "20";
-  newinput_topic.placeholder = "请输入不超过20个字符的题目";
+  newinput_topic.placeholder = "添加题目名称";
   let newdetail = document.createElement("textarea");
   newdetail.placeholder = "添加详情描述";
   newdetail.name = "detail";
@@ -355,7 +363,8 @@ op_radio.onclick = () => {
   newli.appendChild(newbtn);
   ul.appendChild(newli);
   //使弹窗消失
-  btn_for_add.onclick();
+  // btn_for_add.onclick();
+  cancel.onclick();
   //给新增的题目添加删除事件
   newbtn.addEventListener("click", () => {
     ul.removeChild(newli);
@@ -370,7 +379,7 @@ op_radio.onclick = () => {
 //添加单选题/多选题
 function addChoice(op) {
   let newqbox = document.createElement("div");
-  newqbox.className = "questionBox";
+  newqbox.className = "questionBox1";
   let optionArr = ["A", "B", "C", "D"];
   for (let i = 0; i < 4; i++) {
     let newinput_radio = document.createElement("input");
@@ -403,7 +412,7 @@ op_multipleChoice.onclick = () => {
   newinput_topic.type = "text";
   newinput_topic.value = "多选题";
   newinput_topic.maxLength = "20";
-  newinput_topic.placeholder = "请输入不超过20个字符的题目";
+  newinput_topic.placeholder = "添加题目名称";
   let newdetail = document.createElement("textarea");
   newdetail.placeholder = "添加详情描述";
   newdetail.name = "detail";
@@ -418,7 +427,8 @@ op_multipleChoice.onclick = () => {
   newli.appendChild(newbtn);
   ul.appendChild(newli);
   //使弹窗消失
-  btn_for_add.onclick();
+  // btn_for_add.onclick();
+  cancel.onclick();
   //给新增的题目添加删除事件
   newbtn.addEventListener("click", () => {
     ul.removeChild(newli);
@@ -492,7 +502,7 @@ function numberQuestion() {
         }
       }
     }
-    let radioBoxes = lis[i].getElementsByClassName("questionBox")[0];
+    let radioBoxes = lis[i].getElementsByClassName("questionBox1")[0];
     if (radioBoxes && radioBoxes.children[0].type == "radio") {
       let c = radioBoxes.children;
       for (let j = 0; j < c.length; j++) {
@@ -501,7 +511,7 @@ function numberQuestion() {
         }
       }
     }
-    let mulBoxes = lis[i].getElementsByClassName("questionBox")[0];
+    let mulBoxes = lis[i].getElementsByClassName("questionBox1")[0];
     if(mulBoxes && mulBoxes.children[0].type == "checkbox") {
       let c = mulBoxes.children;
       for (let j = 0; j < c.length; j++) {
@@ -530,73 +540,6 @@ function numberQuestion() {
   return true;
 }
 
-//提交前检查
-function check() {
-  //检查是否有重复题目
-  let errorNum = 0;
-  let arr=[];
-  let topics = document.getElementsByClassName("input-topic");
-  for(let i=0;i<topics.length;i++) {
-    if(arr.indexOf(topics[i].value)==-1) {
-      arr.push(topics[i].value);
-    }else {
-      errorNum = 1;
-    }
-  }
-  //检查多选是否至少选了两个
-  for(let i=0;i<topics.length;i++) {
-    if(topics[i].name != "question_multipleChoice") continue;
-    let checkBoxes = lis[i].querySelectorAll("input[type='checkbox']");
-    let cnt = 0;
-    for(let i=0;i<checkBoxes.length;i++) {
-      if(checkBoxes[i].checked) cnt++;
-    }
-    if(cnt < 2) {
-      errorNum = 2;
-    }
-  }
-  //出错提示弹窗
-  if(errorNum) {
-    let h1 = myalert.getElementsByTagName("h1")[0];
-    if(errorNum === 1) {
-      h1.innerHTML = "不能有重复标题";
-    }else if(errorNum === 2){
-      h1.innerHTML = "多选题至少选择两个选项";
-    }
-    myalert.classList.toggle("show");
-    btn_for_submit.disabled = "disabled";
-    countdown = 3;
-    timeOutClose();
-    return false;
-  }
-  return true;
-}
-
-//表单提交前触发检查和编号程序
-form.onsubmit = ()=>{
-  if(check()) {
-    return numberQuestion();
-  }else {
-    return false;
-  }
-}
-
-//弹窗倒计时
-function timeOutClose() {
-  document.getElementById("timeOutClose").innerHTML = countdown;
-  if(countdown > 0) {
-    setTimeout("timeOutClose();",1000);
-  }else {
-    myalert.classList.toggle("show");
-    btn_for_submit.removeAttribute("disabled");
-  }
-  countdown--;
-}
-
-addLoadEvent(op_name.onclick);
-addLoadEvent(op_file.onclick);
-addLoadEvent(deadline_limit);
-
 //问卷
 op_qnaire.onclick = () => {
   let newli = document.createElement("li");
@@ -610,7 +553,7 @@ op_qnaire.onclick = () => {
   newinput_topic.type = "text";
   newinput_topic.value = "问卷题目";
   newinput_topic.maxLength = "20";
-  newinput_topic.placeholder = "请输入不超过20个字符的题目";
+  newinput_topic.placeholder = "添加题目名称";
   let newdetail = document.createElement("textarea");
   newdetail.placeholder = "添加详情描述";
   newdetail.name = "detail";
@@ -620,8 +563,10 @@ op_qnaire.onclick = () => {
   newbtn.className = "removeTopic";
   newbtn.appendChild(document.createTextNode("删除题目"));
   let newadd = document.createElement("div");
+  newadd.className = "qnaire_addop";
   newadd.appendChild(document.createTextNode("添加选项"));
   let newdiv = document.createElement("div");
+  newdiv.className = "if_multi";
   let if_multi = document.createElement("input");
   if_multi.type = "checkbox";
   let newlabel = document.createElement("label");
@@ -650,7 +595,8 @@ op_qnaire.onclick = () => {
   newli.appendChild(newbtn);
   ul.appendChild(newli);
   //使弹窗消失
-  btn_for_add.onclick();
+  // btn_for_add.onclick();
+  cancel.onclick();
   //默认添加两个选项
   newqbox.appendChild(addQuestion(if_multi.checked));
   newqbox.appendChild(addQuestion(if_multi.checked));
@@ -704,13 +650,111 @@ function addQuestion(check_status) {
   newta.name = "qn_option";
   let newremove = document.createElement("span");
   newremove.className = "qnaire_removeop";
-  newremove.appendChild(document.createTextNode("X"));
+  // newremove.appendChild(document.createTextNode("X"));
   newoption.appendChild(newcheck);
   newoption.appendChild(newta);
   newoption.appendChild(newremove);
   newremove.onclick = () => {
     newoption.parentNode.removeChild(newoption);
   }
+  newta.addEventListener("input",()=>{
+    newta.style.height = 'auto';
+    newta.style.height = newta.scrollHeight + 'px';
+  })
   return newoption;
 }
 
+//提交前检查
+function check() {
+  //检查是否有重复题目
+  let errorNum = 0;
+  let arr=[];
+  let topics = document.getElementsByClassName("input-topic");
+  for(let i=0;i<topics.length;i++) {
+    if(arr.indexOf(topics[i].value)==-1) {
+      arr.push(topics[i].value);
+    }else {
+      errorNum = 1;
+    }
+  }
+  //检查多选是否至少选了两个
+  for(let i=0;i<topics.length;i++) {
+    if(topics[i].name != "question_multipleChoice") continue;
+    let checkBoxes = lis[i].querySelectorAll("input[type='checkbox']");
+    let cnt = 0;
+    for(let i=0;i<checkBoxes.length;i++) {
+      if(checkBoxes[i].checked) cnt++;
+    }
+    if(cnt < 2) {
+      errorNum = 2;
+    }
+  }
+  //检查问卷是否至少有两个选项
+  for(let i=0;i<topics.length;i++) {
+    if(topics[i].name != "question_qnaire") continue;
+    let qnaire_options= lis[i].querySelectorAll(".qnaire_option");
+    let qnaire_textareas = lis[i].querySelectorAll(".qnaire_textarea");
+    if(qnaire_options.length<2) {
+      errorNum = 3;
+    }
+    else {
+      //检查问卷选项是否为空 
+      for(let j=0;j<qnaire_textareas.length;j++) {
+        if(qnaire_textareas[j].value=='') {
+          errorNum = 4;
+        }
+      }
+    }
+  }
+  //检查是否至少有一个题目
+  if(topics.length === 0) {
+    errorNum = 5;
+  }
+  //出错提示弹窗
+  if(errorNum) {
+    let h1 = myalert.getElementsByTagName("h1")[0];
+    if(errorNum === 1) {
+      h1.innerHTML = "不能有重复标题!";
+    }else if(errorNum === 2){
+      h1.innerHTML = "多选题请至少选择两个选项!";
+    }else if(errorNum === 3) {
+      h1.innerHTML = "问卷选项不能少于两个！";
+    }else if(errorNum === 4) {
+      h1.innerHTML = "问卷选项内容不能为空！";
+    }else if(errorNum === 5) {
+      h1.innerHTML = "至少有一个题目！";
+    }
+    myalert.style.display = "block";
+    myblur.style.display = "block";
+    countdown = 2;
+    timeOutClose();
+    return false;
+  }
+  return true;
+}
+
+//表单提交前触发检查和编号程序
+form.onsubmit = ()=>{
+  if(check()) {
+    return numberQuestion();
+  }else {
+    return false;
+  }
+}
+
+//弹窗倒计时
+function timeOutClose() {
+  // document.getElementById("timeOutClose").innerHTML = countdown;
+  if(countdown > 0) {
+    setTimeout("timeOutClose();",1000);
+  }else {
+    myalert.style.display = "none";
+    myblur.style.display = "none";
+  }
+  countdown--;
+}
+
+addLoadEvent(op_name.onclick);
+addLoadEvent(op_sno.onclick);
+addLoadEvent(op_file.onclick);
+addLoadEvent(deadline_limit);
