@@ -60,7 +60,7 @@
         <div class="user_data">
             {#     input中value的值用变量替代   #}
             <div id="data1">
-                <div class="input_box"> 用户名称：<input type="text" name="username" class="input" readonly
+                <div class="input_box"> 用户名称： <input type="text" name="username" class="input" readonly
                                                      value={{ username }}>
                 </div>
                 <div class="input_box"> 用户手机：<input type="text" name="phone" class="input" readonly value="未设置">
@@ -68,7 +68,7 @@
                 {#                <div class="input_box"> 用户邮箱：<input type="email" name="email" class="input" readonly#}
                 {#                                                        value="1234567@7654321.hust.edu.cn"></div>#}
                 <div class="input_box"> 用户邮箱：<input type="email" name="email" class="input" readonly
-                                                     value="{{ user_email }}"></div>
+                                                    value="{{ user_email }}"></div>
                 <div class="input_box"> 邮箱授权：<input type="text" name="authorization-code" class="input" readonly
                                                     value="未填写"></div>
                 <button class="btn" onclick="changedata()">修改信息</button>
@@ -119,7 +119,10 @@
     </div>
 </div>
 <textarea id="input"></textarea>
-
+<form method="post" target="hidden_frame" id="hidden">
+    <input type="text" id="hidden-input" name="hidden-input" style="display: none">
+</form>
+<iframe name='hidden_frame' id="hidden_frame" style="display:none"></iframe>
 </body>
 {#<script src="../static/js/mycollection.js"></script>#}
 <script src="{{ url_for('static', filename='js/mycollection.js') }}"></script>

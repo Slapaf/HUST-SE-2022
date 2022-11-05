@@ -90,22 +90,32 @@ function addmember(collection_title, username, collection_status, submit_count, 
     membertitle.onclick = function () {
         //!此处需添加参数，跳转对应收集详情界面
         // window.location.href = '../templates/collection_details.html';
+        document.getElementById("hidden-input").value = "collect-details" + "idididididid";
+        document.getElementById("hidden").submit();
         window.location.href = 'collection_details';
     }
     membername.onclick = function () {
         //!此处需添加参数，跳转对应收集详情界面
+        document.getElementById("hidden-input").value = "collect-details" + "idididididid";
+        document.getElementById("hidden").submit();
         window.location.href = 'collection_details';
     }
     membercondition.onclick = function () {
         //!此处需添加参数，跳转对应收集详情界面
+        document.getElementById("hidden-input").value = "collect-details" + "idididididid";
+        document.getElementById("hidden").submit();
         window.location.href = 'collection_details';
     }
     membertimes.onclick = function () {
         //!此处需添加参数，跳转对应收集详情界面
+        document.getElementById("hidden-input").value = "collect-details" + "idididididid";
+        document.getElementById("hidden").submit();
         window.location.href = 'collection_details';
     }
     memberdate.onclick = function () {
-        //!此处需添加参数，跳转对应收集详情界面
+        //!此处需添加参数，
+        document.getElementById("hidden-input").value = "collect-details" + "idididididid";
+        document.getElementById("hidden").submit();
         window.location.href = 'collection_details';
     }
     op1.onclick = function () {
@@ -121,21 +131,29 @@ function addmember(collection_title, username, collection_status, submit_count, 
     op2.onclick = function () {
         //!此处需添加参数，跳转对应收集详情界面
         //统计按钮
+        document.getElementById("hidden-input").value = "collect-details" + "idididididid";
+        document.getElementById("hidden").submit();
         window.location.href = 'collection_details';
     }
     op3.onclick = function () {
         //!此处需添加参数，跳转对应收集详情界面
         if (membercondition.title == "进行中") {
             //编辑按钮
+            document.getElementById("hidden-input").value = "编辑" + "idididididid";
+            document.getElementById("hidden").submit();
             window.location.href = 'file_collecting';
         } else {
             //重启按钮
+            document.getElementById("hidden-input").value = "重启" + "idididididid";
+            document.getElementById("hidden").submit();
             window.location.href = 'file_collecting';
         }
     }
     op4.onclick = function () {
         //!此处需添加参数，跳转对应收集详情界面
         //复制按钮
+        document.getElementById("hidden-input").value = "复制" + "idididididid";
+        document.getElementById("hidden").submit();
         window.location.href = 'file_collecting';
     }
     op5.onclick = function () {
@@ -159,9 +177,13 @@ function addmember(collection_title, username, collection_status, submit_count, 
             membercondition.title = "已截止";
             membercondition.innerHTML = "已截止";
             memberdate.innerHTML = showtime;
+            document.getElementById("hidden-input").value = "stop " + showtime;
+            document.getElementById("hidden").submit();
         } else {
             //删除按钮
+            document.getElementById("hidden-input").value = "delete " + "idididididid";
             x.removeChild(listmember);
+            document.getElementById("hidden").submit();
         }
     }
 }
