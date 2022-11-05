@@ -1,0 +1,65 @@
+@font-face {
+  font-family: "iconfont"; /* Project id 3751655 */
+  /* Color fonts */
+  src: 
+       url('iconfont.woff2?t=1667639789758') format('woff2'),
+       url('iconfont.woff?t=1667639789758') format('woff'),
+       url('iconfont.ttf?t=1667639789758') format('truetype');
+}
+
+.iconfont {
+  font-family: "iconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-A5:before {
+  content: "\e6ef";
+}
+
+.icon-A6:before {
+  content: "\e6f6";
+}
+
+.icon-A7:before {
+  content: "\e6f7";
+}
+
+.icon-A8:before {
+  content: "\e6f8";
+}
+
+.icon-tag:before {
+  content: "\e61c";
+}
+
+.icon-time:before {
+  content: "\e61d";
+}
+
+.icon-user:before {
+  content: "\e61e";
+}
+
+.icon-A:before {
+  content: "\e6e6";
+}
+
+.icon-A1:before {
+  content: "\e6f2";
+}
+
+.icon-A2:before {
+  content: "\e6f3";
+}
+
+.icon-A3:before {
+  content: "\e6f4";
+}
+
+.icon-A4:before {
+  content: "\e6f5";
+}
+
