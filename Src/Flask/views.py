@@ -74,21 +74,24 @@ def mycollection():
         #     if question.file_path is not None:  # * 有文件路径，说明此题为文件收集题
         #         file_count += count_filenum(collection.id, question.qno)
         # * 创建一个字典类型，用于传参，可删除
-        tmp_dict = {'username': current_user.username,
-                    'collection_title': collection.collection_title,
-                    'collection_status': "进行中" if collection.status == '0' else "已截止",
-                    'submit_count': count_submission(collection_id=collection.id),
-                    'deadline': collection.end_date.strftime('%Y-%m-%d %H:%M:%S')
-                    }
+        tmp_dict = {
+            'username': current_user.username,
+            'collection_title': collection.collection_title,
+            'collection_status': "进行中" if collection.status == '0' else "已截止",
+            'collection_id': collection.id,  # ! 多传一个收集 id
+            'submit_count': count_submission(collection_id=collection.id),
+            'deadline': collection.end_date.strftime('%Y-%m-%d %H:%M:%S')
+        }
         parameter_dict_list.append(tmp_dict)
         # print(tmp_dict)
 
-    return render_template('mycollection.html',
-                           username=current_user.name,
-                           user_email=current_user.email,
-                           json_object=json.dumps(parameter_dict_list),
-                           json_length=len(parameter_dict_list)
-                           )
+    return render_template(
+        'mycollection.html',
+        username=current_user.name,
+        user_email=current_user.email,
+        json_object=json.dumps(parameter_dict_list),
+        json_length=len(parameter_dict_list)
+    )
 
 
 # @app.route('/collection_details', methods=['GET', 'POST'])

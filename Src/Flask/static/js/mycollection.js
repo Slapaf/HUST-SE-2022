@@ -4,12 +4,13 @@ function getData() {
     let tmp_json = JSON.parse(document.getElementById('json_object').innerHTML);
     let json_length = document.getElementById('json_length').innerHTML;
     for (let i = 0; i < json_length; i++) {
-        addmember(tmp_json[i].collection_title, tmp_json[i].username, tmp_json[i].collection_status, tmp_json[i].submit_count, tmp_json[i].deadline);
+        addmember(tmp_json[i].collection_title, tmp_json[i].username, tmp_json[i].collection_status,
+            tmp_json[i].collection_id, tmp_json[i].submit_count, tmp_json[i].deadline);
     }
 }
 
 // collection_title, username, collection_status, submit_count, time_before_ddl
-function addmember(collection_title, username, collection_status, submit_count, deadline) {
+function addmember(collection_title, username, collection_status, collection_id, submit_count, deadline) {
     // let collection_title = document.getElementById('data-id').getAttribute('collection_title')
     // let username = document.getElementById('data-id').getAttribute('username')
     // let collection_status = document.getElementById('data-id').getAttribute('collection_status')
@@ -23,6 +24,9 @@ function addmember(collection_title, username, collection_status, submit_count, 
     let membertimes = document.createElement("div");
     let memberdate = document.createElement("div");
     let memberoperate = document.createElement("div");
+    // ! 11/05 添加对应收集的 id
+    let memberid = document.createElement("div");
+    // ! 11/05
     let op1 = document.createElement("div");
     let op2 = document.createElement("div");
     let op3 = document.createElement("div");
@@ -30,6 +34,9 @@ function addmember(collection_title, username, collection_status, submit_count, 
     let op5 = document.createElement("div");
     //连接节点
     x.appendChild(listmember);
+    // ! 11/05
+    listmember.appendChild(memberid);
+    // ! 11/05
     listmember.appendChild(membertitle);
     listmember.appendChild(membername);
     listmember.appendChild(membercondition);
@@ -52,7 +59,13 @@ function addmember(collection_title, username, collection_status, submit_count, 
     membercondition.title = collection_status;//! 更改为membercondition的值(只能填"进行中"和"已截止"！！！)
     membertimes.title = submit_count + "份";//! 更改为membertimes的值
     memberdate.title = deadline;//! 更改为memberdate的值
+    // ! 11/05 memberid 赋值
+    memberid.title = collection_id;
+    // ! 11/05
     membertitle.appendChild(document.createTextNode(membertitle.title));
+    // ! 11/05
+    memberid.appendChild(document.createTextNode(memberid.title));
+    // ! 11/05
     membername.appendChild(document.createTextNode(membername.title));
     membercondition.appendChild(document.createTextNode(membercondition.title));
     membertimes.appendChild(document.createTextNode(membertimes.title));
@@ -86,39 +99,45 @@ function addmember(collection_title, username, collection_status, submit_count, 
     op3.className = "operate";
     op4.className = "operate";
     op5.className = "operate";
+    // ! 11/05
+    memberid.style.display = "none";
+    // ! 11/05
     //添加点击事件
     membertitle.onclick = function () {
         //!此处需添加参数，跳转对应收集详情界面
         // window.location.href = '../templates/collection_details.html';
-        document.getElementById("hidden-input").value = "collect-details" + "idididididid";
+        document.getElementById("hidden-input").value = "collect-details" + "$" + memberid.title;
         document.getElementById("hidden").submit();
         window.location.href = 'collection_details';
     }
     membername.onclick = function () {
         //!此处需添加参数，跳转对应收集详情界面
-        document.getElementById("hidden-input").value = "collect-details" + "idididididid";
+        document.getElementById("hidden-input").value = "collect-details" + "$" + memberid.title;
         document.getElementById("hidden").submit();
         window.location.href = 'collection_details';
     }
     membercondition.onclick = function () {
         //!此处需添加参数，跳转对应收集详情界面
-        document.getElementById("hidden-input").value = "collect-details" + "idididididid";
+        document.getElementById("hidden-input").value = "collect-details" + "$" + memberid.title;
         document.getElementById("hidden").submit();
         window.location.href = 'collection_details';
     }
     membertimes.onclick = function () {
         //!此处需添加参数，跳转对应收集详情界面
-        document.getElementById("hidden-input").value = "collect-details" + "idididididid";
+        document.getElementById("hidden-input").value = "collect-details" + "$" + memberid.title;
         document.getElementById("hidden").submit();
         window.location.href = 'collection_details';
     }
     memberdate.onclick = function () {
         //!此处需添加参数，
-        document.getElementById("hidden-input").value = "collect-details" + "idididididid";
+        document.getElementById("hidden-input").value = "collect-details" + "$" + memberid.title;
         document.getElementById("hidden").submit();
         window.location.href = 'collection_details';
     }
+    // ? 点击 “分享” 按钮
     op1.onclick = function () {
+        document.getElementById("hidden-input").value = "分享" + "$" + memberid.title;
+        document.getElementById("hidden").submit();
         //分享按钮
         let x = document.getElementById("box");
         document.getElementById("link").innerText = "https://www.baidu.com";//!此处修改为收集链接
@@ -128,34 +147,38 @@ function addmember(collection_title, username, collection_status, submit_count, 
         popLayer.style.display = "block";
         x.style.display = "block";
     }
+    // ? 点击 “统计” 按钮
     op2.onclick = function () {
         //!此处需添加参数，跳转对应收集详情界面
         //统计按钮
-        document.getElementById("hidden-input").value = "collect-details" + "idididididid";
+        document.getElementById("hidden-input").value = "collect-details$" + memberid.title;
         document.getElementById("hidden").submit();
         window.location.href = 'collection_details';
     }
+    // ? 点击 “编辑” 按钮
     op3.onclick = function () {
         //!此处需添加参数，跳转对应收集详情界面
         if (membercondition.title == "进行中") {
             //编辑按钮
-            document.getElementById("hidden-input").value = "编辑" + "idididididid";
+            document.getElementById("hidden-input").value = "编辑$" + memberid.title;
             document.getElementById("hidden").submit();
             window.location.href = 'file_collecting';
         } else {
             //重启按钮
-            document.getElementById("hidden-input").value = "重启" + "idididididid";
+            document.getElementById("hidden-input").value = "重启$" + memberid.title;
             document.getElementById("hidden").submit();
             window.location.href = 'file_collecting';
         }
     }
+    // ? 点击 “复制” 按钮
     op4.onclick = function () {
         //!此处需添加参数，跳转对应收集详情界面
         //复制按钮
-        document.getElementById("hidden-input").value = "复制" + "idididididid";
+        document.getElementById("hidden-input").value = "复制$" + memberid.title;
         document.getElementById("hidden").submit();
         window.location.href = 'file_collecting';
     }
+    // ? 点击 “停止” 按钮
     op5.onclick = function () {
         if (membercondition.title == "进行中") {
             //停止按钮
@@ -177,11 +200,11 @@ function addmember(collection_title, username, collection_status, submit_count, 
             membercondition.title = "已截止";
             membercondition.innerHTML = "已截止";
             memberdate.innerHTML = showtime;
-            document.getElementById("hidden-input").value = "stop " + showtime;
+            document.getElementById("hidden-input").value = "stop" + "$" + memberid.title + "$" + showtime;
             document.getElementById("hidden").submit();
         } else {
             //删除按钮
-            document.getElementById("hidden-input").value = "delete " + "idididididid";
+            document.getElementById("hidden-input").value = "delete" + "$" + memberid.title;
             x.removeChild(listmember);
             document.getElementById("hidden").submit();
         }

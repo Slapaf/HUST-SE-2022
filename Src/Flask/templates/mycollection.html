@@ -61,37 +61,38 @@
             {#     input中value的值用变量替代   #}
             <div id="data1">
                 <div class="input_box"> 用户名称： <input type="text" name="username" class="input" readonly
-                                                     value={{ username }}>
+                                                         value={{ username }}>
                 </div>
                 <div class="input_box"> 用户手机：<input type="text" name="phone" class="input" readonly value="未设置">
                 </div>
                 {#                <div class="input_box"> 用户邮箱：<input type="email" name="email" class="input" readonly#}
                 {#                                                        value="1234567@7654321.hust.edu.cn"></div>#}
                 <div class="input_box"> 用户邮箱：<input type="email" name="email" class="input" readonly
-                                                    value="{{ user_email }}"></div>
+                                                        value="{{ user_email }}"></div>
                 <div class="input_box"> 邮箱授权：<input type="text" name="authorization-code" class="input" readonly
-                                                    value="未填写"></div>
+                                                        value="未填写"></div>
                 <button class="btn" onclick="changedata()">修改信息</button>
             </div>
             <div id="data2" style="display:none">
                 <form method="post" onsubmit="return checkAll2()">
                     {#div中value的值用变量替代#}
                     <div class="input_box"> 用户名称：<input type="text" name="username" class="input" id="input4"
-                                                        onblur="checkKey_3()"
-                                                        value={{ username }}>
+                                                            onblur="checkKey_3()"
+                                                            value={{ username }}>
                     </div>
                     <span class="tip_box1" id="tip4"></span>
                     <div class="input_box"> 用户手机：<input type="text" name="phone" class="input" id="input5"
-                                                        value="未设置" onblur="checkKey_4()">
+                                                            value="未设置" onblur="checkKey_4()">
                     </div>
                     <span class="tip_box1" id="tip5"></span>
                     {#                    <div class="input_box"> 用户邮箱：<input type="email" name="email" class="input" id="input6"#}
                     {#                                                            value="1234567@7654321.hust.edu.cn"></div>#}
                     {#                    <span class="tip_box1" id="tip6"></span>#}
                     <div class="input_box"> 用户邮箱：<input type="email" name="email" class="input" id="input6"
-                                                        value="{{ user_email }}"></div>
-                    <div class="input_box"> 邮箱授权：<input type="text" name="authorization-code" class="input" id="input4"
-                                                        value="未填写">
+                                                            value="{{ user_email }}"></div>
+                    <div class="input_box"> 邮箱授权：<input type="text" name="authorization-code" class="input"
+                                                            id="input4"
+                                                            value="未填写">
                     </div>
                     <button type="submit" class="btn">确认修改</button>
                 </form>
@@ -101,17 +102,17 @@
     <div class="item">
         <div class="user_data" onsubmit="return checkAll1()">
             <div class="input_box"> 输入原密码：<input type="password" id="input0" placeholder="设置密码"
-                                                 onblur="checkKey_0()"
-                                                 class="input"></div>
+                                                      onblur="checkKey_0()"
+                                                      class="input"></div>
             <span class="tip_box" id="tip1"></span>
             <div class="input_box"> 输入新密码：<input type="password" name="psw" id="input1" placeholder="设置密码"
-                                                 onblur="checkKey_1()"
-                                                 class="input"></div>
+                                                      onblur="checkKey_1()"
+                                                      class="input"></div>
             <span class="tip_box" id="tip2"></span>
             <form method="post" id="form2">
                 <div class="input_box"> 确认新密码：<input type="password" name="psw_confirm" id="input2" class="input"
-                                                     placeholder="确认密码"
-                                                     onblur="checkKey_2()"></div>
+                                                          placeholder="确认密码"
+                                                          onblur="checkKey_2()"></div>
                 <span class="tip_box" id="tip3"></span>
                 <button class="btn" id="btn2" type="submit" name="submit" onclick="checkAll()">修改密码</button>
             </form>
