@@ -136,7 +136,7 @@ function addmember(collection_title, username, collection_status, collection_id,
     }
     // ? 点击 “分享” 按钮
     op1.onclick = function () {
-        document.getElementById("hidden-input").value = "分享" + "$" + memberid.title;
+        document.getElementById("hidden-input").value = "share" + "$" + memberid.title;
         document.getElementById("hidden").submit();
         //分享按钮
         let x = document.getElementById("box");
@@ -151,7 +151,7 @@ function addmember(collection_title, username, collection_status, collection_id,
     op2.onclick = function () {
         //!此处需添加参数，跳转对应收集详情界面
         //统计按钮
-        document.getElementById("hidden-input").value = "collect-details$" + memberid.title;
+        document.getElementById("hidden-input").value = "collect-details" + "$" + memberid.title;
         document.getElementById("hidden").submit();
         window.location.href = 'collection_details';
     }
@@ -160,12 +160,12 @@ function addmember(collection_title, username, collection_status, collection_id,
         //!此处需添加参数，跳转对应收集详情界面
         if (membercondition.title == "进行中") {
             //编辑按钮
-            document.getElementById("hidden-input").value = "编辑$" + memberid.title;
+            document.getElementById("hidden-input").value = "edit" + "$" + memberid.title;
             document.getElementById("hidden").submit();
             window.location.href = 'file_collecting';
         } else {
             //重启按钮
-            document.getElementById("hidden-input").value = "重启$" + memberid.title;
+            document.getElementById("hidden-input").value = "restart" + "$" + memberid.title;
             document.getElementById("hidden").submit();
             window.location.href = 'file_collecting';
         }
@@ -174,7 +174,7 @@ function addmember(collection_title, username, collection_status, collection_id,
     op4.onclick = function () {
         //!此处需添加参数，跳转对应收集详情界面
         //复制按钮
-        document.getElementById("hidden-input").value = "复制$" + memberid.title;
+        document.getElementById("hidden-input").value = "copy" + "$" + memberid.title;
         document.getElementById("hidden").submit();
         window.location.href = 'file_collecting';
     }
@@ -185,10 +185,15 @@ function addmember(collection_title, username, collection_status, collection_id,
             let date = new Date();
             let year = date.getFullYear();
             let month = date.getMonth() + 1;
+            if (month < 10) month = '0' + month;
             let day = date.getDate();
+            if (day < 10) day = '0' + day;
             let hour = date.getHours();
+            if (hour < 10) hour = '0' + hour;
             let minute = date.getMinutes();
+            if (minute < 10) minute = '0' + minute;
             let second = date.getSeconds();
+            if (second < 10) second = '0' + second;
             let showtime = year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + second;
             op3.innerHTML = "重启";
             op5.innerHTML = "删除";
@@ -204,7 +209,7 @@ function addmember(collection_title, username, collection_status, collection_id,
             document.getElementById("hidden").submit();
         } else {
             //删除按钮
-            document.getElementById("hidden-input").value = "delete" + "$" + memberid.title;
+            document.getElementById("hidden-input").value = "del" + "$" + memberid.title;
             x.removeChild(listmember);
             document.getElementById("hidden").submit();
         }
