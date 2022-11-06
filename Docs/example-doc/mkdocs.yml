@@ -1,7 +1,15 @@
 site_name: HUST 211 的软工项目文档
 site_url: https://hust-example.com/
 nav:
-  - Home: index.md
-  - About: about.md
+  - 主页: index.md
+  - 指南:
+      - 收集者: user-guide/collector.md
+      - 提交者: user-guide/submitter.md
+  - 关于:
+      - 我们: about/about.md
+      - 版本: about/release-notes.md
 theme:
   name: material
+markdown_extensions:
+  - toc:
+      permalink: "#"

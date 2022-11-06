@@ -1,0 +1,10 @@
+site_name: HUST 211 的软工项目文档
+site_url: https://hust-example.com/
+nav:
+  - Home: "index.md"
+  - About: "about.md"
+theme:
+  name: material
+markdown_extensions:
+  - toc:
+      permalink: "#"
