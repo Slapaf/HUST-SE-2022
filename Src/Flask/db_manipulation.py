@@ -504,44 +504,70 @@ def get_question_Dict(collection_id: int):
     seq += 1
     question[f'{seq}_description'] = collection.description
     question_list = Question_info.query.filter_by(collection_id=collection_id).order_by("qno").all()
+    print(question_list)
     for q in question_list:
         # 若是填空题
         if q.question_type == Question_info.FILL_IN_BLANK:
             seq += 1
             question[f'{seq}_question_fill{q.qno}'] = q.question_title
+            seq += 1
+            question[f'{seq}_detail{q.qno}'] = q.question_description
 
         # 若是文件上传题
         if q.question_type == Question_info.FILE_UPLOAD:
             seq += 1
             question[f'{seq}_question_file{q.qno}'] = q.question_title
+            seq += 1
+            question[f'{seq}_detail{q.qno}'] = q.question_description
+            # 重命名规则
+            qno_list = list(map(int, q.rename_rule.split('-')))
+            for qno in qno_list:
+                seq += 1
+                question[f'{seq}_checked_topic{q.qno}'] = Question_info.query. \
+                    filter_by(collection_id=collection_id, qno=qno).first().question_title
 
         # 若是单选题
         if q.question_type == Question_info.SINGLE_CHOICE:
             seq += 1
             question[f'{seq}_question_radio{q.qno}'] = q.question_title
+            seq += 1
+            question[f'{seq}_detail{q.qno}'] = q.question_description
+            # 单选题答案
+            seq += 1
+            question[f'{seq}_checked_radio{q.qno}'] = Answer_info.query. \
+                filter_by(question_id=q.id).first().answer_option
 
         # 若是多选题
         if q.question_type == Question_info.MULTI_CHOICE:
             seq += 1
             question[f'{seq}_question_multipleChoice{q.qno}'] = q.question_title
+            seq += 1
+            question[f'{seq}_detail{q.qno}'] = q.question_description
+            # 多选题答案
+            answer_list = Answer_info.query.filter_by(question_id=q.id).with_entities(Answer_info.answer_option).all()
+            answer_list = list(map(itemgetter(0), answer_list))
+            print(answer_list)
+            for answer in answer_list:
+                seq += 1
+                question[f'{seq}_checked_mulans{q.qno}'] = answer
 
         # 若是问卷题
-        if q.question_type == Question_info.SINGLE_QUESTIONNAIRE or Question_info.SINGLE_QUESTIONNAIRE:
+        if q.question_type == Question_info.SINGLE_QUESTIONNAIRE or \
+                q.question_type == Question_info.MULTI_QUESTIONNAIRE:
             seq += 1
             question[f'{seq}_question_qnaire{q.qno}'] = q.question_title
+            seq += 1
+            question[f'{seq}_detail{q.qno}'] = q.question_description
+            option_list = Option_info.query.filter_by(question_id=q.id).order_by("option_sn").all()
+            for option in option_list:
+                seq += 1
+                question[f'{seq}_qn_option{q.qno}'] = option.option_content
             if q.question_type == Question_info.SINGLE_QUESTIONNAIRE:
                 seq += 1
                 question[f'{seq}_choose_type{q.qno}'] = "single"
             else:
                 seq += 1
                 question[f'{seq}_choose_type{q.qno}'] = "multiple"
-            option_list = Option_info.query.filter_by(question_id=q.id).order_by("option_sn").all()
-            for option in option_list:
-                seq += 1
-                question[f'{seq}_qn_option{q.qno}'] = option.option_content
-
-        seq += 1
-        question[f'{seq}_detail{q.qno}'] = q.question_description
 
     return question
 
