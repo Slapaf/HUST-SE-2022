@@ -38,15 +38,15 @@
   - [English Documentation](https://www.mkdocs.org/)
 - 本地文档环境搭建
 
-  - 安装 `MkDocs`
+  - 安装 `MkDocs` 及主题
 
-    ```
-    pip install mkdocs
+    ```shell
+    pip install mkdocs mkdocs-material
     ```
 
   - 检查版本
 
-    ```
+    ```shell
     $ mkdocs --version
     mkdocs, version 1.4.2 from /.../venv/lib/python3.X/site-packages/mkdocs (Python 3.X)
     ```
@@ -55,7 +55,7 @@
 
     进入到 `example-doc` 目录下，输入如下命令：
 
-    ```
+    ```shell
     $ mkdocs serve
     INFO     -  Building documentation...
     INFO     -  Cleaning site directory
