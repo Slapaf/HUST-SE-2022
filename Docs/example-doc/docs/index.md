@@ -4,9 +4,9 @@
 
 ## 0. 快速定位
 
-作为老师/班委，我该如何快捷收集各种作业/文件？ [我是收集者](./user-guide/collector.md)
+作为老师或班委，我该如何快捷收集各种作业/文件？ [我是收集者](./user-guide/collector.md)
 
-作为提交者，我该如何通过收件箱提交作业/文件？ [我是提交者](./user-guide/submitter.md)
+作为提交者，我该如何通过收集链接提交作业/文件？ [我是提交者](./user-guide/submitter.md)
 
 ## 1. 系统说明
 
@@ -15,7 +15,7 @@
     mkdocs.yml                  # The configuration file.
     docs/
         about/
-            about.md            # Who we are.
+            about-us.md         # Who we are.
             release-notes.md    # Release notes about project.
         user-guide/
             collector.md        # How to use if you are a collector.

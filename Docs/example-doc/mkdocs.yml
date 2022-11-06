@@ -5,8 +5,9 @@ nav:
   - 指南:
       - 收集者: user-guide/collector.md
       - 提交者: user-guide/submitter.md
+      - FAQ: user-guide/FAQ.md
   - 关于:
-      - 我们: about/about.md
+      - 我们: about/about-us.md
       - 版本: about/release-notes.md
 theme:
   name: material
