@@ -1,6 +1,5 @@
 import datetime
 import json
-from werkzeug.datastructures import MultiDict
 from models import User
 import time
 import pandas as pd
@@ -9,36 +8,48 @@ from flask_login import login_user, login_required, logout_user, current_user
 from init import app, db
 from db_manipulation import *
 
-"""
-#     TODO 接口设计
-#         1. 创建收集后，根据获得的信息将收集存入数据库，设置提交文件的存储路径（作为返回值用于 create_link.html 页面设置），
-#             建议用“收集名+随机数”的组合作为收集标识，用于查找定位，防止重名冲突；
-#         2. 用户进入 mycollection.html 页面时，遍历数据库中的所有收集，返回两个列表（命名随意）：list1 和 list2
-#             list1 存放正在进行的收集（比较 end_date 和用户进入页面时的系统时间），list2 存放已经截止的收集；
-#         3. 用户位于 collection_details.html 页面时，如果添加了应交名单，则需要将名单存入对应收集的某个子目录，
-#             并更新 namelist_path 属性；
-#         4. 其他查询接口暂定自由设计。
-"""
+sample = [('collection_id', 4),
+          ('submitter_id', 1),
+          ('question_name1', '姓名lala'),
+          ('submit_name1', '计胜翔'),
+          ('question_file2', '文件haha'),
+          ('submit_file2', '二十大观看心得.docx'),
+          ('question_sno3', '学号xixi'),
+          ('submit_sno3', 'U202015362'),
+          ('question_radio4', '单选题nie'),
+          ('submit_checked_radio4', 'C'),
+          ('question_multipleChoice5', '多选题kk'),
+          ('submit_checked_mulans5', 'A'),
+          ('submit_checked_mulans5', 'B'),
+          ('question_qnaire6', '你喜欢跑步吗？'),
+          ('submit_checked_qnaire6', '1')]
 
 
 # 用于测试数据库接口函数
 @app.route('/test')
 def test():
-    # submission_record(3)
-    delete_collection(1)
+    # # submission_record(3)
+    # delete_collection(1)
+    save_submission(sample)
     return redirect(url_for('index'))
 
 
 @app.route('/file_submitting/<int:collection_id>', methods=['GET', 'POST'])
 def file_submitting(collection_id):
     if request.method == 'POST':
-        pass
-    question_dict = get_question_Dict(collection_id);
-    print(question_dict)
-    if question_dict is None:
-        return render_template("404.html")
-    return render_template("file_submitting.html",
-                           collection=question_dict);
+        submission = request.form
+        print(submission)
+        a = list(submission.items(multi=True))
+        # TODO：目前前端传过来的数据中没有collection_id和submitter_id
+        save_submission(a)
+        return redirect(url_for('index'))
+    else:
+        question_dict = get_question_Dict(collection_id);
+        print(question_dict)
+        if question_dict is None:
+            return render_template("404.html")
+        return render_template("file_submitting.html",
+                               collection=question_dict);
 
 
 # ! 写错地方了，先留着
@@ -156,7 +167,6 @@ def generate_collection():
             flash("Transport Error!")  # 获取失败
             return render_template('index.html')
         else:
-            print(question_list)
             a = list(question_list.items(multi=True))
             print(a)  # ! 调试用
             t = add_FC(a, current_user.id)

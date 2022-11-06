@@ -91,7 +91,6 @@
             2 days, 1:11:00
     
     6、delete_collection(collection_id=None)
-        ！未测试正确性
         Function: 删除id为collection_id的收集在数据库中的相关数据（包括收集的文件）
         
         Inputs:
@@ -162,7 +161,30 @@
         - action_list：list类型，元素类型为string
         
         Returns: None
+    
+    12、save_submission(submission_list: list)
+        Function: 将用户填写收集的内容submission_list存储到数据库中
         
+        Inputs:
+        - submission_list：list类型，元素类型为元组。格式如下：
+        sample = [('collection_id', 4),   ！必须要有
+                  ('submitter_id', 1),    ！必须要有
+                  ('question_name1', '姓名lala'),
+                  ('submit_name1', '计胜翔'),
+                  ('question_file2', '文件haha'),
+                  ('submit_file2', '二十大观看心得.docx'),
+                  ('question_sno3', '学号xixi'),
+                  ('submit_sno3', 'U202015362'),
+                  ('question_radio4', '单选题nie'),
+                  ('submit_checked_radio4', 'C'),
+                  ('question_multipleChoice5', '多选题kk'),
+                  ('submit_checked_mulans5', 'A'),
+                  ('submit_checked_mulans5', 'B'),
+                  ('question_qnaire6', '你喜欢跑步吗？'),
+                  ('submit_checked_qnaire6', '1')]
+                  
+        Returns: 
+        - submission_id：int类型，表示该提交记录在表Submission_info中的id
 '''''
 
 import string
@@ -506,7 +528,6 @@ def get_question_Dict(collection_id: int):
     seq += 1
     question[f'{seq}_description'] = collection.description
     question_list = Question_info.query.filter_by(collection_id=collection_id).order_by("qno").all()
-    print(question_list)
     for q in question_list:
         # 若是填空题
         if q.question_type == Question_info.FILL_IN_BLANK:
@@ -548,7 +569,6 @@ def get_question_Dict(collection_id: int):
             # 多选题答案
             answer_list = Answer_info.query.filter_by(question_id=q.id).with_entities(Answer_info.answer_option).all()
             answer_list = list(map(itemgetter(0), answer_list))
-            print(answer_list)
             for answer in answer_list:
                 seq += 1
                 question[f'{seq}_checked_mulans{q.qno}'] = answer
@@ -662,3 +682,60 @@ def stop_collection(collection_id: int, action_list):
     new_ddl = datetime.strptime(new_ddl, '%Y-%m-%d %H:%M:%S')
     collection.update({'end_date': new_ddl})
     db.session.commit()
+
+
+def save_submission(submission_list: list):
+    submission_multidict = MultiDict(submission_list)
+    collection_id = submission_multidict['collection_id']
+    submitter_id = submission_multidict['submitter_id']
+    # 创建一个提交记录，并加入数据库
+    submission = Submission_info(collection_id=collection_id,
+                                 submitter_id=submitter_id)
+    submission.submitter_name = User.query.get(submitter_id).username
+    submission.collection_title = Collection_info.query.get(collection_id).collection_title
+    db.session.add(submission)
+    db.session.commit()
+    submission_id = submission.id  # 获得该提交记录的id
+
+    # 提取问题的键值列表
+    key_list = list(submission_multidict.keys())
+    key_list = [key for key in key_list if "question" in key]
+    for key in key_list:
+        submit_content = Submit_Content_info(submission_id=submission_id,
+                                             collection_id=collection_id,
+                                             qno=int(key[-1]))
+        question_id = Question_info.query.filter_by(collection_id=collection_id, qno=int(key[-1])). \
+            first().id
+        submit_content.question_id = question_id
+
+        # 若为姓名题
+        if "name" in key:
+            submit_content.result = submission_multidict['submit_name' + key[-1]]
+
+        # 若为学号题
+        elif "sno" in key:
+            submit_content.result = submission_multidict['submit_sno' + key[-1]]
+
+        # 若为文件上传题
+        elif "file" in key:
+            submit_content.result = submission_multidict['submit_file' + key[-1]]
+
+        # 若为单选题
+        elif "radio" in key:
+            submit_content.result = submission_multidict['submit_checked_radio' + key[-1]]
+
+        # 若为多选题
+        elif "multipleChoice" in key:
+            result = submission_multidict.getlist("submit_checked_mulans" + key[-1])
+            result = '-'.join(result)
+            submit_content.result = result
+
+        elif "qnaire" in key:
+            result = submission_multidict.getlist("submit_checked_qnaire" + key[-1])
+            result = '-'.join(result)
+            submit_content.result = result
+
+        db.session.add(submit_content)
+        db.session.commit()
+
+    return submission_id
