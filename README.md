@@ -33,5 +33,35 @@
 
 #### 文档编辑
 
-- `Docs/example` 目录下的 `docs` 文件夹存放相关文档的 markdown 文件，`mkdocs.yml` 组织项目结构，使用教程参考 https://www.mkdocs.org/getting-started/#getting-started-with-mkdocs
-- Python 虚拟环境暂时不配置，以服务器为准
+- `Docs/example` 目录下的 `docs` 文件夹存放相关文档的 markdown 文件，`mkdocs.yml` 组织项目结构，使用教程参考
+  - [中文文档](https://mkdocs.zimoapps.com/)
+  - [English Documentation](https://www.mkdocs.org/)
+- 本地文档环境搭建
+
+  - 安装 `MkDocs`
+
+    ```
+    pip install mkdocs
+    ```
+
+  - 检查版本
+
+    ```
+    $ mkdocs --version
+    mkdocs, version 1.4.2 from /.../venv/lib/python3.X/site-packages/mkdocs (Python 3.X)
+    ```
+
+  - 启动文档
+
+    进入到 `example-doc` 目录下，输入如下命令：
+
+    ```
+    $ mkdocs serve
+    INFO     -  Building documentation...
+    INFO     -  Cleaning site directory
+    INFO     -  Documentation built in 0.21 seconds
+    INFO     -  [14:48:02] Watching paths for changes: 'docs', 'mkdocs.yml'
+    INFO     -  [14:48:02] Serving on http://127.0.0.1:8000/
+    ```
+
+    在浏览器中打开 `http://127.0.0.1/8000`，将看到文档主页。
