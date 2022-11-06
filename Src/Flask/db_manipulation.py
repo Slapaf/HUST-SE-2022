@@ -495,6 +495,8 @@ def get_question_Dict(collection_id: int):
     seq = 0
     question = {}
     collection = Collection_info.query.get(collection_id)
+    if collection is None:
+        return None
     seq += 1
     question[f'{seq}_collectionTitle'] = collection.collection_title
     seq += 1

@@ -31,8 +31,12 @@ def test():
 
 @app.route('/file_submitting/<int:collection_id>', methods=['GET', 'POST'])
 def file_submitting(collection_id):
+    if request.method == 'POST':
+        pass
     question_dict = get_question_Dict(collection_id);
     print(question_dict)
+    if question_dict is None:
+        return render_template("404.html")
     return render_template("file_submitting.html",
                            collection=question_dict);
 
