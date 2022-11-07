@@ -235,11 +235,13 @@ function addmember(collection_title, username, collection_status, collection_id,
             document.getElementById("hidden-input").value = "edit" + "$" + memberid.title;
             document.getElementById("hidden").submit();
             // window.location.href = 'file_collecting';
+            window.location.href = 'file_editing/' + memberid.title;
         } else {
             //重启按钮
             document.getElementById("hidden-input").value = "restart" + "$" + memberid.title;
             document.getElementById("hidden").submit();
             // window.location.href = 'file_collecting';
+            window.location.href = 'file_editing/' + memberid.title;
         }
     }
     // ? 点击 “复制” 按钮

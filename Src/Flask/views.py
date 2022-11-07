@@ -140,9 +140,9 @@ def mycollection():
             return render_template('collection_details.html')
         elif user_action_list[0] == 'edit':  # 编辑
             # TODO doing...
-            print("哈哈哈")
+            print("哈哈哈")  # ! 调试用
             # return render_template("file_editing.html", collection=question_dict)
-            return redirect(url_for('file_editing', collection_id=collection_id))
+            # return redirect(url_for('file_editing', collection_id=collection_id))
         elif user_action_list[0] == 'restart':  # 重启
             pass
         elif user_action_list[0] == 'copy':  # 复制
