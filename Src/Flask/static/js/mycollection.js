@@ -211,7 +211,8 @@ function addmember(collection_title, username, collection_status, collection_id,
         document.getElementById("hidden").submit();
         //分享按钮
         let y = document.getElementById("box");
-        document.getElementById("link").innerText = "https://www.baidu.com";//!此处修改为收集链接
+        // TODO 此处修改为收集链接，上线需修改
+        document.getElementById("link").innerText = "127.0.0.1:5000/file_submitting/submit" + memberid.title;
         let popLayer = document.getElementById('popLayer');
         popLayer.style.width = "100%";
         popLayer.style.height = "100%";
