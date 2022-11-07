@@ -44,8 +44,8 @@ def test():
 @app.route('/file_submitting/<collection_message>', methods=['GET', 'POST'])
 def file_submitting(collection_message):
     collection_id = int(collection_message[-1])  # ! 从收集信息字符串中提取收集 id
-    print(collection_id)
-    print(type(collection_id))
+    # print(collection_id)
+    # print(type(collection_id))
     if request.method == 'POST':
         submission = request.form
         print(submission)
@@ -103,23 +103,33 @@ def mycollection():
         # print(user_action_list)
         collection_id = user_action_list[1]  # 待操作的收集 id
         # * 根据第一个参数确定操作类型
-        if user_action_list[0] == 'share':  # 分享
+        if user_action_list[0] == 'share':  # ? 分享，已完成
             submitting_page = 'file_submitting' + '/submit' + collection_id
             # return render_template('file_submitting.html')  # ! Debug
             print(submitting_page)  # ! 调试
         elif user_action_list[0] == 'collect-details':  # 统计
-            # TODO
-            pass
+            # TODO doing...
+            parameter_dict_list = []
+            submission_list = submission_record(collection_id=int(collection_id))  # * 获取对应 id 的收集信息
+            print(submission_list)
+            for submission in submission_list:
+                # * 创建一个字典类型，用于传参
+                tmp_dict = {
+                    'submitter_name': submission[0],
+                    'submit_time': submission[1]
+                }
+                parameter_dict_list.append(tmp_dict)
+            return render_template('collection_details.html')
         elif user_action_list[0] == 'edit':  # 编辑
             pass
         elif user_action_list[0] == 'restart':  # 重启
             pass
         elif user_action_list[0] == 'copy':  # 复制
             pass
-        elif user_action_list[0] == 'stop':  # 停止
+        elif user_action_list[0] == 'stop':  # ? 停止，已完成
             stop_collection(int(collection_id), user_action_list)
-        elif user_action_list[0] == 'del':  # 删除
-            delete_collection(int(collection_id))  # TODO 有问题
+        elif user_action_list[0] == 'del':  # ? 删除，已完成
+            delete_collection(int(collection_id))
         return redirect(url_for('mycollection'))
 
     update_status(current_user.id)  # 更新当前用户所有收集的 status 字段
