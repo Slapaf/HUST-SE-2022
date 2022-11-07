@@ -1,0 +1,292 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    /* background-image: url(images/bgi-1.png); */
+    /* background-color: #8bb6f2; */
+    background: linear-gradient(to bottom right, #9c8bf2,#4c9bf0);
+    background-size: cover;
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+/* body::before{
+    content: "";
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top:0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: -10;
+    backdrop-filter: blur(10px);
+} */
+
+/* 导航栏 */
+.nav {
+    width: 110px;
+    /*    width: 280px;*/
+    margin-right: 180px;
+    height: 100vh;
+    background: rgba(243, 246, 249,0.8);
+    border-radius: 0 10px 10px 0;
+    overflow: hidden;
+    transition: 0.5s;
+
+}
+
+.nav:hover {
+    width: 280px;
+}
+
+
+.myicon {
+    width: 250px;
+    height: 60px;
+    margin-left: 25px;
+    margin-top: 20px;
+    display: flex;
+}
+
+.icon-img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 4px solid rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+}
+
+.icon-img img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.icon-con {
+    height: 60px;
+    margin-left: 25px;
+}
+
+.icon-con p {
+    padding-top: 5px;
+}
+
+.icon-con h2 {
+    font-weight: 400;
+}
+
+.line {
+    width: 60px;
+    height: 1px;
+    background: rgba(0, 0, 0, 0.5);
+    margin: 20px 25px;
+    transition: 0.5s;
+}
+
+.nav:hover .line {
+    width: 230px;
+}
+
+.title {
+    width: 60px;
+    margin-left: 25px;
+    margin-bottom: 20px;
+}
+
+.title p {
+    font-size: 14px;
+}
+
+.tab_list {
+    width: 230px;
+    margin-left: 25px;
+}
+
+.tab_list_item {
+    display: flex;
+    position: relative;
+    transition: 0.5s;
+    border-radius: 6px;
+    margin: 5px 0;
+}
+
+.tab_list_item:hover {
+    background: white;
+    cursor: pointer;
+}
+
+.licon {
+    width: 40px;
+    height: 50px;
+    margin-left: 10px;
+    /* display: flex;
+    justify-content: center;
+    align-items: center; */
+}
+
+.con {
+    /* width: 0px; */
+    width: 160px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: 0.5s;
+    overflow: hidden;
+    position: relative;
+    left: -20px;
+    opacity: 0;
+}
+
+.nav:hover .con {
+    width: 160px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 1;
+}
+
+.nav:hover .ricon {
+    width: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 1;
+}
+
+.iconfont {
+    font-size: 26px;
+}
+
+.ricon .iconfont {
+    font-size: 20px;
+    color: #62cb44;
+}
+
+.light {
+    width: 6px;
+    height: 50px;
+    background: #005cff;
+    position: absolute;
+    left: -25px;
+    transition: 0.5s;
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+    opacity: 0;
+}
+
+.tab_list_item:hover .light {
+    opacity: 1;
+}
+
+.nav:hover .serve {
+    width: 230px;
+}
+
+/* 用户信息界面 */
+.change_password,
+.user_information {
+    position: relative;
+    width: 45vw;
+    height: 400px;
+    background-color: white;
+    border-radius: 20px;
+    margin-left: 10vw;
+    /* backdrop-filter: blur(10px); */
+    box-shadow: 0 0 10px #c2c2c2;
+    transition: 0.5s;
+}
+
+.photo {
+    width: 150px;
+    height: 150px;
+    /* background-color: black; */
+    position: absolute;
+    left: -75px;
+    top: 125px;
+    border-radius: 20px;
+    box-shadow: 0 0 10px #c2c2c2;
+    background-image: url(images/portrait.png);
+    background-size: cover;
+    background-repeat: no-repeat;
+    backdrop-filter: blur(50px);
+}
+
+.change_password,
+#form2,
+#data1,
+#Form {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.btn,
+.input_box>input,
+.input_box {
+  font-size: 16px;
+  margin: 5px;
+  padding: 5px;
+}
+
+.input_box>input {
+    border: none;
+    border-bottom: 1px solid;
+    /* outline: none; */
+}
+
+.change_password {
+    display: none;
+}
+
+.btn {
+    background-color: #f3f6f9;
+    color: #666666;
+    border: 1px solid gray;
+    border-radius: 5px;
+    padding: 5px 10px;
+}
+.btn:hover {
+    cursor: pointer;
+    background-color: #3b9dff;
+    color: white;
+    border: none;
+}
+
+#btn2 {
+    position:relative;
+    top: 30px;
+}
+
+.tip_box1,
+.tip_box {
+  position: fixed;
+  top: 10px;
+  /* left: 40vw; */
+  pointer-events: auto;
+  width: fit-content;
+  height: 60px;
+  background-color: white;
+  border-radius: 5px;
+  box-shadow: 0 0 5px #c2c2c2;
+  padding: 16px 20px;
+  display: none;
+  /* z-index: 2; */
+}
+
+.tip_box1::before,
+.tip_box::before {
+    font-family: "iconfont" !important;
+    content: "\e6ee";
+    font-size: larger;
+    position: relative;
+    top: 2px;
+    margin-right: 10px;
+}

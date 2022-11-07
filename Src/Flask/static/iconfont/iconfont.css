@@ -2,9 +2,9 @@
   font-family: "iconfont"; /* Project id 3751655 */
   /* Color fonts */
   src: 
-       url('iconfont.woff2?t=1667639789758') format('woff2'),
-       url('iconfont.woff?t=1667639789758') format('woff'),
-       url('iconfont.ttf?t=1667639789758') format('truetype');
+       url('iconfont.woff2?t=1667718570679') format('woff2'),
+       url('iconfont.woff?t=1667718570679') format('woff'),
+       url('iconfont.ttf?t=1667718570679') format('truetype');
 }
 
 .iconfont {
@@ -13,6 +13,38 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-A10:before {
+  content: "\e6e7";
+}
+
+.icon-A11:before {
+  content: "\e6e8";
+}
+
+.icon-A12:before {
+  content: "\e6e9";
+}
+
+.icon-A13:before {
+  content: "\e6f9";
+}
+
+.icon-A14:before {
+  content: "\e6fa";
+}
+
+.icon-A16:before {
+  content: "\e6fc";
+}
+
+.icon-A13-copy:before {
+  content: "\e6fd";
+}
+
+.icon-A9:before {
+  content: "\e6ee";
 }
 
 .icon-A5:before {

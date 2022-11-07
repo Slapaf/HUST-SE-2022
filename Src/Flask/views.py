@@ -27,6 +27,9 @@ sample = [('collection_id', 4),
           ('question_qnaire6', '你喜欢跑步吗？'),
           ('submit_checked_qnaire6', '1')]
 
+@app.route('/personal_homepage', methods=['GET', 'POST'])
+def personal_homepage():
+    return render_template("personal_homepage.html")
 
 # 用于测试数据库接口函数
 @app.route('/test')

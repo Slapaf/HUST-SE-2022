@@ -6,6 +6,62 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "13478682",
+      "name": "我的",
+      "font_class": "A10",
+      "unicode": "e6e7",
+      "unicode_decimal": 59111
+    },
+    {
+      "icon_id": "13478689",
+      "name": "重置密码",
+      "font_class": "A11",
+      "unicode": "e6e8",
+      "unicode_decimal": 59112
+    },
+    {
+      "icon_id": "13478692",
+      "name": "保存",
+      "font_class": "A12",
+      "unicode": "e6e9",
+      "unicode_decimal": 59113
+    },
+    {
+      "icon_id": "13478762",
+      "name": "个人信息",
+      "font_class": "A13",
+      "unicode": "e6f9",
+      "unicode_decimal": 59129
+    },
+    {
+      "icon_id": "13478768",
+      "name": "向左",
+      "font_class": "A14",
+      "unicode": "e6fa",
+      "unicode_decimal": 59130
+    },
+    {
+      "icon_id": "13478796",
+      "name": "首页",
+      "font_class": "A16",
+      "unicode": "e6fc",
+      "unicode_decimal": 59132
+    },
+    {
+      "icon_id": "32687900",
+      "name": "个人信息-copy",
+      "font_class": "A13-copy",
+      "unicode": "e6fd",
+      "unicode_decimal": 59133
+    },
+    {
+      "icon_id": "13478715",
+      "name": "提示",
+      "font_class": "A9",
+      "unicode": "e6ee",
+      "unicode_decimal": 59118
+    },
+    {
       "icon_id": "13478732",
       "name": "标签",
       "font_class": "A5",
