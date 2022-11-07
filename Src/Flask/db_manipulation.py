@@ -667,7 +667,7 @@ def submission_record(collection_id: int):
     # 获取提交名单列表
     name_list = Submission_info.query. \
         filter_by(collection_id=collection_id). \
-        order_by("-submit_time"). \
+        order_by("id"). \
         with_entities(Submission_info.submitter_name). \
         all()
     name_list = list(map(itemgetter(0), name_list))
@@ -675,7 +675,7 @@ def submission_record(collection_id: int):
     # 获取提交时间列表
     time_list = Submission_info.query. \
         filter_by(collection_id=collection_id). \
-        order_by("-submit_time"). \
+        order_by("id"). \
         with_entities(Submission_info.submit_time). \
         all()
     time_list = list(map(itemgetter(0), time_list))
@@ -683,7 +683,7 @@ def submission_record(collection_id: int):
     # 获取提交信息id列表
     submission_id_list = Submission_info.query. \
         filter_by(collection_id=collection_id). \
-        order_by("-submit_time"). \
+        order_by('id'). \
         with_entities(Submission_info.id). \
         all()
     submission_id_list = list(map(itemgetter(0), submission_id_list))
@@ -704,13 +704,17 @@ def submission_record(collection_id: int):
     # 构建文件详情列表
     file_list = []
     for id in submission_id_list:
-        file = Submit_Content_info.query.filter_by(Submission_id=id). \
+        file = Submit_Content_info.query.filter(Submit_Content_info.submission_id == id,
+                                                Submit_Content_info.question_id.in_(question_id_list)). \
             with_entities(Submit_Content_info.result). \
             all()
         file = list(map(itemgetter(0), file))
         file_list.append(file)
 
-    return list(zip(name_list, time_list, file_num_list, file_list))
+    record = list(zip(name_list, time_list, file_num_list, file_list))
+    # 对元组列表根据submit_time进行降序排序
+    record = list(reversed(sorted(record, key=lambda x: (x[1].timestamp(), x[0]))))
+    return record
 
 
 def stop_collection(collection_id: int, action_list):
@@ -724,18 +728,18 @@ def stop_collection(collection_id: int, action_list):
 
 def save_submission(submission_list: list):
     submission_multidict = MultiDict(submission_list)
+    key_list = list(submission_multidict.keys())  # 提取问题的键值列表
+    seq = list(filter(lambda x: x.find("name") >= 0, key_list))[0][-1]
     collection_id = submission_multidict['collection_id']
     # 创建一个提交记录，并加入数据库
-    submission = Submission_info(collection_id=collection_id)
-    # submission.submitter_name = User.query.get(submitter_id).username
+    submission = Submission_info(collection_id=collection_id,
+                                 # submitter_id=submission_multidict['submitter_id'],
+                                 submitter_name=submission_multidict[f'submit_name{seq}'])
     submission.collection_title = Collection_info.query.get(collection_id).collection_title
     db.session.add(submission)
     db.session.commit()
     submission_id = submission.id  # 获得该提交记录的id
 
-    # 提取问题的键值列表
-    key_list = list(submission_multidict.keys())
-    # list(filter(lambda x: x.find("name") >= 0, key_list))[0]
     key_list = [key for key in key_list if "question" in key]
     for key in key_list:
         submit_content = Submit_Content_info(submission_id=submission_id,

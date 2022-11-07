@@ -1,4 +1,4 @@
-list = ['1','2']
+list = ['1', '2']
 str = '-'.join(list)
 print(str)
 
@@ -15,3 +15,7 @@ print(str)
  ('submit_checked_mulans5', 'B'),
  ('question_qnaire6', '你喜欢跑步吗？'),
  ('submit_checked_qnaire6', '1')]
+
+[('张隽翊', datetime.datetime(2022, 11, 7, 16, 1, 19, 235046), 1, ['张隽翊', '二十大观看心得.docx', 'U202015362', 'C', 'A-B', '1']),
+ ('王广凯', datetime.datetime(2022, 11, 7, 16, 1, 19, 235046), 1,['王广凯', '王广凯dsb.pdf', 'U202015323', 'C', 'A-B', '1']),
+ ('计胜翔', datetime.datetime(2022, 11, 6, 15, 49, 27, 985976), 1,['计胜翔', '二十大观看心得.docx', 'U202015362', 'C', 'A-B', '1'])]

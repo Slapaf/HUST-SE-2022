@@ -11,21 +11,35 @@ from db_manipulation import *
 # ! 分享页面的链接（上线前用域名地址替换）
 SUBMITTING_PAGE = "127.0.0.1:5000/file_submitting"
 
-sample = [('collection_id', 4),
-          ('submitter_id', 1),
-          ('question_name1', '姓名lala'),
-          ('submit_name1', '计胜翔'),
-          ('question_file2', '文件haha'),
-          ('submit_file2', '二十大观看心得.docx'),
-          ('question_sno3', '学号xixi'),
-          ('submit_sno3', 'U202015362'),
-          ('question_radio4', '单选题nie'),
-          ('submit_checked_radio4', 'C'),
-          ('question_multipleChoice5', '多选题kk'),
-          ('submit_checked_mulans5', 'A'),
-          ('submit_checked_mulans5', 'B'),
-          ('question_qnaire6', '你喜欢跑步吗？'),
-          ('submit_checked_qnaire6', '1')]
+sample1 = [('collection_id', 4),
+           ('question_name1', '姓名lala'),
+           ('submit_name1', '计胜翔'),
+           ('question_sno2', '学号xixi'),
+           ('submit_sno2', 'U202015362'),
+           ('question_file3', '文件haha'),
+           ('submit_file3', '二十大观看心得.docx'),
+           ('question_radio4', '单选题nie'),
+           ('submit_checked_radio4', 'C'),
+           ('question_multipleChoice5', '多选题kk'),
+           ('submit_checked_mulans5', 'A'),
+           ('submit_checked_mulans5', 'B'),
+           ('question_qnaire6', '你喜欢跑步吗？'),
+           ('submit_checked_qnaire6', '1')]
+
+sample2 = [('collection_id', 4),
+           ('question_name1', '姓名lala'),
+           ('submit_name1', '张隽翊'),
+           ('question_sno2', '学号xixi'),
+           ('submit_sno2', 'U202015374'),
+           ('question_file3', '文件haha'),
+           ('submit_file3', '张隽翊sb.png'),
+           ('question_radio4', '单选题nie'),
+           ('submit_checked_radio4', 'C'),
+           ('question_multipleChoice5', '多选题kk'),
+           ('submit_checked_mulans5', 'A'),
+           ('submit_checked_mulans5', 'B'),
+           ('question_qnaire6', '你喜欢跑步吗？'),
+           ('submit_checked_qnaire6', '1')]
 
 
 @app.route('/personal_homepage', methods=['GET', 'POST'])
@@ -38,11 +52,9 @@ def personal_homepage():
 def test():
     # # submission_record(3)
     # delete_collection(1)
-    save_submission(sample)
-    submission = Submission_info(collection_id=3,
-                                 submitter_name="王广凯",
-                                 submit_time=datetime.datetime(2022, 10, 4, 8, 0))
-
+    # save_submission(sample1)
+    # save_submission(sample2)
+    print(submission_record(4))
     return redirect(url_for('index'))
 
 
@@ -56,7 +68,7 @@ def file_submitting(collection_message):
         submission = request.form
         print(submission)
         a = list(submission.items(multi=True))
-        # TODO：目前前端传过来的数据中没有collection_id和submitter_id
+        # TODO：目前前端传过来的数据中没有collection_id
         save_submission(a)
         return redirect(url_for('index'))
     else:

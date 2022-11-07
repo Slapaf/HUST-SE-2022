@@ -268,6 +268,7 @@ class Submission_info(db.Model):
     collection_id = db.Column(db.Integer)  # 关联文件收集主表id
     collection_title = db.Column(db.String(20))  # 关联文件收集主表收集名称
     submitter_id = db.Column(db.Integer)  # 提交者的用户id
+    # TODO submitter_name的unique限制解除
     submitter_name = db.Column(db.String(20), unique=True)  # 提交者的用户名username
     submit_time = db.Column(db.DateTime, nullable=False, default=datetime.datetime.now())  # 提交时间（不可以为空）
 
@@ -289,4 +290,5 @@ class Submit_Content_info(db.Model):
     collection_id = db.Column(db.Integer, nullable=False)  # 关联文件收集主表id（不可为空）
     question_id = db.Column(db.Integer, nullable=False)  # 关联问题主表id（不可为空）
     qno = db.Column(db.Integer)  # 问题序号
+    # TODO result的nullable限制待定
     result = db.Column(db.String(30), nullable=False)  # 某个人对这一题的填写结果（若为文件上传题，则此字段存放上传的文件名称）（不可为空）
