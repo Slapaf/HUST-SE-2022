@@ -8,6 +8,9 @@ from flask_login import login_user, login_required, logout_user, current_user
 from init import app, db
 from db_manipulation import *
 
+# ! 分享页面的链接（上线前用域名地址替换）
+SUBMITTING_PAGE = "127.0.0.1:5000/file_submitting"
+
 sample = [('collection_id', 4),
           ('submitter_id', 1),
           ('question_name1', '姓名lala'),
@@ -34,8 +37,12 @@ def test():
     return redirect(url_for('index'))
 
 
-@app.route('/file_submitting/<int:collection_id>', methods=['GET', 'POST'])
-def file_submitting(collection_id):
+# @app.route('/file_submitting/<int:collection_id>', methods=['GET', 'POST'])
+@app.route('/file_submitting/<collection_message>', methods=['GET', 'POST'])
+def file_submitting(collection_message):
+    collection_id = int(collection_message[-1])  # ! 从收集信息字符串中提取收集 id
+    print(collection_id)
+    print(type(collection_id))
     if request.method == 'POST':
         submission = request.form
         print(submission)
@@ -44,12 +51,12 @@ def file_submitting(collection_id):
         save_submission(a)
         return redirect(url_for('index'))
     else:
-        question_dict = get_question_Dict(collection_id);
+        question_dict = get_question_Dict(collection_id)
         print(question_dict)
         if question_dict is None:
             return render_template("404.html")
         return render_template("file_submitting.html",
-                               collection=question_dict);
+                               collection=question_dict)
 
 
 # ! 写错地方了，先留着
@@ -94,7 +101,9 @@ def mycollection():
         collection_id = user_action_list[1]  # 待操作的收集 id
         # * 根据第一个参数确定操作类型
         if user_action_list[0] == 'share':  # 分享
-            pass
+            submitting_page = 'file_submitting' + '/submit' + collection_id
+            # return render_template('file_submitting.html')  # ! Debug
+            print(submitting_page)  # ! 调试
         elif user_action_list[0] == 'collect-details':  # 统计
             # TODO
             pass
