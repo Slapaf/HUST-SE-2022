@@ -27,9 +27,11 @@ sample = [('collection_id', 4),
           ('question_qnaire6', '你喜欢跑步吗？'),
           ('submit_checked_qnaire6', '1')]
 
+
 @app.route('/personal_homepage', methods=['GET', 'POST'])
 def personal_homepage():
     return render_template("personal_homepage.html")
+
 
 # 用于测试数据库接口函数
 @app.route('/test')
@@ -37,6 +39,10 @@ def test():
     # # submission_record(3)
     # delete_collection(1)
     save_submission(sample)
+    submission = Submission_info(collection_id=3,
+                                 submitter_name="王广凯",
+                                 submit_time=datetime.datetime(2022, 10, 4, 8, 0))
+
     return redirect(url_for('index'))
 
 

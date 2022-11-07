@@ -270,15 +270,26 @@ def add_FC(question_list: list, user_id: int):
 
     # 更新问题主表和答案表
     for question_key in question_key_list:
-        # ? 若为填空题
-        if "sno" in question_key or "name" in question_key:
+        # ? 若为姓名题
+        if "name" in question_key:
             question = Question_info(collection_id=collection_id,
                                      qno=int(question_key[-1]),
-                                     question_type=Question_info.FILL_IN_BLANK,
+                                     question_type=Question_info.NAME,
                                      question_title=question_multidict[question_key],
                                      question_description=question_multidict['detail' + question_key[-1]])
             db.session.add(question)
             db.session.commit()
+
+        # ? 若为学号题
+        if "sno" in question_key:
+            question = Question_info(collection_id=collection_id,
+                                     qno=int(question_key[-1]),
+                                     question_type=Question_info.SNO,
+                                     question_title=question_multidict[question_key],
+                                     question_description=question_multidict['detail' + question_key[-1]])
+            db.session.add(question)
+            db.session.commit()
+
 
         # ? 若为单选题
         elif "radio" in question_key:
@@ -549,10 +560,17 @@ def get_question_Dict(collection_id: int):
     question[f'{seq}_description'] = collection.description
     question_list = Question_info.query.filter_by(collection_id=collection_id).order_by("qno").all()
     for q in question_list:
-        # 若是填空题
-        if q.question_type == Question_info.FILL_IN_BLANK:
+        # 若是姓名题
+        if q.question_type == Question_info.NAME:
             seq += 1
-            question[f'{seq}_question_fill{q.qno}'] = q.question_title
+            question[f'{seq}_question_name{q.qno}'] = q.question_title
+            seq += 1
+            question[f'{seq}_detail{q.qno}'] = q.question_description
+
+        # 若是姓名题
+        if q.question_type == Question_info.SNO:
+            seq += 1
+            question[f'{seq}_question_sno{q.qno}'] = q.question_title
             seq += 1
             question[f'{seq}_detail{q.qno}'] = q.question_description
 
@@ -649,7 +667,7 @@ def submission_record(collection_id: int):
     # 获取提交名单列表
     name_list = Submission_info.query. \
         filter_by(collection_id=collection_id). \
-        order_by("id"). \
+        order_by("-submit_time"). \
         with_entities(Submission_info.submitter_name). \
         all()
     name_list = list(map(itemgetter(0), name_list))
@@ -657,7 +675,7 @@ def submission_record(collection_id: int):
     # 获取提交时间列表
     time_list = Submission_info.query. \
         filter_by(collection_id=collection_id). \
-        order_by("id"). \
+        order_by("-submit_time"). \
         with_entities(Submission_info.submit_time). \
         all()
     time_list = list(map(itemgetter(0), time_list))
@@ -665,7 +683,7 @@ def submission_record(collection_id: int):
     # 获取提交信息id列表
     submission_id_list = Submission_info.query. \
         filter_by(collection_id=collection_id). \
-        order_by("submit_time"). \
+        order_by("-submit_time"). \
         with_entities(Submission_info.id). \
         all()
     submission_id_list = list(map(itemgetter(0), submission_id_list))
@@ -707,10 +725,8 @@ def stop_collection(collection_id: int, action_list):
 def save_submission(submission_list: list):
     submission_multidict = MultiDict(submission_list)
     collection_id = submission_multidict['collection_id']
-    submitter_id = submission_multidict['submitter_id']
     # 创建一个提交记录，并加入数据库
-    submission = Submission_info(collection_id=collection_id,
-                                 submitter_id=submitter_id)
+    submission = Submission_info(collection_id=collection_id)
     submission.submitter_name = User.query.get(submitter_id).username
     submission.collection_title = Collection_info.query.get(collection_id).collection_title
     db.session.add(submission)
@@ -719,6 +735,7 @@ def save_submission(submission_list: list):
 
     # 提取问题的键值列表
     key_list = list(submission_multidict.keys())
+    list(filter(lambda x: x.find("name") >= 0, key_list))[0]
     key_list = [key for key in key_list if "question" in key]
     for key in key_list:
         submit_content = Submit_Content_info(submission_id=submission_id,

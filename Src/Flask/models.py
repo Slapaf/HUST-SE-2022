@@ -193,7 +193,13 @@ class Question_info(db.Model):
         8. file_path: 提交文件路径
     """
     # * 问题类型常量
-    FILE_UPLOAD, SINGLE_CHOICE, MULTI_CHOICE, FILL_IN_BLANK, SINGLE_QUESTIONNAIRE, MULTI_QUESTIONNAIRE = '0', '1', '2', '3', '4', '5'  # ? 解答题，单选，多选，填空，问卷题目(单选)，问卷题目(多选)
+    FILE_UPLOAD = '0'  # ? 解答题
+    SINGLE_CHOICE = '1'  # ?，单选
+    MULTI_CHOICE = '2'  # ?多选
+    NAME = '3'  # ?姓名
+    SNO = '4'  # ?学号
+    SINGLE_QUESTIONNAIRE = '5'  # ?问卷题目(单选)
+    MULTI_QUESTIONNAIRE = '6'  # ?问卷题目(多选)
 
     id = db.Column(db.Integer, primary_key=True)  # 主键
     collection_id = db.Column(db.Integer)  # 关联文件收集主表id
