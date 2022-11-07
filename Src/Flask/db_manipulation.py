@@ -204,19 +204,22 @@ from sqlalchemy import func
 
 def add_FC(question_list: list, user_id: int):
     """
-    将问卷的信息存入数据库
+    将问卷的信息存入数据库。每个收集问卷会被分配一个收集者用户目录下的子目录，总长度为 X 位，最后一位代表收集 id。
+
     Args:
-        question_list:题目信息列表
+        question_list: 题目信息列表
         例如：question_multidict = {'collectionTitle': '文件收集', 'collector': 'jsx', 'deadline': '2022-10-13T15:18',
                  'description': 'teset','question_name1': '姓名', 'question_file2': '文件', 'checked_topic2': '学号',
                  'question_file3': '文','checked_topic3': '学', 'question_sno4': '学', 'question_sno5': '学号',
                  'question_name6': '姓','question_radio7': '单选','checked_radio7': 'A', 'question_radio8': '单选题',
                  'checked_radio8': 'B'}
         user_id: int类型，表示用户的id。
-    Return:None
+
+    Return:
+        None
     """
     # ! 文件类型可能有多个，设置一个计数器记录是第几个文件
-    file_counter = 0  # * 文件计数器
+    # file_counter = 0  # * 文件计数器
 
     list_of_question_dict = deepcopy(question_list)  # ! 保存元组的列表，与字典类型的区别在于是否对 key 去重
     # print(list_of_question_dict)
@@ -224,16 +227,15 @@ def add_FC(question_list: list, user_id: int):
     question_multidict = MultiDict(question_list)
     # 前端传来的deadLine为string类型，在此转化为datetime类型
     deadline = question_multidict['deadline']
-    print(deadline)
+    # print(deadline)
     deadline = deadline.replace("T", " ")
-    ddl_format = '%Y-%m-%d %H:%M:%S'
-    question_multidict['deadline'] = datetime.strptime(deadline, ddl_format)
+    question_multidict['deadline'] = datetime.strptime(deadline, '%Y-%m-%d %H:%M:%S')
 
     # * 生成应交名单路径
-    collection_counter = Collection_info.query.filter_by(creator_id=user_id).count()  # 获取当前用户创建的收集总数
-    namelist_path = current_user.userpath + '/' + str(collection_counter) + ''.join(
-        random.sample(string.ascii_letters + string.digits, 8)
-    )  # * 总长度为 20 + 1 + 1 + 8 = 30 位
+    # collection_counter = Collection_info.query.filter_by(creator_id=user_id).count()  # 获取当前用户创建的收集总数
+    # namelist_path = current_user.userpath + '/' + str(collection_counter) + ''.join(
+    #     random.sample(string.ascii_letters + string.digits, 8)
+    # )  # * 总长度为 20 + 1 + 1 + 8 = 30 位
 
     # 创建一个文件收集对象,更新文件收集主表里
     collection = Collection_info(creator=question_multidict['collector'],
@@ -241,11 +243,26 @@ def add_FC(question_list: list, user_id: int):
                                  collection_title=question_multidict['collectionTitle'],
                                  description=question_multidict['description'],
                                  end_date=question_multidict['deadline'],
-                                 namelist_path=namelist_path,
+                                 # namelist_path=namelist_path,
                                  status=Collection_info.SAVED)
     db.session.add(collection)
     db.session.commit()  # 提交数据库会话，否则 id 为None
     collection_id = collection.id
+
+    # ! 生成文件存储路径，最后一位固定为收集 id
+    # ! 生成位置为：FileStorage / userpath / filepath
+    # * 总长度为 20 + 5 + 5 = 30 位
+    file_path = current_user.userpath + '/file' + ''.join(
+        random.sample(string.ascii_letters + string.digits, 5 - len(str(collection_id)))
+    ) + str(collection_id)
+
+    # ! 生成应交名单路径，与文件存储路径相同
+    # ! 应交名单以 .csv 格式存放在 filepath 下
+    # ! 生成位置为：FileStorage / userpath / filepath / xxx.csv
+    # * 更新 Collection_info 的 namelist_path 属性
+    collection = Collection_info.query.filter_by(id=collection_id)
+    collection.update({'namelist_path': file_path})
+    db.session.commit()
 
     key_list = list(question_multidict.keys())
     # 问题的键列表
@@ -326,7 +343,7 @@ def add_FC(question_list: list, user_id: int):
         # ? 若为文件上传题
         elif "file" in question_key:
             # TODO 确定文件重命名规则
-            file_counter += 1
+            # file_counter += 1
             rename_rule = []
             rename_rule_list = []  # * 重命名所需的题目
             question_num = question_key[-1]
@@ -348,9 +365,9 @@ def add_FC(question_list: list, user_id: int):
 
             # * 生成文件存储路径，将文件存储路径放在用户所属的路径下，引入随机数（需使用 file_counter）
             # print(current_user.userpath)
-            file_path = current_user.userpath + '/' + str(file_counter) + ''.join(
-                random.sample(string.ascii_letters + string.digits, 8)
-            )  # * 总长度为 20 + 1 + 1 + 8 = 30 位
+            # file_path = current_user.userpath + '/' + str(file_counter) + ''.join(
+            #     random.sample(string.ascii_letters + string.digits, 8)
+            # )  # * 总长度为 20 + 1 + 1 + 8 = 30 位
             question = Question_info(collection_id=collection_id,
                                      qno=int(question_key[-1]),
                                      question_type=Question_info.FILE_UPLOAD,
@@ -361,8 +378,11 @@ def add_FC(question_list: list, user_id: int):
             db.session.add(question)
             db.session.commit()
             path = './FileStorage/' + question.file_path
-            # print(path)
-            os.mkdir(path)  # 创建该题的文件存储目录
+            # print(path)  # ! 调试
+            try:
+                os.mkdir(path)  # 创建该题的文件存储目录
+            except OSError:
+                print("文件存储路径错误！")
 
     return collection_id
 

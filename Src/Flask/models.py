@@ -56,21 +56,23 @@ class User(db.Model, UserMixin):  # 表名将会是 user（自动生成，小写
         """
         return check_password_hash(self.password_hash, password)  # 返回布尔值
 
-    def set_filepath(self):
+    def set_userpath(self):
         """
-        用于设置用户空间路径的方法
+        用于设置用户空间路径的方法。路径的前若干位为用户名和 user 标识，后面用随机字符串补齐，总长度 20 位。
 
         Returns:
             None
         """
-        # * 将 "用户名" + 随机字符串 作为用户空间路径，总长度为 20 位
-        self.userpath = self.username + ''.join(
-            random.sample(string.ascii_letters + string.digits, 20 - len(self.username))
+        self.userpath = self.username + 'user' + ''.join(
+            random.sample(string.ascii_letters + string.digits, 20 - len(self.username) - len('user'))
         )
 
     def set_email(self, email):
         """
         用于设置用户邮箱的方法
+
+        Args:
+            email(str): 需要设置的邮箱
 
         Returns:
             None

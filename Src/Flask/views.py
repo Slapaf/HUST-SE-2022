@@ -249,13 +249,18 @@ def register():
         # 注册成功，将用户信息存入数据库
         user = User(username=username, name=username)  # 初始化时，用户昵称和用户名相同
         user.set_password(psw)
-        user.set_filepath()  # ! 设置用户空间路径
+        user.set_userpath()  # * 设置用户空间路径
         user.set_email(email)  # * 设置用户邮箱
         db.session.add(user)
         db.session.commit()  # 提交数据库会话
         flash('Successfully Registered!')
         path = './FileStorage/' + user.userpath
-        os.makedirs(path)  # 创建用户目录
+        # ! 异常处理
+        try:
+            os.makedirs(path)  # 创建用户目录
+        except OSError:
+            if not os.path.isdir(path):
+                print("用户目录创建失败！")
         return redirect(url_for('login'))
 
     return render_template('register.html')
