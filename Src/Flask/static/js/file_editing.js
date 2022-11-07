@@ -49,36 +49,36 @@ function addLoadEvent(func) {
 }
 
 //获取当前时间
-function getCurrentDatetime() {   
-  var now = new Date();  
-  var year = now.getFullYear();       //年  
-  var month = now.getMonth() + 1;     //月  
-  var day = now.getDate();            //日  
-  var hh = now.getHours();            //时  
-  var mm = now.getMinutes();          //分  
+function getCurrentDatetime() {
+  var now = new Date();
+  var year = now.getFullYear();       //年
+  var month = now.getMonth() + 1;     //月
+  var day = now.getDate();            //日
+  var hh = now.getHours();            //时
+  var mm = now.getMinutes();          //分
   var ss = now.getSeconds();          //秒
-  var clock = year + "-";  
-  if(month < 10)  
-    clock += "0";  
-  clock += month + "-";  
-  if(day < 10)  
-    clock += "0";  
-  clock += day + "T";  
-  if(hh < 10)  
-    clock += "0";  
-  clock += hh + ":";  
-  if (mm < 10) clock += '0';   
-  clock += mm;   
-  if (ss < 10) clock += '0';   
-  clock += ss; 
-  return clock;      
-} 
+  var clock = year + "-";
+  if(month < 10)
+    clock += "0";
+  clock += month + "-";
+  if(day < 10)
+    clock += "0";
+  clock += day + "T";
+  if(hh < 10)
+    clock += "0";
+  clock += hh + ":";
+  if (mm < 10) clock += '0';
+  clock += mm;
+  if (ss < 10) clock += '0';
+  clock += ss;
+  return clock;
+}
 
 //限制截止日期不能比当前时间早
 function deadline_limit() {
   let currentDatetime = getCurrentDatetime();
   deadline.min = currentDatetime;
-} 
+}
 
 //姓名
 function createName(topicName,detailText){
@@ -330,7 +330,7 @@ function for_checkbox(option, id, value) {
           selectBox.appendChild(drag);
           selectBox.appendChild(drag_txt);
           return;
-        } 
+        }
         selectBox.insertBefore(drag_txt, drop);
         selectBox.insertBefore(drag, drag_txt);
       }
@@ -488,7 +488,7 @@ function onDrop(e) {
       }
     }
   }
-  
+
 }
 
 //提交表单时给每个问题加上编号
@@ -748,7 +748,7 @@ function check() {
       errorNum = 3;
     }
     else {
-      //检查问卷选项是否为空 
+      //检查问卷选项是否为空
       for(let j=0;j<qnaire_textareas.length;j++) {
         if(qnaire_textareas[j].value=='') {
           errorNum = 4;
@@ -839,7 +839,7 @@ let jsonFromHtml = {
   "7_question_name2": "姓名",
   "8_detail2": "请填写姓名",
   "9_question_file3": "文件",
-  "10_detail3":"", 
+  "10_detail3":"",
   "11_checked_topic3": "姓名",
   "12_question_qnaire4": "水的分子式是什么?",
   "13_detail4": "答案：H2O",
@@ -857,9 +857,12 @@ let jsonFromHtml = {
   "25_checked_mulans6": "B"
 };
 
+let tmp_json = document.getElementById('collection').innerHTML;
+tmp_json = eval("(" + tmp_json + ")");
 
 // 处理数据
-let formData = JSON.parse(JSON.stringify(jsonFromHtml));
+// let formData = JSON.parse(JSON.stringify(jsonFromHtml));
+let formData = JSON.parse(JSON.stringify(tmp_json));
 let formDataArr = [];
 let formDataObj = {};
 let formDataLen = 0;
@@ -943,7 +946,7 @@ function createQuestion() {
           if(keys[j].indexOf("checked_topic")!=-1) {
             for(let k=0;k<texts.length;k++) {
               if(texts[k].innerHTML == values[j])
-                texts[k].previousSibling.checked = "chekced";            
+                texts[k].previousSibling.checked = "chekced";
               }
           }
         }

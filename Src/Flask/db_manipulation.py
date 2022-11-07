@@ -98,18 +98,18 @@
         
         Returns: None
     
-    7、get_question_MultiDict(collection_id: int)
+    7、get_question_Dict(collection_id: int)
         Function: 返回id为collection_id的收集的信息，包括收集标题、创建人、截止时间、收集描述、题目等信息
         
         Inputs:
         - collection_id：int类型，表示收集id
         
         Returns: 
-        - question：defaultdict(<class 'list'>类型
+        - question：dict 类型
         
         Example：
             /* 假设要得到id为1的收集的信息 */
-            >>> a = get_question_MultiDict(1)
+            >>> a = get_question_Dict(1)
             >>> a  
             
     8、 modify_password(user_id: int, original_pswd: str, new_pswd: str)

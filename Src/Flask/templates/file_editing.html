@@ -20,8 +20,10 @@
       rel="stylesheet"
       href="{{ url_for('static', filename='css/file_collecting.css') }}"
       type="text/css"
-    /> 
+    />
   </head>
+  {# ? 用于传参 #}
+  <div id="collection" style="display: none">{{ collection }}</div>
   <body>
     <div class="container">
       <form id="form" method="post" name="Form">
@@ -104,7 +106,7 @@
             <li id="3">
               <h1><input class="input-topic" type="text" value="单选" name="question_radio"/></h1>
               <textarea>描述</textarea>
-              <div class="questionBox">          
+              <div class="questionBox">
                 <input type="radio" name="checked_radio+编号" />
                 <span>A</span>
                 <input type="radio" name="checked_radio+编号" />
@@ -119,7 +121,7 @@
             <li id=""4>
               <h1><input class="input-topic" type="text" value="多选" name="question_multipleChoice"/></h1>
               <textarea>描述</textarea>
-              <div class="questionBox">          
+              <div class="questionBox">
                 <input type="checkbox" name="此题目的value" />
                 <span>A</span>
                 <input type="checkbox" name="此题目的value" />
@@ -166,7 +168,7 @@
       src="{{ url_for('static', filename='js/file_editing.js') }}"
       type="text/javascript"
     ></script>
-    
+
     <script language="javascript" type="text/javascript">
       //禁用Enter键表单自动提交
       document.onkeydown = function (event) {

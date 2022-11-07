@@ -139,7 +139,10 @@ def mycollection():
                 parameter_dict_list.append(tmp_dict)
             return render_template('collection_details.html')
         elif user_action_list[0] == 'edit':  # 编辑
-            pass
+            # TODO doing...
+            print("哈哈哈")
+            # return render_template("file_editing.html", collection=question_dict)
+            return redirect(url_for('file_editing', collection_id=collection_id))
         elif user_action_list[0] == 'restart':  # 重启
             pass
         elif user_action_list[0] == 'copy':  # 复制
@@ -148,40 +151,41 @@ def mycollection():
             stop_collection(int(collection_id), user_action_list)
         elif user_action_list[0] == 'del':  # ? 删除，已完成
             delete_collection(int(collection_id))
-        return redirect(url_for('mycollection'))
+        # return redirect(url_for('mycollection'))
 
-    update_status(current_user.id)  # 更新当前用户所有收集的 status 字段
+    else:
+        update_status(current_user.id)  # 更新当前用户所有收集的 status 字段
 
-    collection_list = Collection_info.query.filter_by(creator_id=current_user.id).all()
-    parameter_dict_list = []
-    for collection in collection_list:
-        # ? 对时间进行格式化处理
-        # tmp_time: datetime.timedelta = deadline_countdown(collection.id)
-        # ? 获取已收集文件数
-        # file_count = 0
-        # question_list = Question_info.query.filter_by(collection_id=collection.id).all()
-        # for question in question_list:
-        #     if question.file_path is not None:  # * 有文件路径，说明此题为文件收集题
-        #         file_count += count_filenum(collection.id, question.qno)
-        # * 创建一个字典类型，用于传参，可删除
-        tmp_dict = {
-            'username': current_user.username,
-            'collection_title': collection.collection_title,
-            'collection_status': "进行中" if collection.status == '0' else "已截止",
-            'collection_id': collection.id,  # ! 多传一个收集 id
-            'submit_count': count_submission(collection_id=collection.id),
-            'deadline': collection.end_date.strftime('%Y-%m-%d %H:%M:%S')
-        }
-        parameter_dict_list.append(tmp_dict)
-        # print(tmp_dict)
+        collection_list = Collection_info.query.filter_by(creator_id=current_user.id).all()
+        parameter_dict_list = []
+        for collection in collection_list:
+            # ? 对时间进行格式化处理
+            # tmp_time: datetime.timedelta = deadline_countdown(collection.id)
+            # ? 获取已收集文件数
+            # file_count = 0
+            # question_list = Question_info.query.filter_by(collection_id=collection.id).all()
+            # for question in question_list:
+            #     if question.file_path is not None:  # * 有文件路径，说明此题为文件收集题
+            #         file_count += count_filenum(collection.id, question.qno)
+            # * 创建一个字典类型，用于传参，可删除
+            tmp_dict = {
+                'username': current_user.username,
+                'collection_title': collection.collection_title,
+                'collection_status': "进行中" if collection.status == '0' else "已截止",
+                'collection_id': collection.id,  # ! 多传一个收集 id
+                'submit_count': count_submission(collection_id=collection.id),
+                'deadline': collection.end_date.strftime('%Y-%m-%d %H:%M:%S')
+            }
+            parameter_dict_list.append(tmp_dict)
+            # print(tmp_dict)
 
-    return render_template(
-        'mycollection.html',
-        username=current_user.name,
-        user_email=current_user.email,
-        json_object=json.dumps(parameter_dict_list),
-        json_length=len(parameter_dict_list)
-    )
+        return render_template(
+            'mycollection.html',
+            username=current_user.name,
+            user_email=current_user.email,
+            json_object=json.dumps(parameter_dict_list),
+            json_length=len(parameter_dict_list)
+        )
 
 
 # @app.route('/collection_details', methods=['GET', 'POST'])
@@ -310,6 +314,15 @@ def register():
 @app.route('/file_collecting')
 def file_collecting():
     return render_template('file_collecting.html')
+
+
+@app.route('/file_editing/<string:collection_id>')
+def file_editing(collection_id):
+    question_dict = get_question_Dict(int(collection_id))
+    print(question_dict)
+    if question_dict is None:
+        return render_template("404.html")
+    return render_template('file_editing.html', collection=question_dict)
 
 
 # 收集记录界面
