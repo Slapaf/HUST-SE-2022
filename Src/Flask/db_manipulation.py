@@ -735,7 +735,7 @@ def save_submission(submission_list: list):
 
     # 提取问题的键值列表
     key_list = list(submission_multidict.keys())
-    list(filter(lambda x: x.find("name") >= 0, key_list))[0]
+    # list(filter(lambda x: x.find("name") >= 0, key_list))[0]
     key_list = [key for key in key_list if "question" in key]
     for key in key_list:
         submit_content = Submit_Content_info(submission_id=submission_id,
