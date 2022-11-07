@@ -727,7 +727,7 @@ def save_submission(submission_list: list):
     collection_id = submission_multidict['collection_id']
     # 创建一个提交记录，并加入数据库
     submission = Submission_info(collection_id=collection_id)
-    submission.submitter_name = User.query.get(submitter_id).username
+    # submission.submitter_name = User.query.get(submitter_id).username
     submission.collection_title = Collection_info.query.get(collection_id).collection_title
     db.session.add(submission)
     db.session.commit()
