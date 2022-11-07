@@ -1,6 +1,9 @@
 <!doctype html>
 {#<link rel="stylesheet" href="../static/css/mycollection.css">#}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/mycollection.css') }}">
+<!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/mycollection.css') }}"> -->
+<link rel="stylesheet" href="{{ url_for('static', filename='css/mycollection_1.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/all.css') }}">
+<link rel="stylesheet" href="http://at.alicdn.com/t/c/font_3751655_0cflqaj0na3.css">
 <html lang="zh-CN">
 
 <head>
@@ -11,18 +14,18 @@
 <body>
 <div id="json_object" style="display: none">{{ json_object }}</div>
 <div id="json_length" style="display: none">{{ json_length }}</div>
-<div class="tab_list">
+<!-- <div class="tab_list">
     <a href="{{ url_for('index') }}">返回主页</a>
     <ul>
         <li class="current">我的收集</li>
         <li>个人信息</li>
         <li>修改密码</li>
     </ul>
-</div>
+</div> -->
 <!-- tab栏 -->
 <div class="tab_con">
     <div class="item" style="display: block;">
-        <div class="list_head">
+        <!-- <div class="list_head">
             <div class="list_title">收集标题</div>
             {#    <div class="list_title">{{ collection_title }}</div>#}
             <div class="list_name">收集者</div>
@@ -35,10 +38,14 @@
             {#    <div class="list_date">{{ time_before_ddl }}</div>#}
             {#    <div onclick="addmember()" class="list_operate">操作</div>#}
             <div class="list_operate">操作</div>
+        </div> -->
+        <div id="cardContainer">
+            <h1>我的文件收集</h1>
         </div>
         <div class="list_body" id="list_body">
-            <div id="popLayer"></div>
-            <div class="box" id="box">
+        </div>
+        <div id="popLayer"></div>
+            <div class="box" id="box" style="display: none;">
                 <h1 class="title">收集分享！</h1>
                 <div class="text">
                     <div>下面是您的文件收集链接</div>
@@ -54,73 +61,12 @@
                     <button class="click" onclick="closebox()">确定</button>
                 </div>
             </div>
-        </div>
     </div>
-    <div class="item">
-        <div class="user_data">
-            {#     input中value的值用变量替代   #}
-            <div id="data1">
-                <div class="input_box"> 用户名称： <input type="text" name="username" class="input" readonly
-                                                         value={{ username }}>
-                </div>
-                <div class="input_box"> 用户手机：<input type="text" name="phone" class="input" readonly value="未设置">
-                </div>
-                {#                <div class="input_box"> 用户邮箱：<input type="email" name="email" class="input" readonly#}
-                {#                                                        value="1234567@7654321.hust.edu.cn"></div>#}
-                <div class="input_box"> 用户邮箱：<input type="email" name="email" class="input" readonly
-                                                        value="{{ user_email }}"></div>
-                <div class="input_box"> 邮箱授权：<input type="text" name="authorization-code" class="input" readonly
-                                                        value="未填写"></div>
-                <button class="btn" onclick="changedata()">修改信息</button>
-            </div>
-            <div id="data2" style="display:none">
-                <form method="post" onsubmit="return checkAll2()">
-                    {#div中value的值用变量替代#}
-                    <div class="input_box"> 用户名称：<input type="text" name="username" class="input" id="input4"
-                                                            onblur="checkKey_3()"
-                                                            value={{ username }}>
-                    </div>
-                    <span class="tip_box1" id="tip4"></span>
-                    <div class="input_box"> 用户手机：<input type="text" name="phone" class="input" id="input5"
-                                                            value="未设置" onblur="checkKey_4()">
-                    </div>
-                    <span class="tip_box1" id="tip5"></span>
-                    {#                    <div class="input_box"> 用户邮箱：<input type="email" name="email" class="input" id="input6"#}
-                    {#                                                            value="1234567@7654321.hust.edu.cn"></div>#}
-                    {#                    <span class="tip_box1" id="tip6"></span>#}
-                    <div class="input_box"> 用户邮箱：<input type="email" name="email" class="input" id="input6"
-                                                            value="{{ user_email }}"></div>
-                    <div class="input_box"> 邮箱授权：<input type="text" name="authorization-code" class="input"
-                                                            id="input4"
-                                                            value="未填写">
-                    </div>
-                    <button type="submit" class="btn">确认修改</button>
-                </form>
-            </div>
-        </div>
-    </div>
-    <div class="item">
-        <div class="user_data" onsubmit="return checkAll1()">
-            <div class="input_box"> 输入原密码：<input type="password" id="input0" placeholder="设置密码"
-                                                      onblur="checkKey_0()"
-                                                      class="input"></div>
-            <span class="tip_box" id="tip1"></span>
-            <div class="input_box"> 输入新密码：<input type="password" name="psw" id="input1" placeholder="设置密码"
-                                                      onblur="checkKey_1()"
-                                                      class="input"></div>
-            <span class="tip_box" id="tip2"></span>
-            <form method="post" id="form2">
-                <div class="input_box"> 确认新密码：<input type="password" name="psw_confirm" id="input2" class="input"
-                                                          placeholder="确认密码"
-                                                          onblur="checkKey_2()"></div>
-                <span class="tip_box" id="tip3"></span>
-                <button class="btn" id="btn2" type="submit" name="submit" onclick="checkAll()">修改密码</button>
-            </form>
-        </div>
-    </div>
+    
 </div>
 <textarea id="input"></textarea>
-<form method="post" target="hidden_frame" id="hidden">
+<!-- <form method="post" target="hidden_frame" id="hidden"> -->
+    <form method="post" id="hidden">
     <input type="text" id="hidden-input" name="hidden-input" style="display: none">
 </form>
 <iframe name='hidden_frame' id="hidden_frame" style="display:none"></iframe>
@@ -137,101 +83,6 @@
         input.textContent = text; // 修改文本框的内容
         input.select(); // 选中文本
         document.execCommand("copy"); // 执行浏览器复制命令
-    }
-
-    var tab_list = document.querySelector(".tab_list");
-    var lis = tab_list.querySelectorAll("li");
-    var items = document.querySelectorAll(".item");
-    for (var i = 0; i < lis.length; i++) {
-        lis[i].setAttribute("index", i);
-        lis[i].onclick = function () {
-            for (var i = 0; i < lis.length; i++) {
-                lis[i].className = "";
-            }
-            this.className = "current";
-            var index = this.getAttribute("index");
-            for (var i = 0; i < items.length; i++) {
-                items[i].style.display = "none";
-            }
-            items[index].style.display = "block";
-        }
-    }
-
-    function changedata() {
-        document.getElementById("data1").style.display = "none";
-        document.getElementById("data2").style.display = "block";
-    }
-
-    function checkKey_0() {
-        let k = document.getElementById("tip1");
-        let U0 = input0.value;
-        if (U0 === "123456") {
-            //此处"123456"要换成用户密码的值!
-            k.innerHTML = "";
-        } else {
-            k.innerHTML = "请输入正确的密码！";
-        }
-    }
-
-    function checkKey_1() {
-        let k = document.getElementById("tip2");
-        let Ukey1 = input1.value;
-        if (Ukey1.match(/^[a-zA-Z0-9]{6,16}$/)) {
-            k.innerHTML = "";
-        } else {
-            k.innerHTML = "请输入英文字母,数字组成6-16位的密码！";
-        }
-    }
-
-    function checkKey_2() {
-        let k = document.getElementById("tip3");
-        let Ukey1 = input1.value;
-        let Ukey2 = input2.value;
-        if (Ukey1 === Ukey2) {
-            k.innerHTML = "";
-        } else {
-            k.innerHTML = "两次密码不一致,请重新输入！";
-        }
-    }
-
-    function checkKey_3() {
-        let k = document.getElementById("tip4");
-        let U4 = input4.value;
-        if (U4.match(/^[\u4E00-\u9FA5a-zA-Z0-9_]{1,12}$/)) {
-            k.innerHTML = "";
-        } else {
-            k.innerHTML = "请输入汉字,英文字母,数字和下划线组成1-12位的用户名";
-        }
-    }
-
-    function checkKey_4() {
-        let k = document.getElementById("tip5");
-        let U5 = input5.value;
-        if (U5.match(/^[0-9_]{11}/) || U5 === "未设置" || U5 === "") {
-            k.innerHTML = "";
-        } else {
-            k.innerHTML = "请输入正确的11位手机号或不填此栏！";
-        }
-    }
-
-    function checkAll1() {
-        let U0 = input0.value;
-        let U1 = input1.value;
-        let U2 = input2.value;
-        if (U1.match(/^[a-zA-Z0-9]{6,16}$/) && U1 === U2 && U0 === "123456") {
-            //"123456"要换成用户密码！
-            return true;
-        }
-        return false;
-    }
-
-    function checkAll2() {
-        let U4 = input3.value;
-        let U5 = input4.value;
-        if (U4.match(/^[\u4E00-\u9FA5a-zA-Z0-9_]{1,12}$/) && (U5.match(/^[0-9_]{11}/) || U5 === "未设置" || U5 === "")) {
-            return true;
-        }
-        return false;
     }
 </script>
 </html>
