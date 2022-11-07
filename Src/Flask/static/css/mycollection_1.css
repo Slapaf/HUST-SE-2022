@@ -1,0 +1,221 @@
+#input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    z-index: -10;
+}
+
+#popLayer {
+    display: none;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    background: #DCDBDC;
+    -moz-opacity: 0.8;
+    opacity: .80;
+    filter: alpha(opacity=80);
+}
+
+body {
+    width: 100vw;
+    height: fit-content;
+    min-height: 100vh;
+    background: linear-gradient(to bottom right, #9c8bf2,#4c9bf0);
+    background-size: cover;
+    /* position: fixed; */
+}
+
+#cardContainer {
+    width: 70vw;
+    height: fit-content;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* justify-content: center; */
+    position: relative;
+    left: 15vw;
+    background-color: rgba(255, 255, 255, 0.346);
+    
+}
+/* 
+#cardContainer::after{
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(20px);
+} */
+
+#cardContainer h1 {
+    margin: 20px;
+    font-size: 30px;
+    font-weight: 400;
+    color: #454545;
+}
+
+.card {
+    /* display: inline-block; */
+    margin: 10px 10px;
+    /* width: 30vw; */
+    height: 100px;
+    background-color: #ffffff;
+    font-size: 15px;
+    border-radius: 50px;
+    display: flex;
+    backdrop-filter: blur(10px);
+}
+
+.cardHead,
+.cardBody {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    /* align-items: center; */
+}
+
+.cardHead {
+    /* height: 200px; */
+    width: 30vw;
+    background-color:rgba(22, 170, 244, 0.298);
+    border-radius:50px;
+    backdrop-filter: blur(20px);
+}
+
+.cardHead .cardItems {
+    /* width: 90px;
+    height: 90px; */
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+
+}
+
+.cardHead .cardItems:nth-of-type(1) {
+    border-radius: 50px 0 0 50px;
+    flex: 1.5;
+}
+
+.cardHead .cardItems:nth-of-type(2) {
+    flex: 1;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.cardHead .cardItems:nth-of-type(3) {
+    border-radius: 0 50px 50px 0;
+    flex: 1.5;
+}
+
+
+.itemTitles {
+  font-size: 13px;
+  color: rgb(59, 55, 55);
+  padding: 3px 3px;
+  margin: 10px 0 5px 0; 
+  background-color: rgba(241,241,241,.98);
+  border-radius: 15px;
+}
+
+.member_operate,
+.cardItems {
+    display: flex;
+}
+
+.cardItems {
+    margin: 5px;
+}
+
+.cardTitle::before {
+    font-family: "iconfont" !important;
+    content: "\e6ef";
+}
+
+.cardName::before {
+    font-family: "iconfont" !important;
+    content: "\e6f7";
+}
+
+.cardDate::before {
+    font-family: "iconfont" !important;
+    content: "\e6f8";
+}
+
+.member_title,
+.member_name {
+    width: 100px;
+    white-space:nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+}
+
+.member_date {
+    text-align: center;
+    width: 100px;
+}
+
+/* cardBody部分 */
+.cardBody {
+    width: 30vw;
+    overflow: hidden;
+    transition: 0.5s;
+}
+
+/* .card:hover .cardBody{
+    width: 30vw;
+    transition: 0.5s;
+} */
+
+.cardBody .cardItems {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    /* position: relative;
+    left:15px; */
+    margin: 0 30px;
+}
+
+.cardCondition::before {
+    font-family: "iconfont" !important;
+    content: "\e6e3";
+}
+
+.cardTimes::before {
+    font-family: "iconfont" !important;
+    content: "\e6fb";
+}
+
+.member_condition,
+.member_times {
+    position: relative;
+    top:2px;
+    left:5px;
+}
+
+.member_operate {
+    width: 23vw;
+    display: flex;
+    justify-content: space-around;
+    position: relative;
+    bottom: 3px;
+}
+
+.operate:hover {
+    cursor: pointer;
+    color: #ffffff;
+    background-color: #6c94f0;
+}
+
+.operate {
+    font-size: 13px;
+  color: rgb(59, 55, 55);
+  padding: 5px 10px;
+  margin: 5px ;
+  background-color: rgba(241,241,241,.98);
+  border-radius: 10px;
+}
