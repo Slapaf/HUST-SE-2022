@@ -22,4 +22,4 @@ bin-release/
 # information for Eclipse / Flash Builder.
 
 # addded by ZJY
-__pycache__
+Src/__pycache__/
