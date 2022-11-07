@@ -23,3 +23,4 @@ bin-release/
 
 # addded by ZJY
 Src/__pycache__/
+Src/Flask/__pycache__/
