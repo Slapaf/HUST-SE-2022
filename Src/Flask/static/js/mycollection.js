@@ -10,8 +10,7 @@ function getData() {
     }
     console.log("进入了getData(刷新)");
     console.log(x);
-    makeCard();
-    
+    // makeCard();
 }
 
 // collection_title, username, collection_status, submit_count, time_before_ddl
@@ -107,6 +106,73 @@ function addmember(collection_title, username, collection_status, collection_id,
     // ! 11/05
     memberid.style.display = "none";
     // ! 11/05
+    let k = listmember;
+    let mtitle = k.querySelector(".member_title");
+    let mname = k.querySelector(".member_name");
+    let mcondition = k.querySelector(".member_condition");
+    let mtimes = k.querySelector(".member_times");
+    let mdate = k.querySelector(".member_date");
+    let moperate = k.querySelector(".member_operate");
+    // 新建
+    let card = document.createElement("div");
+    let cardHead = document.createElement("div");
+    let cardBody = document.createElement("div");
+    let cardTitleBox = document.createElement("div");
+    let cardNameBox = document.createElement("div");
+    let cardConditionBox = document.createElement("div");
+    let cardTimesBox = document.createElement("div");
+    let cardDateBox = document.createElement("div");
+    let cardOperateBox = document.createElement("div");
+    let cardTitle = document.createElement("div");
+    let cardName = document.createElement("div");
+    let cardCondition = document.createElement("div");
+    let cardTimes = document.createElement("div");
+    let cardDate = document.createElement("div");
+    let cardOperate = document.createElement("div");
+    // 插
+    cardContainer.appendChild(card);
+    card.appendChild(cardHead);
+    card.appendChild(cardBody);
+    cardHead.appendChild(cardTitleBox);
+    cardHead.appendChild(cardNameBox);
+    cardHead.appendChild(cardDateBox);
+    cardBody.appendChild(cardConditionBox);
+    cardBody.appendChild(cardTimesBox);
+    cardBody.appendChild(cardOperateBox);
+    cardTitleBox.appendChild(cardTitle);
+    cardTitleBox.appendChild(mtitle);
+    cardNameBox.appendChild(cardName);
+    cardNameBox.appendChild(mname);
+    cardDateBox.appendChild(cardDate);
+    cardDateBox.appendChild(mdate);
+    cardConditionBox.appendChild(cardCondition);
+    cardConditionBox.appendChild(mcondition);
+    cardTimesBox.appendChild(cardTimes);
+    cardTimesBox.appendChild(mtimes);
+    // cardOperateBox.appendChild(cardOperate);
+    cardOperateBox.appendChild(moperate);
+    cardTitle.appendChild(document.createTextNode("收集标题:"));
+    cardName.appendChild(document.createTextNode("收集者:"));
+    cardDate.appendChild(document.createTextNode("截止时间:"));
+    cardCondition.appendChild(document.createTextNode("收集状态:"));
+    cardTimes.appendChild(document.createTextNode("提交次数:"));
+    cardOperate.appendChild(document.createTextNode("操作"));
+    //  起类名
+    card.className = "card";
+    cardHead.className = "cardHead";
+    cardBody.className = "cardBody";
+    cardTitleBox.classList = "cardItems cardTitleBox";
+    cardNameBox.classList = "cardItems cardNameBox";
+    cardDateBox.classList = "cardItems cardDateBox";
+    cardConditionBox.classList = "cardItems cardConditionBox";
+    cardTimesBox.classList = "cardItems cardTimesBox";
+    cardOperateBox.classList = "cardItems cardOperateBox";
+    cardTitle.classList = "itemTitles cardTitle";
+    cardName.classList = "itemTitles cardName";
+    cardDate.classList = "itemTitles cardDate";
+    cardCondition.classList = "itemTitles cardCondition";
+    cardTimes.classList = "itemTitles cardTimes";
+    cardOperate.classList = "itemTitles cardOperate";
     //添加点击事件
     membertitle.onclick = function () {
         //!此处需添加参数，跳转对应收集详情界面
@@ -144,13 +210,13 @@ function addmember(collection_title, username, collection_status, collection_id,
         document.getElementById("hidden-input").value = "share" + "$" + memberid.title;
         document.getElementById("hidden").submit();
         //分享按钮
-        let x = document.getElementById("box");
+        let y = document.getElementById("box");
         document.getElementById("link").innerText = "https://www.baidu.com";//!此处修改为收集链接
         let popLayer = document.getElementById('popLayer');
         popLayer.style.width = "100%";
         popLayer.style.height = "100%";
         popLayer.style.display = "block";
-        x.style.display = "block";
+        y.style.display = "block";
     }
     // ? 点击 “统计” 按钮
     op2.onclick = function () {
@@ -216,8 +282,6 @@ function addmember(collection_title, username, collection_status, collection_id,
             console.log(x);
             document.getElementById("hidden-input").value = "stop" + "$" + memberid.title + "$" + showtime;
             document.getElementById("hidden").submit();
-        
-
         } else {
             //删除按钮
             console.log("点击了删除");
@@ -227,103 +291,100 @@ function addmember(collection_title, username, collection_status, collection_id,
             // let index = 0;
             // index = Array.prototype.indexOf.call(x,listmember);
             // console.log(index);
-            x.removeChild(listmember);
+            cardContainer.removeChild(card);
             document.getElementById("hidden").submit();
         }
     }
 }
 
 function closebox() {
-    let x = document.getElementById("box");
-    x.style.display = "none";
+    let y = document.getElementById("box");
+    y.style.display = "none";
     let popLayer = document.getElementById('popLayer');
     popLayer.style.display = "none";
 }
 
 
-function makeCard() {
-    // console.log("进入了makeCard");
-    // console.log(cardContainer.children.length);
-    // console.log(x.children.length);
-    // for(let i=1;i<cardContainer.children.length;i++) {
-    //     cardContainer.removeChild(cardContainer.children[i]);
-    //     // console.log(cardContainer.children[i]);
-    // }
-    let listMems = x.children;
-    for(let i = 0;i < listMems.length;i++) {
-        if(listMems[i].className != "list_member")
-            continue;
-        let k = listMems[i];
-        let mtitle = k.querySelector(".member_title"); 
-        let mname = k.querySelector(".member_name");
-        let mcondition = k.querySelector(".member_condition");
-        let mtimes = k.querySelector(".member_times");
-        let mdate = k.querySelector(".member_date");
-        let moperate = k.querySelector(".member_operate");
-        // 新建
-        let card = document.createElement("div");
-        let cardHead = document.createElement("div");
-        let cardBody = document.createElement("div");
-        let cardTitleBox = document.createElement("div");
-        let cardNameBox = document.createElement("div");
-        let cardConditionBox = document.createElement("div");
-        let cardTimesBox = document.createElement("div");
-        let cardDateBox = document.createElement("div");
-        let cardOperateBox = document.createElement("div");
-        let cardTitle = document.createElement("div");
-        let cardName = document.createElement("div");
-        let cardCondition = document.createElement("div");
-        let cardTimes = document.createElement("div");
-        let cardDate = document.createElement("div");
-        let cardOperate = document.createElement("div");
-        // 插
-        cardContainer.appendChild(card);
-        card.appendChild(cardHead);
-        card.appendChild(cardBody);
-        cardHead.appendChild(cardTitleBox);
-        cardHead.appendChild(cardNameBox);
-        cardHead.appendChild(cardDateBox);
-        cardBody.appendChild(cardConditionBox);
-        cardBody.appendChild(cardTimesBox);
-        cardBody.appendChild(cardOperateBox);
-        cardTitleBox.appendChild(cardTitle);
-        cardTitleBox.appendChild(mtitle);
-        cardNameBox.appendChild(cardName);
-        cardNameBox.appendChild(mname);
-        cardDateBox.appendChild(cardDate);
-        cardDateBox.appendChild(mdate);
-        cardConditionBox.appendChild(cardCondition);
-        cardConditionBox.appendChild(mcondition);
-        cardTimesBox.appendChild(cardTimes);
-        cardTimesBox.appendChild(mtimes);
-        // cardOperateBox.appendChild(cardOperate);
-        cardOperateBox.appendChild(moperate);
-        cardTitle.appendChild(document.createTextNode("收集标题:"));
-        cardName.appendChild(document.createTextNode("收集者:"));
-        cardDate.appendChild(document.createTextNode("截止时间:"));
-        cardCondition.appendChild(document.createTextNode("收集状态:"));
-        cardTimes.appendChild(document.createTextNode("提交次数:"));
-        cardOperate.appendChild(document.createTextNode("操作"));
-        //  起类名
-        card.className = "card";
-        cardHead.className = "cardHead";
-        cardBody.className = "cardBody";
-        cardTitleBox.classList = "cardItems cardTitleBox";
-        cardNameBox.classList = "cardItems cardNameBox";
-        cardDateBox.classList = "cardItems cardDateBox";
-        cardConditionBox.classList = "cardItems cardConditionBox";
-        cardTimesBox.classList = "cardItems cardTimesBox";
-        cardOperateBox.classList = "cardItems cardOperateBox";
-        cardTitle.classList = "itemTitles cardTitle";
-        cardName.classList = "itemTitles cardName";
-        cardDate.classList = "itemTitles cardDate";
-        cardCondition.classList = "itemTitles cardCondition";
-        cardTimes.classList = "itemTitles cardTimes";
-        cardOperate.classList = "itemTitles cardOperate";
-
-    }
-
-
-}
+// function makeCard() {
+//     // console.log("进入了makeCard");
+//     // console.log(cardContainer.children.length);
+//     // console.log(x.children.length);
+//     // for(let i=1;i<cardContainer.children.length;i++) {
+//     //     cardContainer.removeChild(cardContainer.children[i]);
+//     //     // console.log(cardContainer.children[i]);
+//     // }
+//     let listMems = x.children;
+//     for (let i = 0; i < listMems.length; i++) {
+//         if (listMems[i].className != "list_member")
+//             continue;
+//         let k = listMems[i];
+//         let mtitle = k.querySelector(".member_title");
+//         let mname = k.querySelector(".member_name");
+//         let mcondition = k.querySelector(".member_condition");
+//         let mtimes = k.querySelector(".member_times");
+//         let mdate = k.querySelector(".member_date");
+//         let moperate = k.querySelector(".member_operate");
+//         // 新建
+//         let card = document.createElement("div");
+//         let cardHead = document.createElement("div");
+//         let cardBody = document.createElement("div");
+//         let cardTitleBox = document.createElement("div");
+//         let cardNameBox = document.createElement("div");
+//         let cardConditionBox = document.createElement("div");
+//         let cardTimesBox = document.createElement("div");
+//         let cardDateBox = document.createElement("div");
+//         let cardOperateBox = document.createElement("div");
+//         let cardTitle = document.createElement("div");
+//         let cardName = document.createElement("div");
+//         let cardCondition = document.createElement("div");
+//         let cardTimes = document.createElement("div");
+//         let cardDate = document.createElement("div");
+//         let cardOperate = document.createElement("div");
+//         // 插
+//         cardContainer.appendChild(card);
+//         card.appendChild(cardHead);
+//         card.appendChild(cardBody);
+//         cardHead.appendChild(cardTitleBox);
+//         cardHead.appendChild(cardNameBox);
+//         cardHead.appendChild(cardDateBox);
+//         cardBody.appendChild(cardConditionBox);
+//         cardBody.appendChild(cardTimesBox);
+//         cardBody.appendChild(cardOperateBox);
+//         cardTitleBox.appendChild(cardTitle);
+//         cardTitleBox.appendChild(mtitle);
+//         cardNameBox.appendChild(cardName);
+//         cardNameBox.appendChild(mname);
+//         cardDateBox.appendChild(cardDate);
+//         cardDateBox.appendChild(mdate);
+//         cardConditionBox.appendChild(cardCondition);
+//         cardConditionBox.appendChild(mcondition);
+//         cardTimesBox.appendChild(cardTimes);
+//         cardTimesBox.appendChild(mtimes);
+//         // cardOperateBox.appendChild(cardOperate);
+//         cardOperateBox.appendChild(moperate);
+//         cardTitle.appendChild(document.createTextNode("收集标题:"));
+//         cardName.appendChild(document.createTextNode("收集者:"));
+//         cardDate.appendChild(document.createTextNode("截止时间:"));
+//         cardCondition.appendChild(document.createTextNode("收集状态:"));
+//         cardTimes.appendChild(document.createTextNode("提交次数:"));
+//         cardOperate.appendChild(document.createTextNode("操作"));
+//         //  起类名
+//         card.className = "card";
+//         cardHead.className = "cardHead";
+//         cardBody.className = "cardBody";
+//         cardTitleBox.classList = "cardItems cardTitleBox";
+//         cardNameBox.classList = "cardItems cardNameBox";
+//         cardDateBox.classList = "cardItems cardDateBox";
+//         cardConditionBox.classList = "cardItems cardConditionBox";
+//         cardTimesBox.classList = "cardItems cardTimesBox";
+//         cardOperateBox.classList = "cardItems cardOperateBox";
+//         cardTitle.classList = "itemTitles cardTitle";
+//         cardName.classList = "itemTitles cardName";
+//         cardDate.classList = "itemTitles cardDate";
+//         cardCondition.classList = "itemTitles cardCondition";
+//         cardTimes.classList = "itemTitles cardTimes";
+//         cardOperate.classList = "itemTitles cardOperate";
+//     }
+// }
 
 window.onload = getData;

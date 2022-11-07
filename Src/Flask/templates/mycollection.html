@@ -45,28 +45,28 @@
         <div class="list_body" id="list_body">
         </div>
         <div id="popLayer"></div>
-            <div class="box" id="box" style="display: none;">
-                <h1 class="title">收集分享！</h1>
-                <div class="text">
-                    <div>下面是您的文件收集链接</div>
-                    <div>请复制并发给文件提交者</div>
-                </div>
-                <div class="main">
-                    <div class="link_box">
-                        <div class="link" id="link">https://baidu.com</div>
-                    </div>
-                    <button class="copy" onclick="mycopy()">复制</button>
-                </div>
-                <div class="btn">
-                    <button class="click" onclick="closebox()">确定</button>
-                </div>
+        <div class="box" id="box" style="display: none;">
+            <h1 class="title">收集分享！</h1>
+            <div class="text">
+                <div>下面是您的文件收集链接</div>
+                <div>请复制并发给文件提交者</div>
             </div>
+            <div class="main">
+                <div class="link_box">
+                    <div class="link" id="link">https://baidu.com</div>
+                </div>
+                <button class="copy" onclick="mycopy()">复制</button>
+            </div>
+            <div class="btn">
+                <button class="click" onclick="closebox()">确定</button>
+            </div>
+        </div>
     </div>
-    
+
 </div>
 <textarea id="input"></textarea>
 <!-- <form method="post" target="hidden_frame" id="hidden"> -->
-    <form method="post" id="hidden">
+<form method="post" id="hidden" target="hidden_frame">
     <input type="text" id="hidden-input" name="hidden-input" style="display: none">
 </form>
 <iframe name='hidden_frame' id="hidden_frame" style="display:none"></iframe>
