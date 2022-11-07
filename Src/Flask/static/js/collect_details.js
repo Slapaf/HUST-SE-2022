@@ -8,6 +8,16 @@ var lis = tab_list.querySelectorAll("li");
 var items = document.querySelectorAll(".item");
 const x = document.getElementById("list_body");
 
+// TODO 获取提交信息更新页面，从 mycollection 页面进入
+function getData() {
+    let tmp_json = JSON.parse(document.getElementById('json_object').innerHTML);
+    let json_length = document.getElementById('json_length').innerHTML;
+    for (let i = 0; i < json_length; i++) {
+        // ! 未验证正确性
+        addmember(tmp_json[i].submitter_name, tmp_json[i].submit_time, tmp_json[i].file_submitted_count);
+    }
+}
+
 Array.prototype.indexOf = function (val) {
     for (var i = 0; i < this.length; i++) {
         if (this[i] == val) return i;
@@ -127,7 +137,7 @@ function addfile() {
 }
 
 //TODO 待添加参数
-function addmember() {
+function addmember(submitter_name, submit_time, file_submitted_count) {
     //新建元素节点
     let listmember = document.createElement("div");
     let membername = document.createElement("div");
@@ -141,9 +151,12 @@ function addmember() {
     listmember.appendChild(membernumber);
     listmember.appendChild(membercondition);
     //给节点赋值
-    membername.title = "王广凯";
-    memberdate.title = "2022-10-01 23:59";
-    membernumber.title = "211";
+    // membername.title = "王广凯";
+    membername.title = submitter_name;
+    // memberdate.title = "2022-10-01 23:59";
+    memberdate.title = submit_time;
+    // membernumber.title = "211";
+    membernumber.title = file_submitted_count;
     membercondition.title = "查看";
     membername.appendChild(document.createTextNode(membername.title));
     memberdate.appendChild(document.createTextNode(memberdate.title));
