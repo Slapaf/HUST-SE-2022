@@ -115,17 +115,19 @@ body {
 
 .btn_add {
     border-radius: 8px;
-    margin-left: 10px;
+    margin-left: 25px;
     margin-top: 20px;
     width: 90px;
     height: 40px;
     border: 1px solid rgb(190, 190, 190);
 }
 
+.btn_re:hover,
 .btn_add:hover {
     background-color: #6c94f0;
     color: #fff;
     border: none;
+    cursor: pointer;
 }
 
 .name_box {
@@ -158,32 +160,40 @@ body {
 
 .popup_body {
     position: absolute;
-    border-radius: 12px;
-    padding: 20px;
+    border-radius: 15px;
+    padding: 30px;
     width: 40%;
     left: 30%;
     top: 30%;
-    height: 40%;
-    background-color: rgba(236, 236, 236, 0.792);
+    height: 45%;
+    background-color: #fff;
     display: none;
     z-index: 11;
 }
 
 .textarea {
-    border: none;
+    border: 1px gray dashed;
+    border-radius: 15px;
     width: 100%;
     height: 85%;
     font-family: sans-serif;
     resize: none;
-    font-size: 14px;
+    font-size: 15px;
+    padding: 5px;
+}
+
+.textarea:focus {
+    border: none;
+    outline: 1px solid gray;
 }
 
 .btn_re {
     border-radius: 8px;
-    margin: auto;
+    margin: 15px auto;
     display: block;
     width: 100px;
     height: 40px;
+    border: 1px solid gray;
 }
 
 .del {
@@ -195,6 +205,11 @@ body {
     font-size: 5px;
     font-weight: bolder;
     display: none;
+}
+
+.del::before {
+    font-family: "iconfont" !important;
+    content:"\e6f3";
 }
 
 .list_head {
@@ -295,8 +310,5 @@ body {
     z-index: 10;
     width: 100%;
     height: 100%;
-    background: #DCDBDC;
-    -moz-opacity: 0.8;
-    opacity: .80;
-    filter: alpha(opacity=80);
+    background: #85878980;
 }
