@@ -4,7 +4,38 @@ body {
     min-height: 100vh;
     background: linear-gradient(to bottom right, #9c8bf2,#4c9bf0);
     background-size: cover;
-    /* position: fixed; */
+    /* position: relative; */
+}
+
+
+#goback {
+    width: 120px;
+    font-size: 20px;
+    position: absolute;
+    left: 5vw;
+}
+
+.goback_link {
+    background-color: rgba(255, 255, 255, 0.6);
+    padding: 8px;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 16px;
+    color: black;
+    font-family: sans-serif;
+}
+
+.goback_link::before {
+    font-family: "iconfont" !important;
+    content: "\e6fc";
+    font-size: 23px;
+    position: relative;
+    top: 3px;
+    margin-right: 5px;
+}
+
+.goback_link:hover {
+    color: #595bb3;
 }
 
 #cardContainer {
@@ -35,7 +66,7 @@ body {
     margin: 10px 10px;
     /* width: 30vw; */
     height: 100px;
-    background-color: #ffffff8d;
+    background-color: #ffffffe1;
     font-size: 15px;
     border-radius: 15px;
     display: flex;

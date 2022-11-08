@@ -4,6 +4,33 @@ body {
   justify-content: center;
 }
 
+#goback {
+  width: 120px;
+  font-size: 20px;
+  position: absolute;
+  left: 15px;
+  top: 10px;
+}
+
+.goback_link {
+  background-color: rgba(255, 255, 255, 0.6);
+  padding: 8px;
+  border-radius: 8px;
+  text-align: center;
+  font-size: 16px;
+  color: black;
+  font-family: sans-serif;
+}
+
+.goback_link::before {
+  font-family: "iconfont" !important;
+  content: "\e6fc";
+  font-size: 23px;
+  position: relative;
+  top: 3px;
+  right: 3px;
+}
+
 .container {
   width: 50%;
   background-color: white;

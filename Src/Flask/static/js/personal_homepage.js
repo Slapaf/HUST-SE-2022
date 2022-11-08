@@ -6,7 +6,7 @@ const change_password = document.querySelector(".change_password");
 let countdown = 1;
 
 nav_item1.onclick = () => {
-    user_information.style.display = "block";
+    user_information.style.display = "flex";
     change_password.style.display = "none";
 };
 

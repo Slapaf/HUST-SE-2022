@@ -11,6 +11,7 @@
     bottom: 0;
     margin: auto;
     border-radius: 15px;
+    transition: 0.5s;
 }
 
 .title {
