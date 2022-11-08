@@ -12,6 +12,21 @@ from db_manipulation import *
 SUBMITTING_PAGE = "127.0.0.1:5000/file_submitting"
 
 
+def id_str_to_int(id_str: str):
+    """
+    将 str 类型的 id 号转换为 int 类型
+
+    Args:
+        id_str(str): str 类型的 id 号
+
+    Returns:
+        id_int(int): int 类型的 id 号
+    """
+    if id_str.isalpha():
+        return ord(id_str) - ord('a') + 10
+    return int(id_str)
+
+
 @app.route('/personal_homepage', methods=['GET', 'POST'])
 def personal_homepage():
     return render_template("personal_homepage.html")
@@ -28,9 +43,9 @@ def test():
 
 
 # @app.route('/file_submitting/<int:collection_id>', methods=['GET', 'POST'])
-@app.route('/file_submitting/<collection_message>', methods=['GET', 'POST'])
+@app.route('/file_submitting/<string:collection_message>', methods=['GET', 'POST'])
 def file_submitting(collection_message):
-    collection_id = int(collection_message[-1])  # ! 从收集信息字符串中提取收集 id
+    collection_id = id_str_to_int(collection_message[-1])  # ! 从收集信息字符串中提取收集 id
     # print(collection_id)
     # print(type(collection_id))
     if request.method == 'POST':
@@ -290,7 +305,7 @@ def file_collecting():
 
 @app.route('/file_editing/<string:collection_id>')
 def file_editing(collection_id):
-    question_dict = get_question_Dict(int(collection_id))
+    question_dict = get_question_Dict(id_str_to_int(collection_id))
     print(question_dict)
     if question_dict is None:
         return render_template("404.html")

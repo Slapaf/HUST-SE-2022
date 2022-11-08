@@ -1,6 +1,13 @@
 let x = document.getElementById("list_body");
 let cardContainer = document.querySelector("#cardContainer");
 
+function id_str_transfer(id_str) {
+    if (id_str >= '0' && id_str <= '9') {
+        return id_str;
+    }
+    return String.fromCharCode(parseInt(id_str) - 10 + 'a'.charCodeAt());
+}
+
 function getData() {
     let tmp_json = JSON.parse(document.getElementById('json_object').innerHTML);
     let json_length = document.getElementById('json_length').innerHTML;
@@ -64,7 +71,8 @@ function addmember(collection_title, username, collection_status, collection_id,
     membertimes.title = submit_count + "份";//! 更改为membertimes的值
     memberdate.title = deadline;//! 更改为memberdate的值
     // ! 11/05 memberid 赋值
-    memberid.title = collection_id;
+    // memberid.title = collection_id;
+    memberid.title = id_str_transfer(collection_id);
     // ! 11/05
     membertitle.appendChild(document.createTextNode(membertitle.title));
     // ! 11/05
