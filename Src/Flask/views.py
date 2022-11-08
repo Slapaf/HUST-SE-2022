@@ -11,36 +11,6 @@ from db_manipulation import *
 # ! 分享页面的链接（上线前用域名地址替换）
 SUBMITTING_PAGE = "127.0.0.1:5000/file_submitting"
 
-sample1 = [('collection_id', 4),
-           ('question_name1', '姓名lala'),
-           ('submit_name1', '计胜翔'),
-           ('question_sno2', '学号xixi'),
-           ('submit_sno2', 'U202015362'),
-           ('question_file3', '文件haha'),
-           ('submit_file3', '二十大观看心得.docx'),
-           ('question_radio4', '单选题nie'),
-           ('submit_checked_radio4', 'C'),
-           ('question_multipleChoice5', '多选题kk'),
-           ('submit_checked_mulans5', 'A'),
-           ('submit_checked_mulans5', 'B'),
-           ('question_qnaire6', '你喜欢跑步吗？'),
-           ('submit_checked_qnaire6', '1')]
-
-sample2 = [('collection_id', 4),
-           ('question_name1', '姓名lala'),
-           ('submit_name1', '张隽翊'),
-           ('question_sno2', '学号xixi'),
-           ('submit_sno2', 'U202015374'),
-           ('question_file3', '文件haha'),
-           ('submit_file3', '张隽翊sb.png'),
-           ('question_radio4', '单选题nie'),
-           ('submit_checked_radio4', 'C'),
-           ('question_multipleChoice5', '多选题kk'),
-           ('submit_checked_mulans5', 'A'),
-           ('submit_checked_mulans5', 'B'),
-           ('question_qnaire6', '你喜欢跑步吗？'),
-           ('submit_checked_qnaire6', '1')]
-
 
 @app.route('/personal_homepage', methods=['GET', 'POST'])
 def personal_homepage():
@@ -54,7 +24,6 @@ def test():
     # delete_collection(1)
     # save_submission(sample1)
     # save_submission(sample2)
-    print(submission_record(4))
     return redirect(url_for('index'))
 
 
@@ -72,7 +41,7 @@ def file_submitting(collection_message):
         a = list(submission.items(multi=True))
         print(a)
         # TODO：目前前端传过来的数据中没有collection_id
-        # save_submission(a, collection_id)
+        save_submission(a, collection_id)
         return redirect(url_for('index'))
     else:
         question_dict = get_question_Dict(collection_id)

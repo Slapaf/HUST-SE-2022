@@ -268,8 +268,7 @@ class Submission_info(db.Model):
     collection_id = db.Column(db.Integer)  # 关联文件收集主表id
     collection_title = db.Column(db.String(20))  # 关联文件收集主表收集名称
     submitter_id = db.Column(db.Integer)  # 提交者的用户id
-    # TODO submitter_name的unique限制解除
-    submitter_name = db.Column(db.String(20), unique=True)  # 提交者的用户名username
+    submitter_name = db.Column(db.String(20))  # 提交者的用户名username
     submit_time = db.Column(db.DateTime, nullable=False, default=datetime.datetime.now())  # 提交时间（不可以为空）
 
 
