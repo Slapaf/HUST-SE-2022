@@ -202,6 +202,22 @@ from operator import itemgetter
 from sqlalchemy import func
 
 
+def id_int_to_str(id_int: int):
+    """
+    将 int 类型的 id 号转换为 str 类型
+
+    Args:
+        id_int(int): int 类型的 id 号
+
+    Return:
+        id_str(str): str 类型的 id 号
+    """
+    if 0 <= id_int <= 9:
+        return str(id_int)
+    id_int -= 10
+    return chr(id_int + 97)
+
+
 def add_FC(question_list: list, user_id: int):
     """
     将问卷的信息存入数据库。每个收集问卷会被分配一个收集者用户目录下的子目录，总长度为 X 位，最后一位代表收集 id。
@@ -219,7 +235,7 @@ def add_FC(question_list: list, user_id: int):
         None
     """
     # ! 文件类型可能有多个，设置一个计数器记录是第几个文件
-    # file_counter = 0  # * 文件计数器
+    file_counter = 0  # * 文件计数器
 
     list_of_question_dict = deepcopy(question_list)  # ! 保存元组的列表，与字典类型的区别在于是否对 key 去重
     question_multidict = MultiDict(question_list)
@@ -249,9 +265,9 @@ def add_FC(question_list: list, user_id: int):
 
     # ! 生成文件存储路径，最后一位固定为收集 id
     # ! 生成位置为：FileStorage / userpath / filepath
-    # * 总长度为 20 + 5 + 5 = 30 位
+    # * 总长度为 20 + 5 + 4 = 29 位
     file_path = current_user.userpath + '/file' + ''.join(
-        random.sample(string.ascii_letters + string.digits, 5 - len(str(collection_id)))
+        random.sample(string.ascii_letters + string.digits, 4 - len(str(collection_id)))
     ) + str(collection_id)
 
     # ! 生成应交名单路径，与文件存储路径相同
@@ -352,7 +368,7 @@ def add_FC(question_list: list, user_id: int):
         # ? 若为文件上传题
         elif "file" in question_key:
             # TODO 确定文件重命名规则
-            # file_counter += 1
+            file_counter += 1
             rename_rule = []
             rename_rule_list = []  # * 重命名所需的题目
             question_num = question_key[-1]
@@ -377,19 +393,23 @@ def add_FC(question_list: list, user_id: int):
             # file_path = current_user.userpath + '/' + str(file_counter) + ''.join(
             #     random.sample(string.ascii_letters + string.digits, 8)
             # )  # * 总长度为 20 + 1 + 1 + 8 = 30 位
-            question = Question_info(collection_id=collection_id,
-                                     qno=int(question_key[-1]),
-                                     question_type=Question_info.FILE_UPLOAD,
-                                     question_title=question_multidict[question_key],
-                                     question_description=question_multidict['detail' + question_key[-1]],
-                                     rename_rule='-'.join(rename_rule),  # * 命名规则用 - 分隔，数字代表题目序号
-                                     file_path=file_path)
+            question = Question_info(
+                collection_id=collection_id,
+                qno=int(question_key[-1]),
+                question_type=Question_info.FILE_UPLOAD,
+                question_title=question_multidict[question_key],
+                question_description=question_multidict['detail' + question_key[-1]],
+                rename_rule='-'.join(rename_rule),  # * 命名规则用 - 分隔，数字代表题目序号
+                file_path=file_path + "/" + id_int_to_str(
+                    file_counter
+                )  # ! 创建一个以 file_counter 命名的子目录
+            )
             db.session.add(question)
             db.session.commit()
             path = './FileStorage/' + question.file_path
-            # print(path)  # ! 调试
+            print(path)  # ! 调试
             try:
-                os.mkdir(path)  # 创建该题的文件存储目录
+                os.makedirs(path)  # 创建该题的文件存储目录
             except OSError:
                 print("文件存储路径错误！")
 
@@ -509,6 +529,7 @@ def count_filenum(user_id=None, collection_id=None, question_id=None, qno=None):
 def deadline_countdown(collection_id: int):
     """
     截止倒计时
+
     Args:
         collection_id: int. 问卷的id
 
