@@ -82,7 +82,8 @@ body {
 }
 
 .card:hover .cardHead {
-    background-color: #ffc72d;
+    background:linear-gradient(to right,#fd87b7,#ffb673);
+    /* background-color: #f0c61a; */
     color: #000;
     transition: 0.5s;
 }
@@ -104,7 +105,7 @@ body {
     /* height: 80%; */
     width: 30vw;
     /* background-color:rgba(81, 195, 240, 0.223); */
-    background-color:rgba(255, 175, 1, 0.13);
+    background-color:rgba(91, 119, 245, 0.603);
     border-radius:15px;
     transition: 0.5s;
 }

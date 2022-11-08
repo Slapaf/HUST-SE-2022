@@ -8,6 +8,7 @@ html,
 body {
     width: 100%;
     height: fit-content;
+    min-height: 100vh;
     background: linear-gradient(to bottom right, #9c8bf2,#4c9bf0);
     /* background-color: rgba(236, 236, 236, 0.792); */
     background-repeat: no-repeat;

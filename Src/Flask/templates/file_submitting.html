@@ -7,6 +7,7 @@
     <title>Document</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/all.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/file_submitting.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/file_collecting.css') }}">
 </head>
 <div id="collection" style="display: none">{{ collection }}</div>
 <div class="container">
@@ -25,11 +26,11 @@
         <div id="discription">{{collection.description}}</div>
     </div>
     <div class="main">
-        <form action="" id="form" method="post" name="Form" enctype="multipart/form-data">
+        <form id="form" method="post" name="Form" enctype="multipart/form-data">
             <ul id="question_list">
                 <!-- 姓名/学号 -->
                  <!-- <li>
-                    <h1><input type="text" value="后台获取" class="disabledInput"disabled></h1>
+                    <h1><input type="text" value="后台获取" class="readOnlyInput"disabled></h1>
                     <div class="detail"></div>
                     <input type="text" class="inputContent">
                 </li> -->

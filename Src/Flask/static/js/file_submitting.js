@@ -241,5 +241,5 @@ function creatQuestion() {
 
 processFormData();
 creatQuestion();
-console.log(formDataArr);
-console.log(formData);
+
+
