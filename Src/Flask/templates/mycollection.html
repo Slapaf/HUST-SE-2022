@@ -2,8 +2,9 @@
 {#<link rel="stylesheet" href="../static/css/mycollection.css">#}
 <!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/mycollection.css') }}"> -->
 <link rel="stylesheet" href="{{ url_for('static', filename='css/mycollection_1.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/mycollection.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/all.css') }}">
-<link rel="stylesheet" href="http://at.alicdn.com/t/c/font_3751655_0cflqaj0na3.css">
+<link rel="stylesheet" href="http://at.alicdn.com/t/c/font_3751655_o66m8aeymun.css">
 <html lang="zh-CN">
 
 <head>
@@ -74,16 +75,4 @@
 </body>
 {#<script src="../static/js/mycollection.js"></script>#}
 <script src="{{ url_for('static', filename='js/mycollection.js') }}"></script>
-<script>
-    let n = document.getElementById("link");
-    n.title = document.getElementById("link").innerText;
-
-    function mycopy() {
-        var text = document.getElementById("link").innerText;
-        var input = document.getElementById("input");
-        input.textContent = text; // 修改文本框的内容
-        input.select(); // 选中文本
-        document.execCommand("copy"); // 执行浏览器复制命令
-    }
-</script>
 </html>

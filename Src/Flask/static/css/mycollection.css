@@ -1,76 +1,9 @@
-.list_head {
-    display: flex;
-    height: 60px;
-    border-style: solid;
-    border-left: none;
-    border-right: none;
-    border-top: none;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-}
-
-.list_title,
-.list_operate,
-.member_title,
-.member_operate,
-.operate {
-    width: 25%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-.list_name,
-.list_condition,
-.list_times,
-.member_name,
-.member_condition,
-.member_times {
-    margin-left: 8px;
-    margin-right: 8px;
-    width: 10%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-.list_date,
-.member_date {
-    margin-left: 8px;
-    margin-right: 8px;
-    width: 20%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-.list_member {
-    display: flex;
-    height: 60px;
-    border-style: solid;
-    border-width: 2px;
-    border-color: gray;
-    border-left: none;
-    border-right: none;
-    border-top: none;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-}
-
-.member_operate {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
 .box {
     z-index: 11;
     display: none;
     width: 600px;
     height: 400px;
-    background-color: rgb(141, 245, 255);
+    background-color: #ffffff;
     position: absolute;
     top: 0;
     right: 0;
@@ -117,11 +50,18 @@
     color: #606B7C;
 }
 
+.link::before {
+    font-family: "iconfont" !important;
+    content:"\e6fe";
+    font-size: 20px;
+    margin-right: 20px;
+}
 .main {
     display: flex;
 }
 
 .copy {
+    width: 60px;
     margin-top: 40px;
     margin-left: 20px;
     border-radius: 8px;
@@ -138,10 +78,15 @@
     border-radius: 8px;
     border: none;
     width: 100px;
-    height: 50px;
+    height: 40px;
     margin-top: 40px;
 }
 
+.copy:hover,
+.click:hover {
+    background-color: #6c94f0;
+    color: #ffffff;
+}
 #input {
     position: absolute;
     top: 0;
@@ -162,113 +107,5 @@
     -moz-opacity: 0.8;
     opacity: .80;
     filter: alpha(opacity=80);
-}
 
-.tab_con {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    left: 200px;
-}
-
-.tab_list {
-    display: flex;
-    position: absolute;
-    align-items: center;
-    width: 200px;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    border: solid;
-    background-color: darkgray;
-}
-
-.tab_list .current {
-    background-color: white;
-    color: black;
-}
-
-.item_info {
-    padding: 20px 0 0 20px;
-}
-
-.item {
-    display: none;
-    margin-left: 5px;
-}
-
-.tab_list li {
-    border: solid;
-    border-radius: 12px;
-    margin-bottom: 90px;
-    float: bottom;
-    height: 60px;
-    text-align: center;
-    cursor: pointer;
-}
-
-li {
-    list-style-type: none;
-    width: 120px;
-    height: 60px;
-    line-height: 60px;
-    text-align: center;
-}
-
-.input_box {
-    margin-top: 80px;
-    margin-left: 100px;
-    height: 40px;
-    font-size: 24px;
-}
-
-.input {
-    width: 400px;
-    height: 40px;
-    font-size: 22px;
-}
-
-.user_data {
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    background-color: #64a9d9;
-    margin: auto;
-}
-
-.btn {
-    margin-left: 250px;
-    margin-top: 10px;
-    width: 80px;
-    height: 40px;
-    line-height: 40px;
-    text-align: center;
-    border-radius: 8px;
-}
-
-.tip_box {
-    position: absolute;
-    display: block;
-    margin-top: 20px;
-    margin-left: 185px;
-    padding-left: 60px;
-    font-size: 14px;
-    color: rgb(255, 0, 0);
-    font-family: sans-serif;
-}
-.tip_box1 {
-    position: absolute;
-    display: block;
-    margin-top: 20px;
-    margin-left: 165px;
-    padding-left: 60px;
-    font-size: 14px;
-    color: rgb(255, 0, 0);
-    font-family: sans-serif;
-}
-a {
-    position: absolute;
-    top: 0;
-    text-decoration: none;
 }

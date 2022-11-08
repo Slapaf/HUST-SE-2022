@@ -300,11 +300,25 @@ function addmember(collection_title, username, collection_status, collection_id,
     }
 }
 
+let n = document.getElementById("link");
+n.title = document.getElementById("link").innerText;
+let copy = document.querySelector(".copy");
+
+function mycopy() {
+    var text = document.getElementById("link").innerText;
+    var input = document.getElementById("input");
+    input.textContent = text; // 修改文本框的内容
+    input.select(); // 选中文本
+    document.execCommand("copy"); // 执行浏览器复制命令
+    copy.innerHTML = "已复制";
+}
+
 function closebox() {
     let y = document.getElementById("box");
     y.style.display = "none";
     let popLayer = document.getElementById('popLayer');
     popLayer.style.display = "none";
+    copy.innerHTML = "复制";
 }
 
 
