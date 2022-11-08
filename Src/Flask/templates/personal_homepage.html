@@ -15,10 +15,10 @@
     <div class="nav">
         <!--头像-->
         <div class="myicon">
-          <div class="icon-img"><img src="images//touxiang.png"" /></div>
+          <div class="icon-img"><img src="{{url_for('static',filename='images/portrait.png')}}"" /></div>
           <div class="icon-con">
             <p>你好</p>
-            <h2>王广凯</h2>
+            <h2>{{ current_user.name }}</h2>
           </div>
         </div>
         <!-- 分隔线 -->
@@ -38,13 +38,13 @@
             </svg>
             <div class="con">修改密码</div>
           </div>
-          <div class="tab_list_item" id="item3">
-            <div class="light"></div>
-            <svg class="licon" aria-hidden="true">
-              <use xlink:href="#icon-A16"></use>
-            </svg>
-            <div class="con"><a href="{{ url_for('index') }}">返回主页</a></div>
-          </div>
+            <div class="tab_list_item" id="item3">
+              <div class="light"></div>
+                <svg class="licon" aria-hidden="true">
+                  <use xlink:href="#icon-A16"></use>
+                </svg>
+              <div class="con"><a href="{{ url_for('index') }}" id="goback">返回主页</a></div>
+            </div>
         </div>
       </div>
     </div>
