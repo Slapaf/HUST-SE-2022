@@ -66,10 +66,13 @@ def file_submitting(collection_message):
     # print(type(collection_id))
     if request.method == 'POST':
         submission = request.form
+        tmp_file = request.files
+        print(tmp_file)
         print(submission)
         a = list(submission.items(multi=True))
+        print(a)
         # TODO：目前前端传过来的数据中没有collection_id
-        save_submission(a)
+        # save_submission(a, collection_id)
         return redirect(url_for('index'))
     else:
         question_dict = get_question_Dict(collection_id)
