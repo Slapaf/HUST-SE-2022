@@ -385,13 +385,17 @@ def add_FC(question_list: list, user_id: int):
                 if cnt >= len(rename_rule_list):  # * 防止获取到文件后面的重命名规则
                     break
 
+            rename_rule = '-'.join(rename_rule)
+            if rename_rule == '':
+                rename_rule = None
+
             question = Question_info(
                 collection_id=collection_id,
                 qno=int(question_key[-1]),
                 question_type=Question_info.FILE_UPLOAD,
                 question_title=question_multidict[question_key],
                 question_description=question_multidict['detail' + question_key[-1]],
-                rename_rule='-'.join(rename_rule),  # * 命名规则用 - 分隔，数字代表题目序号
+                rename_rule=rename_rule,  # * 命名规则用 - 分隔，数字代表题目序号
                 file_path=file_path + "/" + id_int_to_str(
                     file_counter
                 )  # ! 创建一个以 file_counter 命名的子目录
@@ -597,11 +601,15 @@ def get_question_Dict(collection_id: int):
             seq += 1
             question[f'{seq}_detail{q.qno}'] = q.question_description
             # 重命名规则
-            qno_list = list(map(int, q.rename_rule.split('-')))
-            for qno in qno_list:
+            if q.rename_rule is None:
                 seq += 1
-                question[f'{seq}_checked_topic{q.qno}'] = Question_info.query. \
-                    filter_by(collection_id=collection_id, qno=qno).first().question_title
+                question[f'{seq}_checked_topic{q.qno}'] = ''
+            else:
+                qno_list = list(map(int, q.rename_rule.split('-')))
+                for qno in qno_list:
+                    seq += 1
+                    question[f'{seq}_checked_topic{q.qno}'] = Question_info.query. \
+                        filter_by(collection_id=collection_id, qno=qno).first().question_title
 
         # 若是单选题
         if q.question_type == Question_info.SINGLE_CHOICE:

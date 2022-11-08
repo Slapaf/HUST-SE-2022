@@ -187,31 +187,31 @@ function addmember(collection_title, username, collection_status, collection_id,
         // window.location.href = '../templates/collection_details.html';
         document.getElementById("hidden-input").value = "collect-details" + "$" + memberid.title;
         document.getElementById("hidden").submit();
-        window.location.href = 'collection_details';
+        window.location.href = 'collection_details/' + memberid.title;
     }
     membername.onclick = function () {
         //!此处需添加参数，跳转对应收集详情界面
         document.getElementById("hidden-input").value = "collect-details" + "$" + memberid.title;
         document.getElementById("hidden").submit();
-        window.location.href = 'collection_details';
+        window.location.href = 'collection_details/' + memberid.title;
     }
     membercondition.onclick = function () {
         //!此处需添加参数，跳转对应收集详情界面
         document.getElementById("hidden-input").value = "collect-details" + "$" + memberid.title;
         document.getElementById("hidden").submit();
-        window.location.href = 'collection_details';
+        window.location.href = 'collection_details/' + memberid.title;
     }
     membertimes.onclick = function () {
         //!此处需添加参数，跳转对应收集详情界面
         document.getElementById("hidden-input").value = "collect-details" + "$" + memberid.title;
         document.getElementById("hidden").submit();
-        window.location.href = 'collection_details';
+        window.location.href = 'collection_details/' + memberid.title;
     }
     memberdate.onclick = function () {
         //!此处需添加参数，
         document.getElementById("hidden-input").value = "collect-details" + "$" + memberid.title;
         document.getElementById("hidden").submit();
-        window.location.href = 'collection_details';
+        window.location.href = 'collection_details/' + memberid.title;
     }
     // ? 点击 “分享” 按钮
     op1.onclick = function () {

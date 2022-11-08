@@ -66,13 +66,14 @@ def file_submitting(collection_message):
     # print(type(collection_id))
     if request.method == 'POST':
         submission = request.form
-        tmp_file = request.files
+        tmp_file = request.files.get('submit_file3')
         print(tmp_file)
+        print(tmp_file.filename)
         print(submission)
+
         a = list(submission.items(multi=True))
         print(a)
-        # TODO：目前前端传过来的数据中没有collection_id
-        save_submission(a, collection_id)
+        # save_submission(a, collection_id)
         return redirect(url_for('index'))
     else:
         question_dict = get_question_Dict(collection_id)
@@ -141,9 +142,9 @@ def mycollection():
         elif user_action_list[0] == 'copy':  # 复制
             pass
         elif user_action_list[0] == 'stop':  # ? 停止，已完成
-            stop_collection(int(collection_id), user_action_list)
+            stop_collection(id_str_to_int(collection_id), user_action_list)
         elif user_action_list[0] == 'del':  # ? 删除，已完成
-            delete_collection(int(collection_id))
+            delete_collection(id_str_to_int(collection_id))
         # return redirect(url_for('mycollection'))
 
     # else:
