@@ -66,12 +66,14 @@ def file_submitting(collection_message):
     # print(type(collection_id))
     if request.method == 'POST':
         submission = request.form
-        tmp_file = request.files
+        tmp_file = request.files.get('submit_file3')
         print(tmp_file)
+        print(tmp_file.filename)
         print(submission)
+
         a = list(submission.items(multi=True))
         print(a)
-        save_submission(a, collection_id)
+        # save_submission(a, collection_id)
         return redirect(url_for('index'))
     else:
         question_dict = get_question_Dict(collection_id)
