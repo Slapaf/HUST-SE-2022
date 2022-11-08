@@ -4,17 +4,17 @@
         Function: 添加文件收集（add FileCollection)
         
         Inputs:
-        - question_list：问题信息列表
-        - user_id：创建收集的用户id
+        - question_list：list类型，表示问题信息列表
+        - user_id：int类型，表示创建收集的用户id
         
         Returns: 
-        - collection_id：添加的收集的id
+        - collection_id：int类型，表示添加的收集的id
         
     2、update_status(user_id: int)
         Function: 更新id为user_id的用户的所有收集的状态（进行中or已截止）
         
         Inputs:
-        - user_id：用户id
+        - user_id：int类型，表示用户id
         
         Returns: None
     
@@ -98,21 +98,21 @@
         
         Returns: None
     
-    7、get_question_MultiDict(collection_id: int)
+    7、get_question_Dict(collection_id: int)
         Function: 返回id为collection_id的收集的信息，包括收集标题、创建人、截止时间、收集描述、题目等信息
         
         Inputs:
         - collection_id：int类型，表示收集id
         
         Returns: 
-        - question：defaultdict(<class 'list'>类型
+        - question：dict类型
         
         Example：
             /* 假设要得到id为1的收集的信息 */
-            >>> a = get_question_MultiDict(1)
+            >>> a = get_question_Dict(1)
             >>> a  
             
-    8、 modify_password(user_id: int, original_pswd: str, new_pswd: str)
+    8、modify_password(user_id: int, original_pswd: str, new_pswd: str)
         ！未验证正确性
         Function: 修改id为user_id的用户的密码
         
@@ -148,7 +148,7 @@
         - collection_id：int类型，表示收集id
         
         Returns: 
-        一个元组列表，元组按Submission.id排序，每个元组格式为（姓名，提交时间，文件数量，文件详情）。
+        一个元组列表，元组按Submission.id排序，每个元组格式为（姓名：string，提交时间:datetime，文件数量:int，文件详情:list）。
         例如：
         [('计胜翔', datetime.datetime(2022, 11, 5, 20, 25, 32, 142115), 2, ['jsx1.pdf', 'jsx2.doc']), 
         ('张隽翊', datetime.datetime(2022, 11, 5, 20, 25, 32, 142115), 1, ['zjy1.pdf'])]
