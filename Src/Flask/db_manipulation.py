@@ -222,12 +222,10 @@ def add_FC(question_list: list, user_id: int):
     # file_counter = 0  # * 文件计数器
 
     list_of_question_dict = deepcopy(question_list)  # ! 保存元组的列表，与字典类型的区别在于是否对 key 去重
-    # print(list_of_question_dict)
-
     question_multidict = MultiDict(question_list)
+
     # 前端传来的deadLine为string类型，在此转化为datetime类型
     deadline = question_multidict['deadline']
-    # print(deadline)
     deadline = deadline.replace("T", " ")
     question_multidict['deadline'] = datetime.strptime(deadline, '%Y-%m-%d %H:%M:%S')
 
@@ -538,6 +536,13 @@ def delete_collection(collection_id: int):
         print(fp)
         path = './FileStorage/' + fp
         shutil.rmtree(path)
+
+    # # 此方式下：一个收集中所有文件上传题的文件存储路径相同，在同一目录下
+    # file_path = Question_info.query. \
+    #     filter_by(collection_id=collection_id, question_type=Question_info.FILE_UPLOAD). \
+    #     with_entities(Question_info.file_path). \
+    #     all()
+
 
     Question_info.query.filter_by(collection_id=collection_id).delete()
     Collection_info.query.filter_by(id=collection_id).delete()
