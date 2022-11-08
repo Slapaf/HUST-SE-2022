@@ -107,7 +107,7 @@ function addname() {
                 delbtn.className = "del";
                 node1.title = n[flag];
                 //添加样式和数据,数组n存放名字字符串
-                delbtn.appendChild(document.createTextNode("X"));
+                // delbtn.appendChild(document.createTextNode("X"));
                 para.appendChild(node1);
                 node1.appendChild(node2);
                 d1.appendChild(para);
