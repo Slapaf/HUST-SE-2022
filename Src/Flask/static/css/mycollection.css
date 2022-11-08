@@ -87,6 +87,7 @@
     background-color: #6c94f0;
     color: #ffffff;
 }
+
 #input {
     position: absolute;
     top: 0;
@@ -96,6 +97,7 @@
 }
 
 #popLayer {
+    background-color: rgb(202, 202, 202);
     display: none;
     position: fixed;
     top: 0;
@@ -103,9 +105,7 @@
     left: 0;
     right: 0;
     z-index: 10;
-    background: #DCDBDC;
-    -moz-opacity: 0.8;
+    -moz-opacity: 0.8; 
     opacity: .80;
     filter: alpha(opacity=80);
-
 }
