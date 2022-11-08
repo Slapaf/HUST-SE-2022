@@ -197,9 +197,8 @@ from init import db
 from datetime import datetime
 from werkzeug.datastructures import MultiDict
 import shutil
-from collections import defaultdict
 from operator import itemgetter
-from sqlalchemy import func
+from pathlib import Path
 
 
 def id_int_to_str(id_int: int):
@@ -375,7 +374,6 @@ def add_FC(question_list: list, user_id: int):
             for elem in list_of_question_dict:
                 if elem[0] == "checked_topic" + question_num:
                     rename_rule_list.append(elem[1])
-            # print(rename_rule_list)
 
             # TODO 逻辑有待优化
             cnt = 0
@@ -386,13 +384,7 @@ def add_FC(question_list: list, user_id: int):
                 cnt += 1
                 if cnt >= len(rename_rule_list):  # * 防止获取到文件后面的重命名规则
                     break
-            # print(rename_rule)
 
-            # * 生成文件存储路径，将文件存储路径放在用户所属的路径下，引入随机数（需使用 file_counter）
-            # print(current_user.userpath)
-            # file_path = current_user.userpath + '/' + str(file_counter) + ''.join(
-            #     random.sample(string.ascii_letters + string.digits, 8)
-            # )  # * 总长度为 20 + 1 + 1 + 8 = 30 位
             question = Question_info(
                 collection_id=collection_id,
                 qno=int(question_key[-1]),
@@ -548,22 +540,20 @@ def delete_collection(collection_id: int):
     Answer_info.query.filter_by(collection_id=collection_id).delete()
 
     # 删除该收集中所有文件上传题的文件存储路径下的文件
-    file_path = Question_info.query. \
-        filter_by(collection_id=collection_id, question_type=Question_info.FILE_UPLOAD). \
-        with_entities(Question_info.file_path). \
-        all()
-    file_path = list(map(itemgetter(0), file_path))
-    for fp in file_path:
-        print(fp)
-        path = './FileStorage/' + fp
-        shutil.rmtree(path)
-
-    # # 此方式下：一个收集中所有文件上传题的文件存储路径相同，在同一目录下
     # file_path = Question_info.query. \
     #     filter_by(collection_id=collection_id, question_type=Question_info.FILE_UPLOAD). \
     #     with_entities(Question_info.file_path). \
     #     all()
+    # file_path = list(map(itemgetter(0), file_path))
+    # for fp in file_path:
+    #     print(fp)
+    #     path = './FileStorage/' + fp
+    #     shutil.rmtree(path)
 
+    question = Question_info.query. \
+        filter_by(collection_id=collection_id, question_type=Question_info.FILE_UPLOAD).first()
+    file_path = Path('./FileStorage/' + question.file_path).parent
+    shutil.rmtree(file_path)
 
     Question_info.query.filter_by(collection_id=collection_id).delete()
     Collection_info.query.filter_by(id=collection_id).delete()
