@@ -726,11 +726,11 @@ def stop_collection(collection_id: int, action_list):
     db.session.commit()
 
 
-def save_submission(submission_list: list):
+def save_submission(submission_list: list, collection_id: int):
     submission_multidict = MultiDict(submission_list)
     key_list = list(submission_multidict.keys())  # 提取问题的键值列表
     seq = list(filter(lambda x: x.find("name") >= 0, key_list))[0][-1]
-    collection_id = submission_multidict['collection_id']
+    # collection_id = submission_multidict['collection_id']
     # 创建一个提交记录，并加入数据库
     submission = Submission_info(collection_id=collection_id,
                                  # submitter_id=submission_multidict['submitter_id'],

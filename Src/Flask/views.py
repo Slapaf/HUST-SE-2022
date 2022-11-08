@@ -66,10 +66,13 @@ def file_submitting(collection_message):
     # print(type(collection_id))
     if request.method == 'POST':
         submission = request.form
+        tmp_file = request.files
+        print(tmp_file)
         print(submission)
         a = list(submission.items(multi=True))
+        print(a)
         # TODO：目前前端传过来的数据中没有collection_id
-        save_submission(a)
+        # save_submission(a, collection_id)
         return redirect(url_for('index'))
     else:
         question_dict = get_question_Dict(collection_id)
@@ -139,7 +142,10 @@ def mycollection():
                 parameter_dict_list.append(tmp_dict)
             return render_template('collection_details.html')
         elif user_action_list[0] == 'edit':  # 编辑
-            pass
+            # TODO doing...
+            print("哈哈哈")  # ! 调试用
+            # return render_template("file_editing.html", collection=question_dict)
+            # return redirect(url_for('file_editing', collection_id=collection_id))
         elif user_action_list[0] == 'restart':  # 重启
             pass
         elif user_action_list[0] == 'copy':  # 复制
@@ -148,8 +154,9 @@ def mycollection():
             stop_collection(int(collection_id), user_action_list)
         elif user_action_list[0] == 'del':  # ? 删除，已完成
             delete_collection(int(collection_id))
-        return redirect(url_for('mycollection'))
+        # return redirect(url_for('mycollection'))
 
+    # else:
     update_status(current_user.id)  # 更新当前用户所有收集的 status 字段
 
     collection_list = Collection_info.query.filter_by(creator_id=current_user.id).all()
@@ -310,6 +317,15 @@ def register():
 @app.route('/file_collecting')
 def file_collecting():
     return render_template('file_collecting.html')
+
+
+@app.route('/file_editing/<string:collection_id>')
+def file_editing(collection_id):
+    question_dict = get_question_Dict(int(collection_id))
+    print(question_dict)
+    if question_dict is None:
+        return render_template("404.html")
+    return render_template('file_editing.html', collection=question_dict)
 
 
 # 收集记录界面

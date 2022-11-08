@@ -22,6 +22,10 @@ function creatNameOrSnoOrFile(op, topicName, detailText) {
     let inputContent = document.createElement("input");
     inputContent.type = op == "file" ? "file" : "text";
     inputContent.className = "inputContent";
+    // ! DEBUG
+    // if (op == "file") {
+    //     inputContent.formEnctype = "multipart/form-data";
+    // }
     questionList.appendChild(newli);
     newli.appendChild(newh);
     newh.appendChild(inputTopic);
