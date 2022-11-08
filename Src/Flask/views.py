@@ -12,6 +12,22 @@ from db_manipulation import *
 SUBMITTING_PAGE = "127.0.0.1:5000/file_submitting"
 
 
+def value_type_check(sth_to_be_check):
+    """调试函数，项目完成后删除
+
+    输出待检查对象的值和类型
+
+    Args:
+        sth_to_be_check: 待检查的对象
+
+    Returns:
+        None
+    """
+    print("Value-Type Check!")
+    print("Value:\n", sth_to_be_check)
+    print("Type:\n", type(sth_to_be_check))
+
+
 def id_str_to_int(id_str: str):
     """
     将 str 类型的 id 号转换为 int 类型
@@ -114,17 +130,7 @@ def mycollection():
             print(submitting_page)  # ! 调试
         elif user_action_list[0] == 'collect-details':  # 统计
             # TODO doing...
-            parameter_dict_list = []
-            submission_list = submission_record(collection_id=int(collection_id))  # * 获取对应 id 的收集信息
-            print(submission_list)
-            for submission in submission_list:
-                # * 创建一个字典类型，用于传参
-                tmp_dict = {
-                    'submitter_name': submission[0],
-                    'submit_time': submission[1]
-                }
-                parameter_dict_list.append(tmp_dict)
-            return render_template('collection_details.html')
+            print("嘿嘿嘿")
         elif user_action_list[0] == 'edit':  # 编辑
             # TODO doing...
             print("哈哈哈")  # ! 调试用
@@ -175,15 +181,49 @@ def mycollection():
     )
 
 
-# @app.route('/collection_details', methods=['GET', 'POST'])
-# @login_required
-# def collection_details():
-#     # Todo 数据库提供查询已收问卷数、一首文件数量、截止倒计时操作的接口
-#     print('已收问卷数:', count_submission(1))
-#     print('已收文件数量:', count_filenum(1, 3))
-#     print('截止倒计时:', deadline_countdown(1))
-#     # Todo 已完成
-#     return render_template('collection_details.html')
+@app.route('/collection_details/<string:collection_id>', methods=['GET', 'POST'])
+@login_required
+def collection_details(collection_id):
+    if request.method == 'POST':
+        namelist_data = request.form.to_dict()  # * 获取应交名单数据
+        name_list = namelist_data['name_data'].split(' ')
+        # TODO 若输入名单最后多按下了回车，则最后一个名字末尾有多余的 \r\n
+        namelist_csv = pd.DataFrame(columns=["姓名"], data=name_list)
+        # print(namelist_csv)
+        namelist_path = './FileStorage/' + Collection_info.query.filter_by(
+            creator_id=current_user.id).first().namelist_path
+        # print(namelist_path)
+        os.mkdir(namelist_path)
+        namelist_csv.to_csv(namelist_path + "/应交名单.csv", encoding='utf-8')  # * 保存为 csv 文件
+        return redirect(url_for('collection_details'))
+
+    collection_id = id_str_to_int(collection_id)  # * 转换为实际的收集 id
+    parameter_dict_list = []
+    submission_list = submission_record(collection_id=collection_id)  # * 获取对应 id 的收集信息
+    print(submission_list)
+    for idx, submission in enumerate(submission_list):
+        # * 创建一个字典类型，用于传参
+        submitter_name = submission[0]  # 提交者姓名
+        value_type_check(submitter_name)
+        submit_time = submission[1]  # 提交时间
+        value_type_check(submit_time)
+        file_submitted_count = submission[2]  # 提交文件数量
+        value_type_check(file_submitted_count)
+        file_submitted_list = submission[3]
+        tmp_dict = {
+            'submitter_order_idx': idx,  # ! 用于 js 定位数据，不是数据库 id
+            'submitter_name': submitter_name,
+            'submit_time': submit_time,
+            'file_submitted_count': file_submitted_count,
+            'file_submitted_list': file_submitted_list
+        }
+        parameter_dict_list.append(tmp_dict)
+
+    return render_template(
+        'collection_details.html',
+        json_object=parameter_dict_list,
+        json_length=len(parameter_dict_list)
+    )
 
 
 @app.route('/file_collecting', methods=['GET', 'POST'])
@@ -305,26 +345,9 @@ def file_collecting():
 
 @app.route('/file_editing/<string:collection_id>')
 def file_editing(collection_id):
-    question_dict = get_question_Dict(id_str_to_int(collection_id))
+    collection_id = id_str_to_int(collection_id)
+    question_dict = get_question_Dict(collection_id)
     print(question_dict)
     if question_dict is None:
         return render_template("404.html")
     return render_template('file_editing.html', collection=question_dict)
-
-
-# 收集记录界面
-@app.route('/collection_details', methods=['GET', 'POST'])
-def collection_details():
-    if request.method == 'POST':
-        namelist_data = request.form.to_dict()  # * 获取应交名单数据
-        name_list = namelist_data['name_data'].split(' ')
-        # TODO 若输入名单最后多按下了回车，则最后一个名字末尾有多余的 \r\n
-        namelist_csv = pd.DataFrame(columns=["姓名"], data=name_list)
-        # print(namelist_csv)
-        namelist_path = './FileStorage/' + Collection_info.query.filter_by(
-            creator_id=current_user.id).first().namelist_path
-        # print(namelist_path)
-        os.mkdir(namelist_path)
-        namelist_csv.to_csv(namelist_path + "/应交名单.csv", encoding='utf-8')  # * 保存为 csv 文件
-        return redirect(url_for('collection_details'))
-    return render_template('collection_details.html')

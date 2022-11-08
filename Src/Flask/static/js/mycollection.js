@@ -233,7 +233,7 @@ function addmember(collection_title, username, collection_status, collection_id,
         //统计按钮
         document.getElementById("hidden-input").value = "collect-details" + "$" + memberid.title;
         document.getElementById("hidden").submit();
-        window.location.href = 'collection_details';
+        window.location.href = 'collection_details/' + memberid.title;
     }
     // ? 点击 “编辑” 按钮
     op3.onclick = function () {

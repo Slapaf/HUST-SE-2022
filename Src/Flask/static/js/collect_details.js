@@ -8,13 +8,21 @@ var lis = tab_list.querySelectorAll("li");
 var items = document.querySelectorAll(".item");
 const x = document.getElementById("list_body");
 
+function idx_str_to_int(idx_str) {
+    if (idx_str >= '0' && idx_str <= '9') {
+        return parseInt(idx_str);
+    }
+    return parseInt(idx_str) - 10 + 'a'.charCodeAt();
+}
+
 // TODO 获取提交信息更新页面，从 mycollection 页面进入
 function getData() {
     let tmp_json = JSON.parse(document.getElementById('json_object').innerHTML);
     let json_length = document.getElementById('json_length').innerHTML;
     for (let i = 0; i < json_length; i++) {
         // ! 未验证正确性
-        addmember(tmp_json[i].submitter_name, tmp_json[i].submit_time, tmp_json[i].file_submitted_count);
+        addmember(tmp_json[i].submitter_order_idx, tmp_json[i].submitter_name,
+            tmp_json[i].submit_time, tmp_json[i].file_submitted_count, tmp_json[i].file_submitted_list);
     }
 }
 
@@ -123,12 +131,12 @@ function addname() {
     }
 }
 
-function addfile() {
+function addfile(file_submitted_list) {
     let popup = document.getElementById("popup-content");
     let i = 0;
-    while (i < arr2.length) {
+    while (i < file_submitted_list.length) {
         let para = document.createElement("div");
-        para.title = arr2[i];
+        para.title = file_submitted_list[i];
         para.className = "filelist";
         popup.appendChild(para);
         para.appendChild(document.createTextNode(para.title));
@@ -137,15 +145,21 @@ function addfile() {
 }
 
 //TODO 待添加参数
-function addmember(submitter_name, submit_time, file_submitted_count) {
+function addmember(submitter_order_idx, submitter_name, submit_time, file_submitted_count, file_submitted_list) {
     //新建元素节点
     let listmember = document.createElement("div");
     let membername = document.createElement("div");
     let memberdate = document.createElement("div");
     let membernumber = document.createElement("div");
     let membercondition = document.createElement("div");
+    // ! 11/08 添加 idx
+    let memberid = document.createElement("div");
+    // ! 11/08
     //连接节点
     x.appendChild(listmember);
+    // ! 11/08
+    listmember.appendChild(memberid);
+    // ! 11/08
     listmember.appendChild(membername);
     listmember.appendChild(memberdate);
     listmember.appendChild(membernumber);
@@ -158,7 +172,13 @@ function addmember(submitter_name, submit_time, file_submitted_count) {
     // membernumber.title = "211";
     membernumber.title = file_submitted_count;
     membercondition.title = "查看";
+    // ! 11/08 memberid 赋值
+    memberid.title = id_str_transfer(submitter_order_idx);
+    // ! 11/08
     membername.appendChild(document.createTextNode(membername.title));
+    // ! 11/08
+    membernumber.appendChild(document.createTextNode(memberid.title));
+    // ! 11/08
     memberdate.appendChild(document.createTextNode(memberdate.title));
     membernumber.appendChild(document.createTextNode(membernumber.title));
     membercondition.appendChild(document.createTextNode(membercondition.title));
@@ -167,6 +187,9 @@ function addmember(submitter_name, submit_time, file_submitted_count) {
     memberdate.className = "member_date";
     membernumber.className = "member_number";
     membercondition.className = "member_condition";
+    // ! 11/08
+    memberid.style.display = "none";
+    // ! 11/08
     membercondition.onclick = function () {
         let popup1 = document.getElementById("popup1");
         popup1.style.display = "block";
@@ -174,6 +197,6 @@ function addmember(submitter_name, submit_time, file_submitted_count) {
         popLayer.style.display = "block";
         document.getElementById("hidden-input").value = "check " + membername.title;
         document.getElementById("hidden").submit();
-        addfile();
+        addfile(file_submitted_list);
     }
 }
