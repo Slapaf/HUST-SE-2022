@@ -493,6 +493,7 @@ def count_filenum(user_id=None, collection_id=None, question_id=None, qno=None):
         question_id_list = Question_info.query.filter_by(
             collection_id=collection_id, question_type=Question_info.FILE_UPLOAD
         ).with_entities(Question_info.id).all()
+        question_id_list = list(map(itemgetter(0), question_id_list))
         file_num = 0
         # 遍历该收集中所有文件上传题，统计已收文件总数
         for q_id in question_id_list:
@@ -504,6 +505,7 @@ def count_filenum(user_id=None, collection_id=None, question_id=None, qno=None):
     # 若没给参数question_id、collection_id，但给了参数user_id
     if user_id is not None:
         collection_id_list = Collection_info.query.filter_by(creator_id=user_id).with_entities(Collection_info.id).all()
+        collection_id_list = list(map(itemgetter(0), collection_id_list))
         file_num_dict = {}
         # 遍历该用户的所有收集
         for id1 in collection_id_list:
@@ -511,6 +513,7 @@ def count_filenum(user_id=None, collection_id=None, question_id=None, qno=None):
             question_id_list = Question_info.query.filter_by(
                 collection_id=id1, question_type=Question_info.FILE_UPLOAD
             ).with_entities(Question_info.id).all()
+            question_id_list = list(map(itemgetter(0), question_id_list))
             file_num = 0
             for id2 in question_id_list:
                 path = './FileStorage/' + Question_info.query.filter_by(id=id2).first().file_path
