@@ -19,15 +19,20 @@ function changedata() {
     document.getElementById("data1").style.display = "none";
     document.getElementById("data2").style.display = "block";
     // document.querySelector("#input4").value = document.querySelector("#input4_1").value;
-    // document.querySelector("#input5").value = document.querySelector("#input5_1").value;
+    if (document.querySelector("#input5").value === "未设置") {
+        document.querySelector("#input5_1").value = '';
+    }
     // document.querySelector("#input6").value = document.querySelector("#input6_1").value;
-    // document.querySelector("#input7").value = document.querySelector("#input7_1").value;
+    if (document.querySelector("#input7").value === "未设置") {
+        document.querySelector("#input7_1").value = '';
+    }
 }
 
 function checkKey_0() {
     let k = document.getElementById("tip1");
     console.log(k);
     let U0 = input0.value;
+    // TODO 待修改
     if (U0 === "123456") {
         //此处"123456"要换成用户密码的值!
         k.innerHTML = "";
@@ -115,13 +120,13 @@ function checkAll2() {
 //弹窗倒计时
 function timeOutClose(tip) {
     // document.getElementById("timeOutClose").innerHTML = countdown;
-    if(countdown > 0) {
-      setTimeout(()=>{
-        timeOutClose(tip);
-      },1000);
-    }else {
+    if (countdown > 0) {
+        setTimeout(() => {
+            timeOutClose(tip);
+        }, 1000);
+    } else {
         console.log(tip);
-      tip.style.display = "none";
+        tip.style.display = "none";
     }
     countdown--;
 }
