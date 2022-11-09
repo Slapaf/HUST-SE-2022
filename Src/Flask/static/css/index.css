@@ -49,8 +49,8 @@ nav .right div{
 
 .main {
     position: absolute;
-    top: 150px;
-    right: 250px;
+    top: 23vh;
+    right: 18vw;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -60,7 +60,6 @@ nav .right div{
    
     font-size: 60px;
     color: #000;
-    /* box-shadow: 10px 0 10px rgb(88, 88, 88);*/
 } 
 
 #EnglishName {
