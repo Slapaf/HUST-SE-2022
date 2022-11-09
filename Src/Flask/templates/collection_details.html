@@ -98,10 +98,15 @@
         }
     }
 
+    let getData_signal = 1;
+
     window.onload = function starttime() {
         time(part2_right, '{{ ddl_countdown }}');
         ptimer = setTimeout(starttime, 1000); // 添加计时器
-        getData;
+        if (getData_signal == 1) { // 每次加载页面只触发一次 getData 函数
+            getData();
+            getData_signal--;
+        }
     }
 
     function time(obj, futimg) {
