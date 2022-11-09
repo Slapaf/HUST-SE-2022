@@ -77,8 +77,6 @@ function addmember(collection_title, username, collection_status, collection_id,
     // ! 11/05
     membertitle.appendChild(document.createTextNode(membertitle.title));
     // ! 11/05
-    memberid.appendChild(document.createTextNode(memberid.title));
-    // ! 11/05
     membername.appendChild(document.createTextNode(membername.title));
     membercondition.appendChild(document.createTextNode(membercondition.title));
     membertimes.appendChild(document.createTextNode(membertimes.title));
