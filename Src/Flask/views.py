@@ -257,7 +257,7 @@ def collection_details(collection_id):
         json_length=len(parameter_dict_list),
         submission_count=count_submission(collection_id=collection_id),
         filenum_count=count_filenum(collection_id=collection_id),
-        ddl_countdown=time_format(deadline_countdown(collection_id=collection_id))
+        ddl_countdown=Collection_info.query.get(collection_id).end_date(collection_id=collection_id))
     )
 
 
