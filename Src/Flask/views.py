@@ -243,7 +243,7 @@ def collection_details(collection_id):
         tmp_dict = {
             'submitter_order_idx': idx,  # ! 用于 js 定位数据，不是数据库 id
             'submitter_name': submitter_name,
-            'submit_time': submit_time,
+            'submit_time': submit_time.strftime('%Y-%m-%d %H:%M:%S'),
             'file_submitted_count': file_submitted_count,
             'file_submitted_list': file_submitted_list
         }

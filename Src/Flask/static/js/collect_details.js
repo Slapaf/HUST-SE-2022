@@ -200,3 +200,5 @@ function addmember(submitter_order_idx, submitter_name, submit_time, file_submit
         addfile(file_submitted_list);
     }
 }
+
+window.onload = getData;
