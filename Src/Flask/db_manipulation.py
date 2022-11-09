@@ -162,14 +162,12 @@
         
         Returns: None
     
-    12、save_submission(submission_list: list)
+    12、save_submission(submission_list: list, collection_id: int, file)
         Function: 将用户填写收集的内容submission_list存储到数据库中
         
         Inputs:
         - submission_list：list类型，元素类型为元组。格式如下：
-        sample = [('collection_id', 4),   ！必须要有
-                  ('submitter_id', 1),    ！必须要有
-                  ('question_name1', '姓名lala'),
+        sample = [('question_name1', '姓名lala'),
                   ('submit_name1', '计胜翔'),
                   ('question_file2', '文件haha'),
                   ('submit_file2', '二十大观看心得.docx'),
@@ -182,7 +180,9 @@
                   ('submit_checked_mulans5', 'B'),
                   ('question_qnaire6', '你喜欢跑步吗？'),
                   ('submit_checked_qnaire6', '1')]
-                  
+        - collection_id：int类型，表示收集id
+        - file：flask表单数据，python ImmutableMultiDict类，用于获取提交的文件名
+        
         Returns: 
         - submission_id：int类型，表示该提交记录在表Submission_info中的id
 '''''
@@ -750,7 +750,7 @@ def stop_collection(collection_id: int, action_list):
     db.session.commit()
 
 
-def save_submission(submission_list: list, collection_id: int):
+def save_submission(submission_list: list, collection_id: int, file):
     submission_multidict = MultiDict(submission_list)
     key_list = list(submission_multidict.keys())  # 提取问题的键值列表
     seq = list(filter(lambda x: x.find("name") >= 0, key_list))[0][-1]
@@ -783,7 +783,8 @@ def save_submission(submission_list: list, collection_id: int):
 
         # 若为文件上传题
         elif "file" in key:
-            submit_content.result = submission_multidict['submit_file' + key[-1]]
+            filename = file.get('submit_file' + key[-1]).filename
+            submit_content.result = filename
 
         # 若为单选题
         elif "radio" in key:
