@@ -1,8 +1,8 @@
-list = []
-str = '-'.join(list)
-str = ''
-a = str.split('-')
-print(a)
+import re
+
+str = "fsdfs12"
+t = int(re.findall(r"\d+", str)[0])
+print(t)
 
 [('question_name1', '姓名lala'),
  ('submit_name1', '计胜翔'),

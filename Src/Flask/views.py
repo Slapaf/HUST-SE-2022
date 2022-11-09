@@ -1,5 +1,8 @@
 import datetime
 import json
+
+from werkzeug.utils import secure_filename
+
 from models import User
 import time
 import pandas as pd
@@ -87,6 +90,8 @@ def test():
     # delete_collection(1)
     # save_submission(sample1)
     # save_submission(sample2)
+    a = count_filenum(collection_id=1)
+    print(a)
     return redirect(url_for('index'))
 
 
@@ -102,6 +107,16 @@ def file_submitting(collection_message):
         print(type(tmp_file))
         a = list(submission.items(multi=True))
         print("提交内容：", a)
+        # TODO 数据库封装一下
+        t = MultiDict(a)
+        file_key_list = list(t.keys())
+        file_key_list = [key for key in file_key_list if "file" in key]
+        for file_key in file_key_list:
+            f = tmp_file['submit_file' + file_key[-1]]
+            print(type(f))
+            path = './FileStorage/' + Question_info.query.filter_by(id=int(file_key[-1])).first().file_path
+            print(path)
+            f.save(os.path.join(path, f.filename))
         save_submission(a, collection_id, tmp_file)
         return redirect(url_for('index'))
     else:
@@ -129,7 +144,7 @@ def time_format(time_to_format):
     if time_to_format.days > 0:
         return str(time_to_format.days) + "天"
     seconds = time_to_format.seconds
-    hours = seconds // 360
+    hours = seconds // 3600
     if hours > 0:
         return str(hours) + "小时"
     minute = seconds // 60
@@ -252,7 +267,10 @@ def collection_details(collection_id):
     return render_template(
         'collection_details.html',
         json_object=parameter_dict_list,
-        json_length=len(parameter_dict_list)
+        json_length=len(parameter_dict_list),
+        submission_count=count_submission(collection_id=collection_id),
+        filenum_count=count_filenum(collection_id=collection_id),
+        ddl_countdown=Collection_info.query.get(collection_id).end_date.strftime('%Y-%m-%d %H:%M:%S')
     )
 
 
