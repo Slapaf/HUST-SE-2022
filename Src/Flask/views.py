@@ -131,7 +131,7 @@ def time_format(time_to_format):
     if time_to_format.days > 0:
         return str(time_to_format.days) + "天"
     seconds = time_to_format.seconds
-    hours = seconds // 360
+    hours = seconds // 3600
     if hours > 0:
         return str(hours) + "小时"
     minute = seconds // 60
@@ -257,7 +257,7 @@ def collection_details(collection_id):
         json_length=len(parameter_dict_list),
         submission_count=count_submission(collection_id=collection_id),
         filenum_count=count_filenum(collection_id=collection_id),
-        ddl_countdown=deadline_countdown(collection_id=collection_id)
+        ddl_countdown=time_format(deadline_countdown(collection_id=collection_id))
     )
 
 
