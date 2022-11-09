@@ -27,10 +27,9 @@ class User(db.Model, UserMixin):  # 表名将会是 user（自动生成，小写
     username = db.Column(db.String(20), unique=True)  # 用户名（不可重复）
     password_hash = db.Column(db.String(128))  # 密码散列值
     userpath = db.Column(db.String(20), unique=True)  # 用户空间路径
-    email = db.Column(db.String(20), nullable=False, unique=True)  # 用户邮箱
+    email = db.Column(db.String(20), nullable=False)  # 用户邮箱
+    authorization_code = db.Column(db.String(20))  # 邮箱授权码
     yag = None
-
-    authorization_code = db.Column(db.String(20), unique=True)  # 邮箱授权码
 
     def set_password(self, password):
         """
