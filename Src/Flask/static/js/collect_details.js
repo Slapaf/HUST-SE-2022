@@ -23,18 +23,16 @@ function id_str_transfer(id_str) {
 }
 
 // TODO 获取提交信息更新页面，从 mycollection 页面进入
-function getData() {
-    console.log("进入了getdata");
-    console.log(document.getElementById('json_object').innerHTML);
-    let tmp_json = JSON.parse(document.getElementById('json_object').innerHTML);
-    let json_length = document.getElementById('json_length').innerHTML;
-    console.log(tmp_json);
-    for (let i = 0; i < json_length; i++) {
-        // ! 未验证正确性
-        addmember(tmp_json[i].submitter_order_idx, tmp_json[i].submitter_name,
-            tmp_json[i].submit_time, tmp_json[i].file_submitted_count, tmp_json[i].file_submitted_list);
-    }
-}
+// function getData() {
+//     let tmp_json = JSON.parse(document.getElementById('json_object').innerHTML);
+//     let json_length = document.getElementById('json_length').innerHTML;
+//     console.log(tmp_json);
+//     for (let i = 0; i < json_length; i++) {
+//         // ! 未验证正确性
+//         addmember(tmp_json[i].submitter_order_idx, tmp_json[i].submitter_name,
+//             tmp_json[i].submit_time, tmp_json[i].file_submitted_count, tmp_json[i].file_submitted_list);
+//     }
+// }
 
 Array.prototype.indexOf = function (val) {
     for (var i = 0; i < this.length; i++) {
@@ -210,6 +208,3 @@ function addmember(submitter_order_idx, submitter_name, submit_time, file_submit
         addfile(file_submitted_list);
     }
 }
-
-
-window.onload = getData;
