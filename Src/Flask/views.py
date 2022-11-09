@@ -44,8 +44,40 @@ def id_str_to_int(id_str: str):
 
 
 @app.route('/personal_homepage', methods=['GET', 'POST'])
+@login_required
 def personal_homepage():
-    return render_template("personal_homepage.html")
+    if request.method == 'POST':
+        tmp_data = request.form.to_dict()
+        '''
+        如果是修改个人信息
+        {'username': '张隽翊', 'phone': '未设置', 'email': '729695343@qq.com', 'authorization-code': '未设置'}
+        
+        如果是修改密码
+        {'psw_confirm': '123456', 'submit': ''}
+        '''
+        value_type_check(tmp_data)
+        if len(tmp_data) > 2:  # * 修改个人信息
+            # TODO 需要数据库提供更新邮箱授权码的接口
+            r_code = modify_personal_info(current_user.id, tmp_data['username'], tmp_data['email'])
+            if r_code == 1:
+                print("修改个人信息成功。")
+            else:
+                print("修改个人信息失败！该用户不存在。")
+        else:  # * 修改密码
+            r_code = modify_password(current_user.id, "123456", tmp_data['psw_confirm'])  # TODO 待修改
+            if r_code == 1:
+                print("修改密码成功。")
+            else:
+                print("修改密码失败！")
+        return redirect(url_for('personal_homepage'))
+    user_authorization_code = current_user.authorization_code
+    if user_authorization_code is None:
+        user_authorization_code = "未设置"
+    return render_template(
+        "personal_homepage.html",
+        user_authorization_code=user_authorization_code,
+        user_pwd_hash=current_user.password_hash  # TODO 待修改
+    )
 
 
 # 用于测试数据库接口函数
