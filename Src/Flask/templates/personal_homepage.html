@@ -61,7 +61,7 @@
                                                         id="input5_1" value="未设置">
                 </div>
                 <div class="input_box"> 用户邮箱：<input type="email" name="email" class="input" readonly
-                                                        id="input6_1"value={{ current_user.user_email }}></div>
+                                                        id="input6_1"value={{ current_user.email }}></div>
                 <div class="input_box"> 邮箱授权：<input type="text" name="authorization-code" class="input" readonly
                                                         id="input7_1"value="未填写"></div>
                 <button class="btn" onclick="changedata()">点击修改信息</button>
@@ -73,7 +73,7 @@
                         用户名称：
                         <input type="text" name="username" class="input" id="input4"
                                                             onblur="checkKey_3()"
-                                                            value={{ username }}>
+                                                            value={{ current_user.username }}>
                     </div>
                     <span class="tip_box1" id="tip4"></span>
                     <div class="input_box"> 
@@ -82,13 +82,10 @@
                                                             value="未设置" onblur="checkKey_4()">
                     </div>
                     <span class="tip_box1" id="tip5"></span>
-                    {#                    <div class="input_box"> 用户邮箱：<input type="email" name="email" class="input" id="input6"#}
-                    {#                                                            value="1234567@7654321.hust.edu.cn"></div>#}
-                    {#                    <span class="tip_box1" id="tip6"></span>#}
                     <div class="input_box"> 
                         用户邮箱：
                         <input type="email" name="email" class="input" id="input6"
-                                                            value="{{ user_email }}"></div>
+                                                            value={{ current_user.email }}></div>
                     <div class="input_box"> 
                         邮箱授权：
                         <input type="text" name="authorization-code" class="input"

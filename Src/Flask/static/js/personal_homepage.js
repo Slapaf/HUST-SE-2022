@@ -18,10 +18,10 @@ nav_item2.onclick = () => {
 function changedata() {
     document.getElementById("data1").style.display = "none";
     document.getElementById("data2").style.display = "block";
-    document.querySelector("#input4").value = document.querySelector("#input4_1").value;
-    document.querySelector("#input5").value = document.querySelector("#input5_1").value;
-    document.querySelector("#input6").value = document.querySelector("#input6_1").value;
-    document.querySelector("#input7").value = document.querySelector("#input7_1").value;
+    // document.querySelector("#input4").value = document.querySelector("#input4_1").value;
+    // document.querySelector("#input5").value = document.querySelector("#input5_1").value;
+    // document.querySelector("#input6").value = document.querySelector("#input6_1").value;
+    // document.querySelector("#input7").value = document.querySelector("#input7_1").value;
 }
 
 function checkKey_0() {
