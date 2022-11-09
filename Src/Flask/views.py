@@ -87,6 +87,8 @@ def test():
     # delete_collection(1)
     # save_submission(sample1)
     # save_submission(sample2)
+    a = count_filenum(collection_id=1)
+    print(a)
     return redirect(url_for('index'))
 
 
