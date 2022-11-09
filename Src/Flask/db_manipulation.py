@@ -127,14 +127,15 @@
         - 0：原密码错误
         - -1：user_id错误，即该用户不存在
     
-    9、modify_personal_info(user_id: int, new_name: str, new_email: str)
+    9、modify_personal_info(user_id: int, new_name: str, new_email: str, authorization_code: str)
         ！未验证正确性
-        Function: 修改id为user_id的用户的个人信息（昵称、邮箱）
+        Function: 修改id为user_id的用户的个人信息（昵称、邮箱、邮箱授权码）
         
         Inputs:
         - user_id：int类型，表示用户id
         - new_name：string类型，表示新昵称
         - new_email：string类型，表示新邮箱
+        - authorization_code: string类型，表示邮箱授权码
         
         Returns: 
         一个整数，取值范围和含义如下：
@@ -680,7 +681,7 @@ def modify_password(user_id: int, original_pswd: str, new_pswd: str):
     return 1  # 修改成功
 
 
-def modify_personal_info(user_id: int, new_name: str, new_email: str):
+def modify_personal_info(user_id: int, new_name: str, new_email: str, authorization_code: str):
     user = User.query.filter_by(id=user_id).first()
 
     # 该用户id不存在
@@ -690,6 +691,7 @@ def modify_personal_info(user_id: int, new_name: str, new_email: str):
     # 修改个人信息
     user.name = new_name
     user.email = new_email
+    user.authorization_code = authorization_code
     db.session.commit()
     return 1  # 修改成功
 
