@@ -55,16 +55,15 @@
             {#     input中value的值用变量替代   #}
             <div id="data1">
                 <div class="input_box"> 用户名称： <input type="text" name="username" class="input" readonly
-                                                         value={{ username }}>
+                                                        id="input4_1" value={{ current_user.username }}>
                 </div>
-                <div class="input_box"> 用户手机：<input type="text" name="phone" class="input" readonly value="未设置">
+                <div class="input_box"> 用户手机：<input type="text" name="phone" class="input" readonly 
+                                                        id="input5_1" value="未设置">
                 </div>
-                {#                <div class="input_box"> 用户邮箱：<input type="email" name="email" class="input" readonly#}
-                {#                                                        value="1234567@7654321.hust.edu.cn"></div>#}
                 <div class="input_box"> 用户邮箱：<input type="email" name="email" class="input" readonly
-                                                        value="{{ user_email }}"></div>
+                                                        id="input6_1"value={{ current_user.user_email }}></div>
                 <div class="input_box"> 邮箱授权：<input type="text" name="authorization-code" class="input" readonly
-                                                        value="未填写"></div>
+                                                        id="input7_1"value="未填写"></div>
                 <button class="btn" onclick="changedata()">点击修改信息</button>
             </div>
             <div id="data2" style="display:none">
@@ -93,7 +92,7 @@
                     <div class="input_box"> 
                         邮箱授权：
                         <input type="text" name="authorization-code" class="input"
-                                                            id="input4"
+                                                            id="input7"
                                                             value="未填写">
                     </div>
                     <button type="submit" class="btn">确认修改</button>

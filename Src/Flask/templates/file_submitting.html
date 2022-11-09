@@ -7,33 +7,61 @@
     <title>Document</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/all.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/file_submitting.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/file_collecting.css') }}">
+    <script src="{{ url_for('static', filename='iconfont/iconfont.js') }}"></script>
 </head>
 <div id="collection" style="display: none">{{ collection }}</div>
 <div class="container">
     <div class="header">
-        <h3>收集标题</h3>
-        <!-- 字符串 -->
-        <div id="collectionTitle">{{collection.collectionTitle}}</div>
-        <h3>收集者</h3>
-        <!-- 字符串 -->
-        <div id="collector">{{collection.collector}}</div>
-        <h3>截止时间</h3>
-        <!-- 字符串 -->
-        <div id="deadline">{{collection.deadline}}</div>
-        <h3>详情</h3>
-        <!-- 字符串 -->
-        <div id="discription">{{collection.description}}</div>
+        <div class="collectionInformation">
+            <h3>
+                <svg class="icon" aria-hidden="true">
+                    <use xlink:href="#icon-A5"></use>
+                </svg>
+                收集标题：
+            </h3>
+            <!-- 字符串 -->
+            <div id="collectionTitle">{{collection.collectionTitle}}</div>
+        </div>
+        <div class="collectionInformation">
+            <h3>
+                <svg class="icon" aria-hidden="true">
+                    <use xlink:href="#icon-A7"></use>
+                </svg>
+                收集者：
+            </h3>
+            <!-- 字符串 -->
+            <div id="collector">{{collection.collector}}</div>
+        </div>
+        <div class="collectionInformation">
+            <h3>
+                <svg class="icon" aria-hidden="true">
+                    <use xlink:href="#icon-A8"></use>
+                </svg>
+                截止时间：
+            </h3>
+            <!-- 字符串 -->
+            <div id="deadline">{{collection.deadline}}</div>
+        </div>
+        <div class="collectionInformation">
+            <h3>
+                <svg class="icon" aria-hidden="true">
+                    <use xlink:href="#icon-A"></use>
+                </svg>
+                详情：
+            </h3>
+            <!-- 字符串 -->
+            <div id="description">{{collection.description}}</div>
+        </div>
     </div>
     <div class="main">
         <form id="form" method="post" name="Form" enctype="multipart/form-data">
             <ul id="question_list">
                 <!-- 姓名/学号 -->
-                 <!-- <li>
+                 <li>
                     <h1><input type="text" value="后台获取" class="readOnlyInput"disabled></h1>
                     <div class="detail"></div>
                     <input type="text" class="inputContent">
-                </li> -->
+                </li>
                 <!-- 文件 -->
                 <!-- <li>
                     <h1><input type="text" value="后台获取" class="disabledInput"disabled></h1>

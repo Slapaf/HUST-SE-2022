@@ -2,7 +2,7 @@ const questionList = document.querySelector("#question_list");
 const collectionTitle = document.querySelector("#collectionTitle");
 const collector = document.querySelector("#collector");
 const deadline = document.querySelector("#deadline");
-const discription = document.querySelector("#discription");
+const description = document.querySelector("#description");
 let qnum = 0;
 let question_id = 0;
 
@@ -201,7 +201,7 @@ function creatQuestion() {
     collectionTitle.innerHTML = Object.values(formData)[0];
     collector.innerHTML = Object.values(formData)[1];
     deadline.innerHTML = Object.values(formData)[2];
-    discription.innerHTML = Object.values(formData)[3];
+    description.innerHTML = Object.values(formData)[3];
     for (let i = 0; i < formDataLen; i++) {
         let q = formDataArr[i];
         let keys = Object.keys(formDataArr[i]);
