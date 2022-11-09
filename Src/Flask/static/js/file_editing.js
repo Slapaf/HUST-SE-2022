@@ -607,10 +607,6 @@ function createQuestionnaire(topicName,detailText,qnOptionArr,multi) {
   //默认添加两个选项
   // newqbox.appendChild(addQuestion(if_multi.checked));
   // newqbox.appendChild(addQuestion(if_multi.checked));
-  //按照传过来的参数添加选项
-  for(let i=0;i<qnOptionArr.length;i++) {
-    newqbox.appendChild(addQuestion_for_fileEditing(if_multi.checked,qnOptionArr[i]));
-  }
   //给新增的题目添加删除事件
   newbtn.addEventListener("click", () => {
     ul.removeChild(newli);
@@ -624,6 +620,10 @@ function createQuestionnaire(topicName,detailText,qnOptionArr,multi) {
     if_multi.checked = true;
     hidden_radio1.removeAttribute("checked");
     hidden_radio2.checked = "checked";
+  }
+  //按照传过来的参数添加选项
+  for(let i=0;i<qnOptionArr.length;i++) {
+    newqbox.appendChild(addQuestion_for_fileEditing(if_multi.checked,qnOptionArr[i]));
   }
   if_multi.onchange = () => {
     let qnaire_check = newli.getElementsByClassName("qnaire_check");

@@ -9,7 +9,7 @@ function id_str_transfer(id_str) {
 }
 
 function getData() {
-    console.log(document.getElementById('json_object').innerHTML);
+    console.log(document.getElementById('json_object').innerHTML)
     let tmp_json = JSON.parse(document.getElementById('json_object').innerHTML);
     let json_length = document.getElementById('json_length').innerHTML;
     for (let i = 0; i < json_length; i++) {

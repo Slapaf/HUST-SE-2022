@@ -3,8 +3,12 @@ const collectionTitle = document.querySelector("#collectionTitle");
 const collector = document.querySelector("#collector");
 const deadline = document.querySelector("#deadline");
 const description = document.querySelector("#description");
+const myalert = document.querySelector(".alert");
+const myblur = document.querySelector("#blur");
+const myform = document.querySelector("#myform");
 let qnum = 0;
 let question_id = 0;
+let countdown = 2;
 
 //添加名字/学号/文件
 function creatNameOrSnoOrFile(op, topicName, detailText) {
@@ -21,7 +25,11 @@ function creatNameOrSnoOrFile(op, topicName, detailText) {
     detail.innerHTML = detailText;
     let inputContent = document.createElement("input");
     inputContent.type = op == "file" ? "file" : "text";
-    inputContent.className = "inputContent";
+    inputContent.className = "inputContent";    
+    if(op!="file") {
+        inputContent.required = true;
+    }
+    inputContent.maxLength = 25;
     questionList.appendChild(newli);
     newli.appendChild(newh);
     newh.appendChild(inputTopic);
@@ -62,6 +70,7 @@ function creatSingleOrMultiple(op, topicName, detailText) {
         inputChoice.name =
             "submit_checked_" + (op === "single" ? "radio" : "mulans") + question_id;
         inputChoice.value = ABCD[i];
+        inputChoice.required = op === "single" ? true : false;
         let newlabel = document.createElement("label");
         newlabel.innerHTML = ABCD[i];
         opBox.appendChild(inputChoice);
@@ -107,6 +116,7 @@ function creatQuestionnaire(
         inputChoice.type = chooseType == "single" ? "radio" : "checkbox";
         inputChoice.name = "submit_checked_qnaire" + question_id;
         inputChoice.value = (i + 1).toString();
+        inputChoice.required = chooseType === "single" ? true : false;
         let optionContent = document.createElement("div");
         optionContent.className = "qnOptionContent";
         optionContent.innerHTML = qnOptionContent[i];
@@ -226,7 +236,86 @@ function creatQuestion() {
     }
 }
 
-processFormData();
-creatQuestion();
 
+//将需要文档加载完毕后执行的函数加到执行队列
+function addLoadEvent(func) {
+    var oldonload = window.onload;
+    if (typeof window.onload != "function") {
+      window.onload = func;
+    } else {
+      window.onload = function () {
+        oldonload();
+        func();
+      };
+    }
+}
 
+addLoadEvent(processFormData);
+addLoadEvent(creatQuestion);
+
+//提交前检查
+function check() {
+    let errorNum = 0;
+    let arr=[];
+    //检查多选是否至少选了两个
+    let multiQuestionBoxes = document.querySelectorAll(".multiQuestionBox");
+    for(let i = 0;i < multiQuestionBoxes.length;i++) {
+      let checkBoxes = multiQuestionBoxes[i].querySelectorAll("input[type='checkbox']");
+      let cnt = 0;
+      for(let i=0;i<checkBoxes.length;i++) {
+        if(checkBoxes[i].checked) cnt++;
+      }
+      if(cnt < 2) {
+        errorNum = 1;
+      }
+    }
+    //检查问卷多选是否至少选了两个
+    let qnQuestionBoxes = document.querySelectorAll(".qnQuestionBox");
+    for(let i = 0;i < qnQuestionBoxes.length;i++) {
+      let checkBoxes = qnQuestionBoxes[i].querySelectorAll("input[type='checkbox']");
+      let cnt = 0;
+      for(let i=0;i<checkBoxes.length;i++) {
+        if(checkBoxes[i].checked) cnt++;
+      }
+      if(cnt < 2) {
+        errorNum = 2;
+      }
+    }
+    //出错提示弹窗
+    if(errorNum) {
+      let h1 = myalert.getElementsByTagName("h1")[0];
+      if(errorNum === 1) {
+        h1.innerHTML = "多选题请至少选择两个选项";
+      }else if(errorNum === 2){
+        h1.innerHTML = "多选题请至少选择两个选项!";
+      }
+      myalert.style.display = "block";
+      myblur.style.display = "block";
+      countdown = 2;
+      timeOutClose();
+      return false;
+    }
+    return true;
+}
+  
+//表单提交前触发检查和编号程序
+myform.onsubmit = ()=>{
+    if(check())
+        return true;
+    else
+        return false;
+}
+
+//弹窗倒计时
+function timeOutClose() {
+    // document.getElementById("timeOutClose").innerHTML = countdown;
+    if(countdown > 0) {
+      setTimeout("timeOutClose();",1000);
+    }else {
+      myalert.style.display = "none";
+      myblur.style.display = "none";
+    }
+    countdown--;
+}
+
+console.log(myform);
