@@ -61,7 +61,7 @@ function creatSingleOrMultiple(op, topicName, detailText) {
     let ABCD = ["A", "B", "C", "D"];
     for (let i = 0; i < 4; i++) {
         let opBox = document.createElement("div");
-        opBox.className = op === "single" ? "radioOption" : "multiOption";
+        opBox.className = op === "single" ? "singleOption" : "multiOption";
         let inputChoice = document.createElement("input");
         inputChoice.type = op === "single" ? "radio" : "checkbox";
         inputChoice.name =
