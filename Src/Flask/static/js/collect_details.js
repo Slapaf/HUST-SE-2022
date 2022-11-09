@@ -15,6 +15,13 @@ function idx_str_to_int(idx_str) {
     return parseInt(idx_str) - 10 + 'a'.charCodeAt();
 }
 
+function id_str_transfer(id_str) {
+    if (id_str >= '0' && id_str <= '9') {
+        return id_str;
+    }
+    return String.fromCharCode(parseInt(id_str) - 10 + 'a'.charCodeAt());
+}
+
 // TODO 获取提交信息更新页面，从 mycollection 页面进入
 function getData() {
     console.log("进入了getdata");

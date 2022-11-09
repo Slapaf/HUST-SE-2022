@@ -19,6 +19,7 @@ let dragElement = null; //存放拖拽的元素
 let qnum = 1;  //单选编号（区分单选用）
 let question_id = 0; //（复选框用）id
 let countdown = 3;
+let timeWithoutSec = "";
 //点击“添加题目”按钮，弹出弹窗
 btn_for_add.onclick = () => {
   popup.style.display = "block";
@@ -65,7 +66,8 @@ function getCurrentDatetime() {
     clock += "0";  
   clock += hh + ":";  
   if (mm < 10) clock += '0';   
-  clock += mm;   
+  clock += mm;
+  timeWithoutSec = clock;   
   if (ss < 10) clock += '0';   
   clock += ss; 
   return clock;      
@@ -74,7 +76,8 @@ function getCurrentDatetime() {
 //限制截止日期不能比当前时间早
 function deadline_limit() {
   let currentDatetime = getCurrentDatetime();
-  deadline.min = currentDatetime;
+  deadline.min = timeWithoutSec;
+  deadline.max = "2050-12-31T23:59";
 } 
 
 //姓名
