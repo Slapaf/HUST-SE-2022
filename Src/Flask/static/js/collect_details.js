@@ -202,9 +202,9 @@ function addmember(submitter_order_idx, submitter_name, submit_time, file_submit
         popup1.style.display = "block";
         let popLayer = document.getElementById('popLayer');
         popLayer.style.display = "block";
-        let wgk=document.getElementById("popup-content");
-        let jsx=document.createElement("div");
-        jsx.id="return";
+        let wgk = document.getElementById("popup-content");
+        let jsx = document.createElement("div");
+        jsx.id = "return";
         wgk.appendChild(jsx);
         addfile(file_submitted_list);
     }
