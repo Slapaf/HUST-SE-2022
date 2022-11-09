@@ -1,45 +1,89 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head>
+  <head>
     <title>Home</title>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/all.css') }}" type="text/css">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}" type="text/css">
-</head>
-<body>
-{% for message in get_flashed_messages() %}
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/all.css') }}"
+      type="text/css"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/index.css') }}"
+      type="text/css"
+    />
+  </head>
+  <body>
+    {% for message in get_flashed_messages() %}
     <div class="alert">{{ message }}</div>
-{% endfor %}
-<nav>
-    <div class="left"></div>
-    <div class="right">
-        {% if current_user.is_authenticated %}
-            <div>{{ current_user.name }}</div>
-            <div><a href="{{ url_for('logout') }}">退出登录</a></div>
-        {% else %}
-            <div><a href="{{ url_for('login') }}">登录</a></div>
-            <div><a href="{{ url_for('register') }}">注册</a></div>
-        {% endif %}
-    </div>
-</nav>
-<section class="container">
-    <h1>作业收集系统</h1>
-    <div class="main">
+    {% endfor %}
+    <nav>
+      <div class="left">
         <div class="op1">
             <a href="{{ url_for('file_collecting') }}">创建收集</a>
-        </div>
-        <div class="op2">
+          </div>
+          <div class="op2">
             <a href="{{ url_for('mycollection') }}">收集记录</a>
+          </div>
+      </div>
+      <div class="right">
+        {% if current_user.is_authenticated %}
+        <div>{{ current_user.name }}</div>
+        <div><a href="{{ url_for('logout') }}">退出登录</a></div>
+        {% else %}
+        <div><a href="{{ url_for('login') }}">登录</a></div>
+        <div><a href="{{ url_for('register') }}">注册</a></div>
+        {% endif %}
+      </div>
+    </nav>
+    <section class="container panel">
+      <div class="main">
+        <h1 id="productName">青青草原收件箱</h1>
+        <h1 id="EnglishName">Green grasslands Inbox</h1>
+        <div class="underProductName">
+            <h2>您的生活好帮手嘿嘿嘿嘿嘿嘿</h2>
+            <h2>啦啦啦啦啦啦啦啦啦啦</h2>
+            <h2>你好你好你好你好你好你好</h2>
+            <div class="createCollection">
+                <a href="{{ url_for('file_collecting') }}">创建收集</a>
+            </div>
+        </div>   
+      </div>
+      <img id="round_right" src="{{ url_for('static', filename='images/round1.png') }}">
+      <img id="round_left" src="{{ url_for('static', filename='images/round2.png') }}">
+      <img id="svg1" src="{{ url_for('static', filename='images/1.svg') }}" alt="">
+    </section>
+    <!-- <section class="description panel blue" style="background-color: blue;">
+        <div>
+          <h1>Layered pinning</h1>
+          <p>Use pinning to layer panels on top of each other as you scroll.</p>
+          <div class="scroll-down">Scroll down<div class="arrow"></div></div>
         </div>
-    </div>
-</section>
-<footer>
-    <p>
-        版权所有：一念神魔之青青草原
-    </p>
-</footer>
-</body>
+      </section> -->
+    <section class="panel red" style="background-color: rgb(97, 167, 233);z-index:10">
+      <a href="baidu.com">aaaaaaaaaaaaaaaaaaaaaaaaa</a>
+    </section>
+    <section class="panel orange" style="background-color: rgb(104, 221, 192);z-index:11">
+      <a href="baidu.com">aaaaaaaaaaaaaaaaaaaaaaaaa</a>
+      TWO
+    </section>
+    <section class="panel purple" style="background-color: rgb(221, 219, 104);z-index:12">
+      <a href="baidu.com">aaaaaaaaaaaaaaaaaaaaaaaaa</a>
+      THREE
+    </section>
+    <section class="panel green" style="background-color: rgb(207, 104, 221);z-index:13">
+      <a href="baidu.com">aaaaaaaaaaaaaaaaaaaaaaaaa</a>
+      FOUR
+    </section>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.3/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.3/ScrollTrigger.min.js"></script>
+    <!-- <footer>
+      <p>版权所有：一念神魔之青青草原</p>
+    </footer> -->
+    <script src="{{ url_for('static', filename='js/index.js') }}"></script>
+  </body>
 </html>
