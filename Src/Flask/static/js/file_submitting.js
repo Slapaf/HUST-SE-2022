@@ -22,10 +22,6 @@ function creatNameOrSnoOrFile(op, topicName, detailText) {
     let inputContent = document.createElement("input");
     inputContent.type = op == "file" ? "file" : "text";
     inputContent.className = "inputContent";
-    // ! DEBUG
-    // if (op == "file") {
-    //     inputContent.formEnctype = "multipart/form-data";
-    // }
     questionList.appendChild(newli);
     newli.appendChild(newh);
     newh.appendChild(inputTopic);
@@ -37,8 +33,7 @@ function creatNameOrSnoOrFile(op, topicName, detailText) {
     inputContent.name = "submit_" + op + question_id;
 }
 
-// creatNameOrSnoOrFile("file","文件","hahahahahahaha");
-// creatNameOrSnoOrFile("sno", "学号", "hahahahahahaha");
+
 
 //添加单选/多选
 function creatSingleOrMultiple(op, topicName, detailText) {
@@ -81,8 +76,7 @@ function creatSingleOrMultiple(op, topicName, detailText) {
     //加id，加name
 }
 
-// creatSingleOrMultiple(0,"single", "单选", "这是单选");
-// creatSingleOrMultiple("multiple", "多选", "这是多选");
+
 
 //参数：编号，题目，详情描述，选项数，选项内容（数组），选择类型（单选/多选）
 function creatQuestionnaire(
@@ -127,14 +121,7 @@ function creatQuestionnaire(
     newli.appendChild(qBox);
 }
 
-// creatQuestionnaire(
-//   "问卷",
-//   "你喜欢吃饭吗？",
-//   3,
-//   ["喜欢", "不喜欢", "随便"],
-//   "single"
-// );
-// creatQuestionnaire(0,"问卷","你喜欢吃饭吗？",3,["喜欢","不喜欢","随便"],"multiple");
+
 
 // TODO:按照这个格式传数据
 let jsonFromHtml = {
