@@ -87,6 +87,8 @@ def test():
     # delete_collection(1)
     # save_submission(sample1)
     # save_submission(sample2)
+    a = count_filenum(collection_id=1)
+    print(a)
     return redirect(url_for('index'))
 
 
@@ -252,7 +254,10 @@ def collection_details(collection_id):
     return render_template(
         'collection_details.html',
         json_object=parameter_dict_list,
-        json_length=len(parameter_dict_list)
+        json_length=len(parameter_dict_list),
+        submission_count=count_submission(collection_id=collection_id),
+        filenum_count=count_filenum(collection_id=collection_id),
+        ddl_countdown=deadline_countdown(collection_id=collection_id)
     )
 
 
