@@ -214,8 +214,6 @@ function addmember(collection_title, username, collection_status, collection_id,
     }
     // ? 点击 “分享” 按钮
     op1.onclick = function () {
-        document.getElementById("hidden-input").value = "share" + "$" + memberid.title;
-        document.getElementById("hidden").submit();
         //分享按钮
         let y = document.getElementById("box");
         // TODO 此处修改为收集链接，上线需修改
