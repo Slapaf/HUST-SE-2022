@@ -27,7 +27,7 @@
   .collectionInformation {
     display: flex;
     align-items: center;
-    margin: 5px 0;
+    margin: 5px 20px;
   }
   
   #collectionTitle,
@@ -46,15 +46,17 @@
     font-size: 15px;
   }
   
+  #test {
+    display: none;
+  }
+
+  #label {
+    width: 100px;
+    height: 20px;
+    background-color: #000;
+  }
   
   /* 题目主体部分 */
-  .container .main {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    border-bottom: solid 2px #f3f6f9;
-    /* padding: 20px 30px; */
-  }
   
   .container .main ul {
     width: 100%;
@@ -84,9 +86,9 @@
     
   }
 
-  .main textarea {
-    font-size: 15px;
-    margin: 5px 5px;
+  .detail {
+    font-size: 14px;
+    margin: 0 5px;
     padding: 5px 5px;
     /* border-radius:5px; */
     border: none;
@@ -97,201 +99,60 @@
   }
   
   
-  .input-content {
-    font-size: 13px;
-    background-color: #f3f6f9;
-    border: 1px solid #c2c2c2;
-    border-radius: 5px;
+  .inputContent {
     padding:8px 5px;
     margin:5px 5px;
-  }
-  
-  .removeTopic {
-    font-size: 15px;
-    line-height: 15px;
-    padding: 3px 5px;
-    margin:5px 5px;
-    background-color: transparent;
-    border: none;
-    align-self: flex-end;
-  }
-  
-  .removeTopic:hover {
-    color: #5254ad;
-  }
-  
-  .removeTopic::before {
-    font-family: "iconfont" !important;
-    content: "\e6f6";
-    font-size: 17px;
-    position: relative;
-    top: 1px;
-  }
-  
-  /* 文件 */
-  .nameRules {
     font-size: 13px;
-    margin: 10px;
-    margin-bottom: 0;
-    padding:3px 5px;
-    padding-left: 8px;
-    background-color: #f1f1f1;
-    width: fit-content;
-    border-radius: 5px 5px 0 0;
-    position: relative;
-    display: inline-block;
+    border-radius: 5px;
+    border: 1px solid #c2c2c2;
+    transition: 0.5s;
   }
-  .nameRules::after {
-    font-family: "iconfont" !important;
-    content: "\e6f4";
-    font-size: 16px;
-    position: relative;
-    top: 1px;
+
+  .inputContent:focus {
+    outline: none;
+    border: 1px transparent solid;
+    box-shadow: 0 0 3px rgba(65, 108, 248, 0.925);
+    transition: 0.3s; 
   }
-  /* 提示弹窗 */
-  
-  .nameRules:before {
-    position: absolute;
-    opacity: 0;
-    z-index: 1000000;
-    transition:all 0.3s ease;
-    pointer-events: none;
-  }
-  
-  .nameRules:hover:before {
-    opacity: 1;
-  }
-  
-  
-  .nameRules:before {
-    content: attr(data-hint);
-    background: #f3f6f9b0;
-    color: black;
-    padding: 8px 10px;
-    font-size: 12px;
-    white-space: nowrap;
-    box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.3);
-  }
-  
-  /* right */
-  .nameRules:before {
-    left: 100%;
-    bottom: 50%;
-    margin: 0 0 -4px -8px;
-    border-right-color: #f3f6f9b0;
-  }
-  
-  .nameRules:hover:before {
-    margin: 0 0 -4px -0;
-  }
-  
-  
-  .selectTopic {
-    /* width: fit-content; */
-    margin: 10px;
-    margin-top: 0;
-    padding:5px 5px;
-    background-color: #f1f1f1;
-    border-radius: 0 5px 5px 5px;
-  }
-  
-  .selectTopic span {
-    margin: 0 10px 0 3px;
-    font-size: 13px;
-  }
-  .selectTopic input[type="checkbox"] {
-    position: relative;
-    top: 2px;
-  }
-  
+   
   /* 单选/多选 */
-  .questionBox1 {
-    font-size: 15px;
+  .singleQuestionBox,
+  .multiQuestionBox,
+  .qnQuestionBox {
+    display: flex;
     margin: 5px 5px;
     padding: 0 5px;
     width: 50%;
+    font-size: 15px;
+    
   }
   
-  .questionBox1 span {
-    margin: 0 15px 0 2px;
+  .singleOption,
+  .multiOption {
+    margin-right: 8px;
   }
-  
+
+  .singleOption label,
+  .multiOption label,
+  .qnOption .qnOptionContent {
+    margin: 0 3px;
+  }
+
   /* 问卷 */
-  .qnaire_option {
+  .qnQuestionBox {
+    flex-direction: column;
+  }
+  
+  .qnOption {
     display: flex;
     justify-content: flex-start;
     align-items: center;
+    margin: 3px 0;
   }
   
-  .questionBox .qnaire_textarea {
-    font-size: 15px;
-    height: auto;
-    border: 1px solid #c2c2c2;
-    border-radius: 5px;
-  }
   
-  .qnaire_removeop::after {
-    font-family: "iconfont" !important;
-    content: "\e6f5";
-    font-size: 17px;
   
-  }
-  .qnaire_removeop:hover::after {
-    cursor: pointer;
-  }
-  
-  .qnaire_addop {
-    font-size: 13px;
-    padding: 5px;
-    padding-left: 0;
-  }
-  
-  .qnaire_addop::before {
-    font-family: "iconfont" !important;
-    content: "\e6f2";
-    font-size: 17px;
-    position: relative;
-    top: 2px;
-  }
-  
-  .qnaire_addop:hover,
-  .qnaire_addop:hover::before {
-    cursor: pointer;
-    color: #5254ad;
-  }
-  
-  .if_multi {
-    font-size: 13px;
-    padding: 5px;
-    padding-left: 0;
-  }
-  
-  #btn-for-add {
-    font-size: 13px;
-    width: 100px;
-    margin: 10px;
-    padding: 3px;
-    background: #f3f6f9;
-    border: solid 1px #c2c2c2;
-    border-radius: 5px;
-    text-align: center;
-    align-self: center;
-  }
-  
-  #btn-for-add::before {
-    font-family: "iconfont" !important;
-    content: "\e6f2";
-    font-size: 17px;
-    position: relative;
-    top: 2px;
-  }
-  
-  #btn-for-add:hover {
-    background-color: #d9e8f4;
-  
-  }
-  
-  #btn-for-submit {
+  #btnForSubmit {
     font-size: 15px;
     width: 150px;
     margin: 30px;
@@ -305,7 +166,7 @@
     margin-left: -75px;
   }
   
-  #btn-for-submit:hover {
+  #btnForSubmit:hover {
     background-color: #3a7dfbe3;
     cursor: pointer;
   }
