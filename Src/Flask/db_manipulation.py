@@ -199,6 +199,7 @@ from werkzeug.datastructures import MultiDict
 import shutil
 from operator import itemgetter
 from pathlib import Path
+import re
 
 
 def id_int_to_str(id_int: int):
@@ -280,26 +281,28 @@ def add_FC(question_list: list, user_id: int):
     key_list = list(question_multidict.keys())
     # 问题的键列表
     question_key_list = [question_key for question_key in key_list if "question" in question_key]
+    seq = 0
 
     # 更新问题主表和答案表
     for question_key in question_key_list:
+        seq += 1
         # ? 若为姓名题
         if "name" in question_key:
             question = Question_info(collection_id=collection_id,
-                                     qno=int(question_key[-1]),
+                                     qno=seq,
                                      question_type=Question_info.NAME,
                                      question_title=question_multidict[question_key],
-                                     question_description=question_multidict['detail' + question_key[-1]])
+                                     question_description=question_multidict[f'detail{seq}'])
             db.session.add(question)
             db.session.commit()
 
         # ? 若为学号题
         if "sno" in question_key:
             question = Question_info(collection_id=collection_id,
-                                     qno=int(question_key[-1]),
+                                     qno=seq,
                                      question_type=Question_info.SNO,
                                      question_title=question_multidict[question_key],
-                                     question_description=question_multidict['detail' + question_key[-1]])
+                                     question_description=question_multidict[f'detail{seq}'])
             db.session.add(question)
             db.session.commit()
 
@@ -307,58 +310,58 @@ def add_FC(question_list: list, user_id: int):
         # ? 若为单选题
         elif "radio" in question_key:
             question = Question_info(collection_id=collection_id,
-                                     qno=int(question_key[-1]),
+                                     qno=seq,
                                      question_type=Question_info.SINGLE_CHOICE,
                                      question_title=question_multidict[question_key],
-                                     question_description=question_multidict['detail' + question_key[-1]])
+                                     question_description=question_multidict[f'detail{seq}'])
             db.session.add(question)
             db.session.commit()
             # 存选择题答案
             answer = Answer_info(collection_id=collection_id,
                                  question_id=question.id,
-                                 qno=int(question_key[-1]),
-                                 answer_option=question_multidict['checked_radio' + question_key[-1]])
+                                 qno=seq,
+                                 answer_option=question_multidict[f'checked_radio{seq}'])
             db.session.add(answer)
             db.session.commit()
 
         # ? 若为多选题
         elif "multipleChoice" in question_key:
             question = Question_info(collection_id=collection_id,
-                                     qno=int(question_key[-1]),
+                                     qno=seq,
                                      question_type=Question_info.MULTI_CHOICE,
                                      question_title=question_multidict[question_key],
-                                     question_description=question_multidict['detail' + question_key[-1]])
+                                     question_description=question_multidict[f'detail{seq}'])
             db.session.add(question)
             db.session.commit()
             # 存选择题答案
-            ano_list = question_multidict.getlist('checked_mulans' + question_key[-1])
+            ano_list = question_multidict.getlist(f'checked_mulans{seq}')
             for ano in ano_list:
                 answer = Answer_info(collection_id=collection_id,
                                      question_id=question.id,
-                                     qno=int(question_key[-1]),
+                                     qno=seq,
                                      answer_option=ano)
                 db.session.add(answer)
             db.session.commit()
 
         # ? 若为问卷题
         elif "question_qnaire" in question_key:
-            if question_multidict['choose_type' + question_key[-1]] == 'single':
+            if question_multidict[f'choose_type{seq}'] == 'single':
                 qn_type = Question_info.SINGLE_QUESTIONNAIRE
             else:
                 qn_type = Question_info.MULTI_QUESTIONNAIRE
             question = Question_info(collection_id=collection_id,
-                                     qno=int(question_key[-1]),
+                                     qno=seq,
                                      question_type=qn_type,
                                      question_title=question_multidict[question_key],
-                                     question_description=question_multidict['detail' + question_key[-1]])
+                                     question_description=question_multidict[f'detail{seq}'])
             db.session.add(question)
             db.session.commit()
             # 存问卷题目各选项的内容
-            option_content = question_multidict.getlist('qn_option' + question_key[-1])
+            option_content = question_multidict.getlist(f'qn_option{seq}')
             for i in range(len(option_content)):
                 option = Option_info(collection_id=collection_id,
                                      question_id=question.id,
-                                     qno=int(question_key[-1]),
+                                     qno=seq,
                                      option_sn=i,
                                      option_content=option_content[i])
                 db.session.add(option)
@@ -370,7 +373,7 @@ def add_FC(question_list: list, user_id: int):
             file_counter += 1
             rename_rule = []
             rename_rule_list = []  # * 重命名所需的题目
-            question_num = question_key[-1]
+            question_num = str(seq)
             for elem in list_of_question_dict:
                 if elem[0] == "checked_topic" + question_num:
                     rename_rule_list.append(elem[1])
@@ -380,7 +383,7 @@ def add_FC(question_list: list, user_id: int):
             for elem in list_of_question_dict:
                 if elem[1] not in rename_rule_list:
                     continue
-                rename_rule.append(elem[0][-1])  # ! 待添加分隔符
+                rename_rule.append(re.findall(r"\d+", elem[0])[0])  # ! 待添加分隔符
                 cnt += 1
                 if cnt >= len(rename_rule_list):  # * 防止获取到文件后面的重命名规则
                     break
@@ -391,10 +394,10 @@ def add_FC(question_list: list, user_id: int):
 
             question = Question_info(
                 collection_id=collection_id,
-                qno=int(question_key[-1]),
+                qno=seq,
                 question_type=Question_info.FILE_UPLOAD,
                 question_title=question_multidict[question_key],
-                question_description=question_multidict['detail' + question_key[-1]],
+                question_description=question_multidict[f'detail{seq}'],
                 rename_rule=rename_rule,  # * 命名规则用 - 分隔，数字代表题目序号
                 file_path=file_path + "/" + id_int_to_str(
                     file_counter
@@ -450,6 +453,7 @@ def count_submission(user_id=None, collection_id=None):
     # 若没给参数collection_id，但给了参数user_id
     if user_id is not None:
         collection_id_list = Collection_info.query.filter_by(creator_id=user_id).with_entities(Collection_info.id).all()
+        collection_id_list = list(map(itemgetter(0), collection_id_list))
         submission_dict = {}
         for collection_id in collection_id_list:
             submission_dict[collection_id] = Submission_info.query.filter_by(collection_id=collection_id).count()
@@ -756,51 +760,52 @@ def stop_collection(collection_id: int, action_list):
 def save_submission(submission_list: list, collection_id: int, file):
     submission_multidict = MultiDict(submission_list)
     key_list = list(submission_multidict.keys())  # 提取问题的键值列表
-    seq = list(filter(lambda x: x.find("name") >= 0, key_list))[0][-1]
+    qno = re.findall(r"\d+", list(filter(lambda x: x.find("name") >= 0, key_list))[0])[0]
     # collection_id = submission_multidict['collection_id']
     # 创建一个提交记录，并加入数据库
     submission = Submission_info(collection_id=collection_id,
                                  # submitter_id=submission_multidict['submitter_id'],
-                                 submitter_name=submission_multidict[f'submit_name{seq}'])
+                                 submitter_name=submission_multidict['submit_name' + qno])
     submission.collection_title = Collection_info.query.get(collection_id).collection_title
     db.session.add(submission)
     db.session.commit()
     submission_id = submission.id  # 获得该提交记录的id
 
     key_list = [key for key in key_list if "question" in key]
+    seq = 0
     for key in key_list:
+        seq += 1
         submit_content = Submit_Content_info(submission_id=submission_id,
                                              collection_id=collection_id,
-                                             qno=int(key[-1]))
-        question_id = Question_info.query.filter_by(collection_id=collection_id, qno=int(key[-1])). \
-            first().id
+                                             qno=seq)
+        question_id = Question_info.query.filter_by(collection_id=collection_id, qno=seq).first().id
         submit_content.question_id = question_id
 
         # 若为姓名题
         if "name" in key:
-            submit_content.result = submission_multidict['submit_name' + key[-1]]
+            submit_content.result = submission_multidict[f'submit_name{seq}']
 
         # 若为学号题
         elif "sno" in key:
-            submit_content.result = submission_multidict['submit_sno' + key[-1]]
+            submit_content.result = submission_multidict[f'submit_sno{seq}']
 
         # 若为文件上传题
         elif "file" in key:
-            filename = file.get('submit_file' + key[-1]).filename
+            filename = file.get(f'submit_file{seq}').filename
             submit_content.result = filename
 
         # 若为单选题
         elif "radio" in key:
-            submit_content.result = submission_multidict['submit_checked_radio' + key[-1]]
+            submit_content.result = submission_multidict[f'submit_checked_radio{seq}']
 
         # 若为多选题
         elif "multipleChoice" in key:
-            result = submission_multidict.getlist("submit_checked_mulans" + key[-1])
+            result = submission_multidict.getlist(f"submit_checked_mulans{seq}")
             result = '-'.join(result)
             submit_content.result = result
 
         elif "qnaire" in key:
-            result = submission_multidict.getlist("submit_checked_qnaire" + key[-1])
+            result = submission_multidict.getlist(f"submit_checked_qnaire{seq}")
             result = '-'.join(result)
             submit_content.result = result
 
