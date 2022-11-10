@@ -109,7 +109,7 @@
         
         Example：
             /* 假设要得到id为1的收集的信息 */
-            >>> a = get_question_Dict(1)
+            >>> a = get_question_dict(1)
             >>> a  
             
     8、modify_password(user_id: int, original_pswd: str, new_pswd: str)
@@ -211,6 +211,7 @@ import shutil
 from operator import itemgetter
 from pathlib import Path
 import re
+import werkzeug
 
 
 def id_int_to_str(id_int: int):
@@ -229,21 +230,16 @@ def id_int_to_str(id_int: int):
     return chr(id_int + 97)
 
 
-def add_FC(question_list: list, user_id: int):
+def add_FC(question_list: list, user_id: int) -> int:
     """
-    将问卷的信息存入数据库。每个收集问卷会被分配一个收集者用户目录下的子目录，总长度为 X 位，最后一位代表收集 id。
+    将新创建的收集存入数据库，并为每个收集分配一个收集者用户目录下的子目录，总长度为 X 位，最后一位代表收集 id。
 
     Args:
         question_list: 题目信息列表
-        例如：question_multidict = {'collectionTitle': '文件收集', 'collector': 'jsx', 'deadline': '2022-10-13T15:18',
-                 'description': 'teset','question_name1': '姓名', 'question_file2': '文件', 'checked_topic2': '学号',
-                 'question_file3': '文','checked_topic3': '学', 'question_sno4': '学', 'question_sno5': '学号',
-                 'question_name6': '姓','question_radio7': '单选','checked_radio7': 'A', 'question_radio8': '单选题',
-                 'checked_radio8': 'B'}
-        user_id: int类型，表示用户的id。
+        user_id: 用户id
 
     Return:
-        None
+        collection_id: 收集id
     """
     # ! 文件类型可能有多个，设置一个计数器记录是第几个文件
     file_counter = 0  # * 文件计数器
@@ -264,7 +260,7 @@ def add_FC(question_list: list, user_id: int):
 
     # 创建一个文件收集对象,更新文件收集主表里
     collection = Collection_info(creator=question_multidict['collector'],
-                                 creator_id=current_user.id,
+                                 creator_id=user_id,
                                  collection_title=question_multidict['collectionTitle'],
                                  description=question_multidict['description'],
                                  end_date=question_multidict['deadline'],
@@ -426,12 +422,12 @@ def add_FC(question_list: list, user_id: int):
     return collection_id
 
 
-def update_status(user_id: int):
+def update_status(user_id: int) -> None:
     """
     更新用户各个收集的状态
 
     Args:
-        user_id: int类型，表示用户id。
+        user_id: 用户id。
     """
     collection_list = Collection_info.query.filter_by(creator_id=user_id).all()
     # ? 根据当前时间更新各个收集的状态
@@ -444,16 +440,16 @@ def update_status(user_id: int):
     db.session.commit()
 
 
-def count_submission(user_id=None, collection_id=None):
+def count_submission(user_id: int = None, collection_id: int = None):
     """统计问卷提交数量
 
     Args:
-        user_id（可选参数）: int类型，表示用户的id。
-        collection_id（可选参数）: int类型，表示问卷的id。
+        user_id: 用户id
+        collection_id: 收集id
 
-    Return:
-        若collection_id不为None， 则返回该问卷的提交数量，是一个整数。
-        若collection_id为None，user_id不为None，则返回该用户创建的每一个问卷的提交数量，是一个字典，键为问卷id，值为该问卷的提交数量。
+    Returns:
+        若collection_id不为None， 则返回该问卷的提交数量，是一个整数;
+        若collection_id为None，user_id不为None，则返回该用户创建的每一个问卷的提交数量，是一个字典，键为问卷id，值为该问卷的提交数量;
         若2个参数都为None，则返回None。
     """
 
@@ -473,13 +469,13 @@ def count_submission(user_id=None, collection_id=None):
     return None
 
 
-def count_filenum(user_id=None, collection_id=None, question_id=None, qno=None):
-    """统计一个收集（collection_id）的第qno题的已收文件数
+def count_filenum(user_id: int = None, collection_id: int = None, question_id: int = None, qno: int = None):
+    """统计已收文件数
 
     Args:
-        user_id（可选参数）: int类型，表示用户的id。
-        collection_id（可选参数）: int类型，表示问卷的id。
-        qno（可选参数）: int类型，表示题目序号。
+        user_id: 用户id
+        collection_id: 收集id
+        qno: 题目序号
 
     Return:
         若question_id不为None，或collection_id、qno不为None，则返回该题的已收文件数，是一个整数。
@@ -541,11 +537,10 @@ def count_filenum(user_id=None, collection_id=None, question_id=None, qno=None):
 
 
 def deadline_countdown(collection_id: int):
-    """
-    截止倒计时
+    """ 截止倒计时
 
     Args:
-        collection_id: int. 问卷的id
+        collection_id: 收集id
 
     Return:
         Datetime对象，表示截止倒计时。
@@ -555,23 +550,19 @@ def deadline_countdown(collection_id: int):
     return deadline - current_time  # 返回倒计时
 
 
-def delete_collection(collection_id: int):
+def delete_collection(collection_id: int) -> None:
+    """删除id为collection_id的收集在数据库中的所有相关信息
+
+    Args:
+        collection_id: 收集id
+
+    """
     Submit_Content_info.query.filter_by(collection_id=collection_id).delete()
     Submission_info.query.filter_by(collection_id=collection_id).delete()
     Option_info.query.filter_by(collection_id=collection_id).delete()
     Answer_info.query.filter_by(collection_id=collection_id).delete()
 
     # 删除该收集中所有文件上传题的文件存储路径下的文件
-    # file_path = Question_info.query. \
-    #     filter_by(collection_id=collection_id, question_type=Question_info.FILE_UPLOAD). \
-    #     with_entities(Question_info.file_path). \
-    #     all()
-    # file_path = list(map(itemgetter(0), file_path))
-    # for fp in file_path:
-    #     print(fp)
-    #     path = './FileStorage/' + fp
-    #     shutil.rmtree(path)
-
     question = Question_info.query. \
         filter_by(collection_id=collection_id, question_type=Question_info.FILE_UPLOAD).first()
     file_path = Path('./FileStorage/' + question.file_path).parent
@@ -582,7 +573,16 @@ def delete_collection(collection_id: int):
     db.session.commit()
 
 
-def get_question_Dict(collection_id: int):
+def get_question_dict(collection_id: int) -> dict:
+    """获取id为collection_id的收集的相关信息
+
+    Args:
+        collection_id: 收集id
+
+    Returns:
+        一个字典，包含该收集的相关信息（收集标题、收集描述、创建者、截止时间、题目等等）
+
+    """
     seq = 0
     question = {}
     collection = Collection_info.query.get(collection_id)
@@ -674,7 +674,18 @@ def get_question_Dict(collection_id: int):
     return question
 
 
-def modify_password(user_id: int, original_pswd: str, new_pswd: str):
+def modify_password(user_id: int, original_pswd: str, new_pswd: str) -> int:
+    """修改密码
+
+    Args:
+        user_id: 用户id
+        original_pswd: 原始密码
+        new_pswd: 新密码
+
+    Returns:
+        若为-1，则用户id不存在；若为0，则原密码错误；若为1，则修改成功。
+
+    """
     user = User.query.filter_by(id=user_id).first()  # 在数据库中查询用户
 
     # 该用户id不存在
@@ -691,7 +702,19 @@ def modify_password(user_id: int, original_pswd: str, new_pswd: str):
     return 1  # 修改成功
 
 
-def modify_personal_info(user_id: int, new_name: str, new_email: str, authorization_code: str):
+def modify_personal_info(user_id: int, new_name: str, new_email: str, authorization_code: str) -> int:
+    """修改个人信息（昵称、邮箱、邮箱授权码）
+
+    Args:
+        user_id: 用户id
+        new_name: 新昵称
+        new_email: 新邮箱
+        authorization_code: 邮箱授权码
+
+    Returns:
+        若为-1，则用户id不存在；若为1，则修改成功。
+
+    """
     user = User.query.filter_by(id=user_id).first()
 
     # 该用户id不存在
@@ -706,7 +729,18 @@ def modify_personal_info(user_id: int, new_name: str, new_email: str, authorizat
     return 1  # 修改成功
 
 
-def submission_record(collection_id: int):
+def submission_record(collection_id: int) -> list:
+    """获取id为collection_id的收集的提交记录（姓名，提交时间，文件数量，文件详情）
+
+    Args:
+        collection_id: 收集id
+
+    Returns:
+        一个元组列表，每个元组表示一条提交信息。
+        For example:
+        [('计胜翔', datetime.datetime(2022, 11, 5, 20, 25, 32, 142115), 2, ['jsx1.pdf', 'jsx2.doc']),
+        ('张隽翊', datetime.datetime(2022, 11, 5, 20, 25, 32, 142115), 1, ['zjy1.pdf'])]
+    """
     # 获取提交名单列表
     name_list = Submission_info.query. \
         filter_by(collection_id=collection_id). \
@@ -760,7 +794,13 @@ def submission_record(collection_id: int):
     return record
 
 
-def stop_collection(collection_id: int, action_list):
+def stop_collection(collection_id: int, action_list) -> None:
+    """停止收集
+
+    Args:
+        collection_id: 收集id
+        action_list:
+    """
     collection = Collection_info.query.filter_by(id=collection_id)
     collection.update({'status': Collection_info.FINISHED})  # 状态标记为已截止
     new_ddl = action_list[2]
@@ -769,7 +809,18 @@ def stop_collection(collection_id: int, action_list):
     db.session.commit()
 
 
-def save_submission(submission_list: list, collection_id: int, file):
+def save_submission(submission_list: list, collection_id: int, file: werkzeug.datastructures.ImmutableMultiDict) -> int:
+    """保存收集提交内容
+
+    Args:
+        submission_list: 提交信息列表
+        collection_id: 收集id
+        file: 网页提交表单中的文件数据
+
+    Returns:
+        提交记录id
+
+    """
     submission_multidict = MultiDict(submission_list)
     key_list = list(submission_multidict.keys())  # 提取问题的键值列表
     qno = re.findall(r"\d+", list(filter(lambda x: x.find("name") >= 0, key_list))[0])[0]
@@ -827,7 +878,13 @@ def save_submission(submission_list: list, collection_id: int, file):
     return submission_id
 
 
-def modify_collection(collection_id: int, question_list: list):
+def modify_collection(collection_id: int, question_list: list) -> None:
+    """修改已创建的收集
+
+    Args:
+        collection_id: 收集id
+        question_list: 问题信息列表
+    """
     question_multidict = MultiDict(question_list)
 
     # 前端传来的deadLine为string类型，在此转化为datetime类型

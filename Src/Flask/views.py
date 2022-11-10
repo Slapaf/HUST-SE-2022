@@ -1,10 +1,4 @@
-import datetime
 import json
-
-from werkzeug.utils import secure_filename
-
-from models import User
-import time
 import pandas as pd
 from flask import render_template, request, url_for, redirect, flash
 from flask_login import login_user, login_required, logout_user, current_user
@@ -104,9 +98,7 @@ def file_submitting(collection_message):
     if request.method == 'POST':
         submission = request.form
         tmp_file = request.files
-        print(type(tmp_file))
         a = list(submission.items(multi=True))
-        print("提交内容：", a)
         # TODO 数据库封装一下
         t = MultiDict(a)
         file_key_list = list(t.keys())
@@ -120,7 +112,7 @@ def file_submitting(collection_message):
         save_submission(a, collection_id, tmp_file)
         return redirect(url_for('index'))
     else:
-        question_dict = get_question_Dict(collection_id)
+        question_dict = get_question_dict(collection_id)
         print(question_dict)
         if question_dict is None:
             return render_template("404.html")
@@ -408,7 +400,7 @@ def file_editing(collection_id):
             print("提交编辑成功！")
             redirect(url_for('index'))  # 编辑完成，返回主页
     collection_id = id_str_to_int(collection_id)
-    question_dict = get_question_Dict(collection_id)
+    question_dict = get_question_dict(collection_id)
     print(question_dict)
     if question_dict is None:
         return render_template("404.html")
