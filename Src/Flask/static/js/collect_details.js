@@ -88,55 +88,55 @@ function click2() {
 }
 
 // * 添加名字
-function addname() {
-    var str = document.getElementById("textarea").value;
-    // * 赋值
-    document.getElementById("name_data").value = str;
-    if (str != "") {
-        var n = str.split(/[\s\n]|\,/);//将 textarea 中字符串以,和换行符切分
-        var flag = 0;
-        let d1 = document.getElementById("name_box");
-        while (flag < n.length) {
-            if (n[flag] != "") {
-                if (arr.includes(n[flag])) {
-                    flag++;
-                    continue;
-                }
-                arr.push(n[flag]);
-                let para = document.createElement("div");
-                let node1 = document.createElement("div");
-                let node2 = document.createTextNode(n[flag]);
-                let delbtn = document.createElement("button");
-                //生成子节点
-                para.className = "paraname";
-                para.id = n[flag];
-                node1.className = "div1";
-                delbtn.className = "del";
-                node1.title = n[flag];
-                //添加样式和数据,数组n存放名字字符串
-                // delbtn.appendChild(document.createTextNode("X"));
-                para.appendChild(node1);
-                node1.appendChild(node2);
-                d1.appendChild(para);
-                para.appendChild(delbtn);
-                //给子节点添加父节点
-                para.onmouseover = function () {
-                    delbtn.style.display = "block";
-                }//光标移动至相应元素则显示按钮
-                para.onmouseout = function () {
-                    delbtn.style.display = "none";
-                }//光标移动至相应元素外则按钮隐藏
-                delbtn.onclick = function () {
-                    document.getElementById("hidden-input").value = "delete " + node1.title;
-                    arr.remove(node1.title);
-                    d1.removeChild(para);
-                    document.getElementById("hidden").submit();
-                }//点击删除节点
-            }
-            flag++;
-        }
-    }
-}
+// function addname() {
+//     var str = document.getElementById("textarea").value;
+//     // * 赋值
+//     document.getElementById("name_data").value = str;
+//     if (str != "") {
+//         var n = str.split(/[\s\n]|\,/);//将 textarea 中字符串以,和换行符切分
+//         var flag = 0;
+//         let d1 = document.getElementById("name_box");
+//         while (flag < n.length) {
+//             if (n[flag] != "") {
+//                 if (arr.includes(n[flag])) {
+//                     flag++;
+//                     continue;
+//                 }
+//                 arr.push(n[flag]);
+//                 let para = document.createElement("div");
+//                 let node1 = document.createElement("div");
+//                 let node2 = document.createTextNode(n[flag]);
+//                 let delbtn = document.createElement("button");
+//                 //生成子节点
+//                 para.className = "paraname";
+//                 para.id = n[flag];
+//                 node1.className = "div1";
+//                 delbtn.className = "del";
+//                 node1.title = n[flag];
+//                 //添加样式和数据,数组n存放名字字符串
+//                 // delbtn.appendChild(document.createTextNode("X"));
+//                 para.appendChild(node1);
+//                 node1.appendChild(node2);
+//                 d1.appendChild(para);
+//                 para.appendChild(delbtn);
+//                 //给子节点添加父节点
+//                 para.onmouseover = function () {
+//                     delbtn.style.display = "block";
+//                 }//光标移动至相应元素则显示按钮
+//                 para.onmouseout = function () {
+//                     delbtn.style.display = "none";
+//                 }//光标移动至相应元素外则按钮隐藏
+//                 delbtn.onclick = function () {
+//                     document.getElementById("hidden-input").value = "delete " + node1.title;
+//                     arr.remove(node1.title);
+//                     d1.removeChild(para);
+//                     document.getElementById("hidden").submit();
+//                 }//点击删除节点
+//             }
+//             flag++;
+//         }
+//     }
+// }
 
 function addfile(file_submitted_list) {
     let popup = document.getElementById("return");
@@ -205,79 +205,5 @@ function addmember(submitter_order_idx, submitter_name, submit_time, file_submit
         jsx.id = "return";
         wgk.appendChild(jsx);
         addfile(file_submitted_list);
-    }
-}
-
-function faddname() {
-    let arr1 = [];
-    let arr2 = [];
-    arr1 = ["jsx", "wzx"];//已提交
-    arr2 = ["wgk", "zjy"];//未提交
-    let d1 = document.getElementById("name_box");
-    let flag = 0;
-    while (flag < arr1.length) {
-        let para = document.createElement("div");
-        let node1 = document.createElement("div");
-        let node2 = document.createTextNode(arr1[flag]);
-        let delbtn = document.createElement("button");
-        //生成子节点
-        para.className = "paraname1";
-        para.id = arr1[flag];
-        node1.className = "div1";
-        delbtn.className = "del";
-        node1.title = arr1[flag];
-        //添加样式和数据,数组n存放名字字符串
-        // delbtn.appendChild(document.createTextNode("X"));
-        para.appendChild(node1);
-        node1.appendChild(node2);
-        d1.appendChild(para);
-        para.appendChild(delbtn);
-        //给子节点添加父节点
-        para.onmouseover = function () {
-            delbtn.style.display = "block";
-        }//光标移动至相应元素则显示按钮
-        para.onmouseout = function () {
-            delbtn.style.display = "none";
-        }//光标移动至相应元素外则按钮隐藏
-        delbtn.onclick = function () {
-            document.getElementById("hidden-input").value = "delete " + node1.title;
-            arr.remove(node1.title);
-            d1.removeChild(para);
-            document.getElementById("hidden").submit();
-        }//点击删除节点
-        flag++;
-    }
-    flag = 0;
-    while (flag < arr2.length) {
-        let para = document.createElement("div");
-        let node1 = document.createElement("div");
-        let node2 = document.createTextNode(arr2[flag]);
-        let delbtn = document.createElement("button");
-        //生成子节点
-        para.className = "paraname";
-        para.id = arr2[flag];
-        node1.className = "div1";
-        delbtn.className = "del";
-        node1.title = arr2[flag];
-        //添加样式和数据,数组n存放名字字符串
-        // delbtn.appendChild(document.createTextNode("X"));
-        para.appendChild(node1);
-        node1.appendChild(node2);
-        d1.appendChild(para);
-        para.appendChild(delbtn);
-        //给子节点添加父节点
-        para.onmouseover = function () {
-            delbtn.style.display = "block";
-        }//光标移动至相应元素则显示按钮
-        para.onmouseout = function () {
-            delbtn.style.display = "none";
-        }//光标移动至相应元素外则按钮隐藏
-        delbtn.onclick = function () {
-            document.getElementById("hidden-input").value = "delete " + node1.title;
-            arr.remove(node1.title);
-            d1.removeChild(para);
-            document.getElementById("hidden").submit();
-        }//点击删除节点
-        flag++;
     }
 }

@@ -55,13 +55,22 @@ def personal_homepage():
         value_type_check(tmp_data)
         if len(tmp_data) > 2:  # * 修改个人信息
             # TODO 需要数据库提供更新邮箱授权码的接口
-            r_code = modify_personal_info(current_user.id, tmp_data['username'], tmp_data['email'])
+            r_code = modify_personal_info(
+                current_user.id,
+                tmp_data['username'],
+                tmp_data['email'],
+                tmp_data['authorization-code']
+            )
             if r_code == 1:
                 print("修改个人信息成功。")
             else:
                 print("修改个人信息失败！该用户不存在。")
         else:  # * 修改密码
-            r_code = modify_password(current_user.id, "123456", tmp_data['psw_confirm'])  # TODO 待修改
+            r_code = modify_password(
+                current_user.id,
+                "123456",
+                tmp_data['psw_confirm']
+            )  # TODO 待修改
             if r_code == 1:
                 print("修改密码成功。")
             else:
@@ -226,6 +235,13 @@ def mycollection():
 def collection_details(collection_id):
     if request.method == 'POST':
         namelist_data = request.form.to_dict()  # * 获取应交名单数据
+        if 'hidden-input' in namelist_data.keys():
+            namelist_path = './FileStorage/' + \
+                            Collection_info.query.filter_by(creator_id=current_user.id).first().namelist_path
+            namelist = pd.read_csv(namelist_path + "/应交名单.csv", encoding='utf-8')
+            namelist = namelist[~namelist['姓名'].isin([namelist_data['hidden-input']])]
+            namelist.to_csv(namelist_path + "/应交名单.csv", encoding='utf-8')  # * 保存为 csv 文件
+            return redirect(url_for('collection_details', collection_id=collection_id))
         name_list = namelist_data['name_data'].split(' ')
         # TODO 若输入名单最后多按下了回车，则最后一个名字末尾有多余的 \r\n
         namelist_csv = pd.DataFrame(columns=["姓名"], data=name_list)
@@ -242,12 +258,27 @@ def collection_details(collection_id):
     parameter_dict_list = []
     submission_list = submission_record(collection_id=collection_id)  # * 获取对应 id 的收集信息
     print(submission_list)
+    # TODO 数据库提供方法
+    who_has_submitted_list = [submission[0] for submission in submission_list]  # * 已提交列表
+    namelist_path = './FileStorage/' + \
+                    Collection_info.query.filter_by(creator_id=current_user.id).first().namelist_path
+    who_should_submit_list = []
+    if os.path.exists(namelist_path + "/应交名单.csv"):
+        who_should_submit_list = pd.read_csv(namelist_path + "/应交名单.csv",
+                                             encoding='utf-8')['姓名'].tolist()
+        print(who_should_submit_list)
+    # * 已提交名单生成逻辑：在应交名单中且提交了文件
+    submitted_list = list(set(who_has_submitted_list) & set(who_should_submit_list))
+    print("已提交名单: ", submitted_list)
+    # * 未提交名单生成逻辑：在应交名单中但未提交文件
+    not_submitted_list = list(set(who_should_submit_list) - set(who_has_submitted_list))
+    print("未提交名单: ", not_submitted_list)
     for idx, submission in enumerate(submission_list):
         # * 创建一个字典类型，用于传参
         submitter_name = submission[0]  # 提交者姓名
         submit_time = submission[1]  # 提交时间
         file_submitted_count = submission[2]  # 提交文件数量
-        file_submitted_list = submission[3]
+        file_submitted_list = submission[3]  # 提交文件列表
         tmp_dict = {
             'submitter_order_idx': idx,  # ! 用于 js 定位数据，不是数据库 id
             'submitter_name': submitter_name,
@@ -263,7 +294,9 @@ def collection_details(collection_id):
         json_length=len(parameter_dict_list),
         submission_count=count_submission(collection_id=collection_id),
         filenum_count=count_filenum(collection_id=collection_id),
-        ddl_countdown=Collection_info.query.get(collection_id).end_date.strftime('%Y-%m-%d %H:%M:%S')
+        ddl_countdown=Collection_info.query.get(collection_id).end_date.strftime('%Y-%m-%d %H:%M:%S'),
+        submitted_list=submitted_list,
+        not_submitted_list=not_submitted_list
     )
 
 
