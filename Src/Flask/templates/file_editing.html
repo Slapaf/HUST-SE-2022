@@ -1,203 +1,203 @@
 <!DOCTYPE html>
 
 <html lang="zh-CN">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>文件收集</title>
     <script src="{{ url_for('static', filename='iconfont/iconfont.js') }}"></script>
     <link
-      rel="stylesheet"
-      href="http://at.alicdn.com/t/c/font_3751655_z5o1dt36bka.css"
+            rel="stylesheet"
+            href="http://at.alicdn.com/t/c/font_3751655_z5o1dt36bka.css"
     >
     <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='css/all.css') }}"
-      type="text/css"
+            rel="stylesheet"
+            href="{{ url_for('static', filename='css/all.css') }}"
+            type="text/css"
     />
     <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='css/file_collecting.css') }}"
-      type="text/css"
+            rel="stylesheet"
+            href="{{ url_for('static', filename='css/file_collecting.css') }}"
+            type="text/css"
     />
-  </head>
-  {# ? 用于传参 #}
-  <div id="collection" style="display: none">{{ collection }}</div>
-  <body>
-    <div class="container">
-      <form id="form" method="post" name="Form">
+</head>
+{# ? 用于传参 #}
+<div id="collection" style="display: none">{{ collection }}</div>
+<body>
+<div class="container">
+    <form id="form" method="post" name="Form">
         <div class="header">
-          <label>
-            <svg class="icon" aria-hidden="true">
-              <use xlink:href="#icon-A5"></use>
-            </svg>
-            收集标题:
-          </label>
-          <input
-            class="collectionTitle"
-            type="text"
-            value="文件收集"
-            name="collectionTitle"
-            maxlength="20"
-          />
-          <br />
-          <label>
-            <svg class="icon" aria-hidden="true">
-              <use xlink:href="#icon-A7"></use>
-            </svg>
-            收集者:
-          </label>
-          <input
-            class="collector"
-            type="text"
-            value="张三"
-            name="collector"
-            maxlength="20"
-            required
-          />
-          <br />
-          <label>
-            <svg class="icon" aria-hidden="true">
-              <use xlink:href="#icon-A8"></use>
-            </svg>
-            截止时间:
-          </label>
-          <input
-            class="deadline"
-            step="1"
-            type="datetime-local"
-            name="deadline"
-            required
-          />
-          <br />
-          <textarea
-            class="description"
-            name="description"
-            placeholder="添加详情描述"
-          ></textarea>
+            <label>
+                <svg class="icon" aria-hidden="true">
+                    <use xlink:href="#icon-A5"></use>
+                </svg>
+                收集标题:
+            </label>
+            <input
+                    class="collectionTitle"
+                    type="text"
+                    value="文件收集"
+                    name="collectionTitle"
+                    maxlength="20"
+            />
+            <br/>
+            <label>
+                <svg class="icon" aria-hidden="true">
+                    <use xlink:href="#icon-A7"></use>
+                </svg>
+                收集者:
+            </label>
+            <input
+                    class="collector"
+                    type="text"
+                    value="张三"
+                    name="collector"
+                    maxlength="20"
+                    required
+            />
+            <br/>
+            <label>
+                <svg class="icon" aria-hidden="true">
+                    <use xlink:href="#icon-A8"></use>
+                </svg>
+                截止时间:
+            </label>
+            <input
+                    class="deadline"
+                    step="1"
+                    type="datetime-local"
+                    name="deadline"
+                    required
+            />
+            <br/>
+            <textarea
+                    class="description"
+                    name="description"
+                    placeholder="添加详情描述"
+            ></textarea>
         </div>
         <div class="main">
-          <ul id="question_list"></ul>
-          <!-- 下面这些便于观察结构和属性，勿删 -->
-          <!-- <li id="1(变化的)">
-              <h1><input class="input-topic" type="text" value="姓名" name="question_name"/></h1>
-              <textarea>描述</textarea>
-              <input
-                class="input-content"
-                type="text"
-                disabled="disabled"
-                placeholder="此项由提交者填写"
-              />
-              <button class="removeTopic">删除题目</button>
-            </li>
-            <li id="2">
-              <h1><input class="input-topic" type="text" value="文件" name="question_file"/></h1>
-              <textarea>描述</textarea>
-              <div class="selectTopic">
-                <input type="checkbox" id="对应题目id"/>
-                <span>姓名</span>
-                <input type="checkbox" />
-                <span>学号</span>
-              </div>
-              <input class="input-content" type="file" disabled="disabled"/>
-              <button class="removeTopic">删除题目</button>
-            </li>
-            <li id="3">
-              <h1><input class="input-topic" type="text" value="单选" name="question_radio"/></h1>
-              <textarea>描述</textarea>
-              <div class="questionBox">
-                <input type="radio" name="checked_radio+编号" />
-                <span>A</span>
-                <input type="radio" name="checked_radio+编号" />
-                <span>B</span>
-                <input type="radio" name="checked_radio+编号" />
-                <span>C</span>
-                <input type="radio" name="checked_radio+编号" />
-                <span>D</span>
-              </div>
-              <button class="removeTopic">删除题目</button>
-            </li>
-            <li id=""4>
-              <h1><input class="input-topic" type="text" value="多选" name="question_multipleChoice"/></h1>
-              <textarea>描述</textarea>
-              <div class="questionBox">
-                <input type="checkbox" name="此题目的value" />
-                <span>A</span>
-                <input type="checkbox" name="此题目的value" />
-                <span>B</span>
-                <input type="checkbox" name="此题目的value" />
-                <span>C</span>
-                <input type="checkbox" name="此题目的value" />
-                <span>D</span>
-              </div>
-            </li> -->
-          <div id="btn-for-add">添加题目</div>
+            <ul id="question_list"></ul>
+            <!-- 下面这些便于观察结构和属性，勿删 -->
+            <!-- <li id="1(变化的)">
+                <h1><input class="input-topic" type="text" value="姓名" name="question_name"/></h1>
+                <textarea>描述</textarea>
+                <input
+                  class="input-content"
+                  type="text"
+                  disabled="disabled"
+                  placeholder="此项由提交者填写"
+                />
+                <button class="removeTopic">删除题目</button>
+              </li>
+              <li id="2">
+                <h1><input class="input-topic" type="text" value="文件" name="question_file"/></h1>
+                <textarea>描述</textarea>
+                <div class="selectTopic">
+                  <input type="checkbox" id="对应题目id"/>
+                  <span>姓名</span>
+                  <input type="checkbox" />
+                  <span>学号</span>
+                </div>
+                <input class="input-content" type="file" disabled="disabled"/>
+                <button class="removeTopic">删除题目</button>
+              </li>
+              <li id="3">
+                <h1><input class="input-topic" type="text" value="单选" name="question_radio"/></h1>
+                <textarea>描述</textarea>
+                <div class="questionBox">
+                  <input type="radio" name="checked_radio+编号" />
+                  <span>A</span>
+                  <input type="radio" name="checked_radio+编号" />
+                  <span>B</span>
+                  <input type="radio" name="checked_radio+编号" />
+                  <span>C</span>
+                  <input type="radio" name="checked_radio+编号" />
+                  <span>D</span>
+                </div>
+                <button class="removeTopic">删除题目</button>
+              </li>
+              <li id=""4>
+                <h1><input class="input-topic" type="text" value="多选" name="question_multipleChoice"/></h1>
+                <textarea>描述</textarea>
+                <div class="questionBox">
+                  <input type="checkbox" name="此题目的value" />
+                  <span>A</span>
+                  <input type="checkbox" name="此题目的value" />
+                  <span>B</span>
+                  <input type="checkbox" name="此题目的value" />
+                  <span>C</span>
+                  <input type="checkbox" name="此题目的value" />
+                  <span>D</span>
+                </div>
+              </li> -->
+            <div id="btn-for-add" style="display: none">添加题目</div>
         </div>
         {# ? 此处生成一个收集对象 #}
-        <input type="submit" id="btn-for-submit" value="创建" />
+        <input type="submit" id="btn-for-submit" value="创建"/>
         {#
         <form method="post">
           #} {#
           <input type="submit" name="submit" id="submit" value="创建收集" />#}
-          {#
+        {#
         </form>
         #}
-      </form>
-    </div>
-    <div class="popup">
-      <div class="popup-header">
+    </form>
+</div>
+<div class="popup">
+    <div class="popup-header">
         <h2>添加题目</h2>
         <span></span>
-      </div>
-      <div class="popup-body">
+    </div>
+    <div class="popup-body">
         <div class="popup-op" id="op-name">姓名</div>
         <div class="popup-op" id="op-file">文件</div>
         <div class="popup-op" id="op-sno">学号</div>
         <div class="popup-op" id="op-radio">单选题</div>
         <div class="popup-op" id="op-multipleChoice">多选题</div>
         <div class="popup-op" id="op-qnaire">问卷题目</div>
-      </div>
     </div>
-    <div class="alert">
-      <h1></h1>
-      <div id="timeOutClose"></div>
-    </div>
-    <div id="blur"></div>
-    <script
-      src="{{ url_for('static', filename='js/file_editing.js') }}"
-      type="text/javascript"
-    ></script>
+</div>
+<div class="alert">
+    <h1></h1>
+    <div id="timeOutClose"></div>
+</div>
+<div id="blur"></div>
+<script
+        src="{{ url_for('static', filename='js/file_editing.js') }}"
+        type="text/javascript"
+></script>
 
-    <script language="javascript" type="text/javascript">
-      //禁用Enter键表单自动提交
-      document.onkeydown = function (event) {
+<script language="javascript" type="text/javascript">
+    //禁用Enter键表单自动提交
+    document.onkeydown = function (event) {
         var target, code, tag;
         if (!event) {
-          event = window.event; //针对ie浏览器
-          target = event.srcElement;
-          code = event.keyCode;
-          if (code == 13) {
-            tag = target.tagName;
-            if (tag == "textarea") {
-              return true;
-            } else {
-              return false;
+            event = window.event; //针对ie浏览器
+            target = event.srcElement;
+            code = event.keyCode;
+            if (code == 13) {
+                tag = target.tagName;
+                if (tag == "textarea") {
+                    return true;
+                } else {
+                    return false;
+                }
             }
-          }
         } else {
-          target = event.target; //针对遵循w3c标准的浏览器，如Firefox
-          code = event.keyCode;
-          if (code == 13) {
-            tag = target.tagName;
-            if (tag == "INPUT") {
-              return false;
-            } else {
-              return true;
+            target = event.target; //针对遵循w3c标准的浏览器，如Firefox
+            code = event.keyCode;
+            if (code == 13) {
+                tag = target.tagName;
+                if (tag == "INPUT") {
+                    return false;
+                } else {
+                    return true;
+                }
             }
-          }
         }
-      };
-    </script>
-  </body>
+    };
+</script>
+</body>
 </html>
