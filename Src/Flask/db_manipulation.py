@@ -593,7 +593,7 @@ def get_question_dict(collection_id: int) -> dict:
     seq += 1
     question[f'{seq}_collector'] = collection.creator
     seq += 1
-    question[f'{seq}_deadline'] = collection.end_date.strftime("%Y-%m-%d %H:%M")
+    question[f'{seq}_deadline'] = collection.end_date.strftime("%Y-%m-%d %H:%M:%S")
     seq += 1
     question[f'{seq}_description'] = collection.description
     question_list = Question_info.query.filter_by(collection_id=collection_id).order_by("qno").all()
