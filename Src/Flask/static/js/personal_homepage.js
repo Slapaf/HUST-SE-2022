@@ -5,6 +5,16 @@ const user_information = document.querySelector(".user_information");
 const change_password = document.querySelector(".change_password");
 let countdown = 1;
 
+let checkPassword = false;
+
+window.onload = function () {
+    if (checkPassword != true) {
+        user_information.style.display = "none";
+        change_password.style.display = "flex";
+    }
+}
+
+
 nav_item1.onclick = () => {
     user_information.style.display = "flex";
     change_password.style.display = "none";
@@ -28,21 +38,21 @@ function changedata() {
     }
 }
 
-function checkKey_0() {
-    let k = document.getElementById("tip1");
-    console.log(k);
-    let U0 = input0.value;
-    // TODO 待修改
-    if (U0 === "123456") {
-        //此处"123456"要换成用户密码的值!
-        k.innerHTML = "";
-    } else {
-        k.innerHTML = "请输入正确的密码！";
-        k.style.display = "block";
-        countdown = 1;
-        timeOutClose(k);
-    }
-}
+// function checkKey_0() {
+//     let k = document.getElementById("tip1");
+//     console.log(k);
+//     let U0 = input0.value;
+//     // TODO 待修改
+//     if (U0 === "123456") {
+//         //此处"123456"要换成用户密码的值!
+//         k.innerHTML = "";
+//     } else {
+//         k.innerHTML = "请输入正确的密码！";
+//         k.style.display = "block";
+//         countdown = 1;
+//         timeOutClose(k);
+//     }
+// }
 
 function checkKey_1() {
     let k = document.getElementById("tip2");
