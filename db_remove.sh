@@ -1,0 +1,1 @@
+rm -rf Src/Flask/data.db
