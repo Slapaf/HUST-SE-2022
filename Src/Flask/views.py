@@ -165,22 +165,25 @@ def mycollection():
             submitting_page = 'file_submitting' + '/submit' + collection_id
             # return render_template('file_submitting.html')  # ! Debug
             print(submitting_page)  # ! 调试
+            print("分享")
         elif user_action_list[0] == 'collect-details':  # 统计
             # TODO doing...
-            print("嘿嘿嘿")
+            print("统计")
         elif user_action_list[0] == 'edit':  # 编辑
             # TODO doing...
-            print("哈哈哈")  # ! 调试用
+            print("编辑")
             # return render_template("file_editing.html", collection=question_dict)
             # return redirect(url_for('file_editing', collection_id=collection_id))
         elif user_action_list[0] == 'restart':  # 重启
-            pass
+            print("重启")
         elif user_action_list[0] == 'copy':  # 复制
-            pass
+            print("复制")
         elif user_action_list[0] == 'stop':  # ? 停止，已完成
             stop_collection(id_str_to_int(collection_id), user_action_list)
+            print("停止")
         elif user_action_list[0] == 'del':  # ? 删除，已完成
             delete_collection(id_str_to_int(collection_id))
+            print("删除")
         # return redirect(url_for('mycollection'))
 
     # else:
@@ -230,9 +233,10 @@ def collection_details(collection_id):
         namelist_path = './FileStorage/' + Collection_info.query.filter_by(
             creator_id=current_user.id).first().namelist_path
         # print(namelist_path)
-        os.mkdir(namelist_path)
+        # os.mkdir(namelist_path)
+        print(namelist_path)
         namelist_csv.to_csv(namelist_path + "/应交名单.csv", encoding='utf-8')  # * 保存为 csv 文件
-        return redirect(url_for('collection_details'))
+        return redirect(url_for('collection_details', collection_id=collection_id))
 
     collection_id = id_str_to_int(collection_id)  # * 转换为实际的收集 id
     parameter_dict_list = []
@@ -241,11 +245,8 @@ def collection_details(collection_id):
     for idx, submission in enumerate(submission_list):
         # * 创建一个字典类型，用于传参
         submitter_name = submission[0]  # 提交者姓名
-        value_type_check(submitter_name)
         submit_time = submission[1]  # 提交时间
-        value_type_check(submit_time)
         file_submitted_count = submission[2]  # 提交文件数量
-        value_type_check(file_submitted_count)
         file_submitted_list = submission[3]
         tmp_dict = {
             'submitter_order_idx': idx,  # ! 用于 js 定位数据，不是数据库 id
@@ -386,7 +387,6 @@ def file_collecting():
 @app.route('/file_editing/<string:collection_id>', methods=['GET', 'POST'])
 def file_editing(collection_id):
     if request.method == 'POST':
-        collection_id = id_str_to_int(collection_id)
         question_list = request.form
         value_type_check(question_list)
         if not question_list:
@@ -396,9 +396,9 @@ def file_editing(collection_id):
         else:
             a = list(question_list.items(multi=True))
             print(a)  # ! 调试用
-            modify_collection(collection_id, a)
+            modify_collection(id_str_to_int(collection_id), a)
             print("提交编辑成功！")
-            redirect(url_for('index'))  # 编辑完成，返回主页
+            return redirect(url_for('index'))  # 编辑完成，返回主页
     collection_id = id_str_to_int(collection_id)
     question_dict = get_question_dict(collection_id)
     print(question_dict)
