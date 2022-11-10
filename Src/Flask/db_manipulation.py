@@ -893,7 +893,7 @@ def modify_collection(collection_id: int, question_list: list) -> None:
     question_multidict['deadline'] = datetime.strptime(deadline, '%Y-%m-%d %H:%M:%S')
 
     # 更新Collection_info表中的信息
-    collection = Collection_info.query.get(collection_id)
+    collection = Collection_info.query.filter_by(id=collection_id)
     collection.update({'start_date': datetime.now()})
     collection.update({'collection_title': question_multidict['collectionTitle']})
     collection.update({'creator': question_multidict['collector']})
