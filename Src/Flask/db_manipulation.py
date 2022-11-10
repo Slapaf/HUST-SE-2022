@@ -186,6 +186,16 @@
         
         Returns: 
         - submission_id：int类型，表示该提交记录在表Submission_info中的id
+        
+    13、modify_collection(collection_id: int, question_list: list)
+        ！未测试正确性
+        Function: 修改一个已创建的收集（只能修改收集标题、创建人、截止时间、收集描述和题目描述）
+        
+        Inputs:
+        - collection_id：int类型，表示收集id
+        - question_list：list类型，表示问题信息列表
+        
+        Returns: None
 '''''
 
 import string
@@ -815,3 +825,30 @@ def save_submission(submission_list: list, collection_id: int, file):
         db.session.commit()
 
     return submission_id
+
+
+def modify_collection(collection_id: int, question_list: list):
+    question_multidict = MultiDict(question_list)
+
+    # 前端传来的deadLine为string类型，在此转化为datetime类型
+    deadline = question_multidict['deadline']
+    deadline = deadline.replace("T", " ")
+    question_multidict['deadline'] = datetime.strptime(deadline, '%Y-%m-%d %H:%M:%S')
+
+    # 更新Collection_info表中的信息
+    collection = Collection_info.query.get(collection_id)
+    collection.update({'start_date': datetime.now()})
+    collection.update({'collection_title': question_multidict['collectionTitle']})
+    collection.update({'creator': question_multidict['collector']})
+    collection.update({'description': question_multidict['description']})
+    collection.update({'end_date': question_multidict['deadline']})
+    db.session.commit()
+
+    qno_list = Question_info.query.filter_by(collection_id=collection_id). \
+        with_entities(Question_info.qno).all()
+    qno_list = list(map(itemgetter(0), qno_list))
+    max_qno = max(qno_list)
+    for seq in range(1, max_qno + 1):
+        question = Question_info.query.filter_by(collection_id=collection_id, qno=seq).first()
+        question.update({'question_description': question_multidict[f'detail{seq}']})
+        db.session.commit()
