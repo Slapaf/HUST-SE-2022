@@ -66,7 +66,7 @@
         </div>
     </div>
     {# ? 向数据库提交应交名单数据 #}
-    <form method="post" target="hidden_frame">
+    <form method="post">
         <div class="popup_body" id="popup">
             <textarea placeholder="请按行输入姓名，或以英文逗号隔开多个姓名，例如：张三,李四" class="textarea"
                       id="textarea"></textarea>
@@ -96,6 +96,7 @@
             addmember(tmp_json[i].submitter_order_idx, tmp_json[i].submitter_name,
                 tmp_json[i].submit_time, tmp_json[i].file_submitted_count, tmp_json[i].file_submitted_list);
         }
+        faddname();
     }
 
     let getData_signal = 1;
