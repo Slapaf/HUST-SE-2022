@@ -383,11 +383,22 @@ def file_collecting():
     return render_template('file_collecting.html')
 
 
-@app.route('/file_editing/<string:collection_id>')
+@app.route('/file_editing/<string:collection_id>', methods=['GET', 'POST'])
 def file_editing(collection_id):
     if request.method == 'POST':
-        pass
-        redirect(url_for('index'))  # 编辑完成，返回主页
+        collection_id = id_str_to_int(collection_id)
+        question_list = request.form
+        value_type_check(question_list)
+        if not question_list:
+            flash("提交编辑失败！")
+            print("提交编辑失败！")
+            return render_template('index.html')
+        else:
+            a = list(question_list.items(multi=True))
+            print(a)  # ! 调试用
+            modify_collection(collection_id, a)
+            print("提交编辑成功！")
+            redirect(url_for('index'))  # 编辑完成，返回主页
     collection_id = id_str_to_int(collection_id)
     question_dict = get_question_dict(collection_id)
     print(question_dict)
