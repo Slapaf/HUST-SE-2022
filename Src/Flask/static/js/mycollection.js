@@ -232,7 +232,7 @@ function addmember(collection_title, username, collection_status, collection_id,
         document.getElementById("hidden").submit();
         window.location.href = 'collection_details/' + memberid.title;
     }
-    // ? 点击 “编辑” 按钮
+    // ? 点击 “编辑” 或 “重启” 按钮
     op3.onclick = function () {
         //!此处需添加参数，跳转对应收集详情界面
         if (membercondition.title == "进行中") {

@@ -393,6 +393,9 @@ def file_collecting():
 
 @app.route('/file_editing/<string:collection_id>')
 def file_editing(collection_id):
+    if request.method == 'POST':
+        pass
+        redirect(url_for('index'))  # 编辑完成，返回主页
     collection_id = id_str_to_int(collection_id)
     question_dict = get_question_Dict(collection_id)
     print(question_dict)
