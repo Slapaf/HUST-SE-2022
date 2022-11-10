@@ -1,5 +1,8 @@
 import re
+import numpy
+import numpy as np
 
+a=np.where()
 str = "fsdfs12"
 t = int(re.findall(r"\d+", str)[0])
 print(t)
