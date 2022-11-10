@@ -906,6 +906,6 @@ def modify_collection(collection_id: int, question_list: list) -> None:
     qno_list = list(map(itemgetter(0), qno_list))
     max_qno = max(qno_list)
     for seq in range(1, max_qno + 1):
-        question = Question_info.query.filter_by(collection_id=collection_id, qno=seq).first()
+        question = Question_info.query.filter_by(collection_id=collection_id, qno=seq)
         question.update({'question_description': question_multidict[f'detail{seq}']})
         db.session.commit()
