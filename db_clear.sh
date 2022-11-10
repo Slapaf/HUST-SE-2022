@@ -1,0 +1,1 @@
+cd Src/Flask && flask initdb --drop
