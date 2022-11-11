@@ -5,11 +5,17 @@
 <head>
     <meta charset="UTF-8">
     <title>注册</title>
+    <link
+      rel="stylesheet"
+      href="http://at.alicdn.com/t/c/font_3751655_o66m8aeymun.css"
+    />
 </head>
 
 <body>
 {% for message in get_flashed_messages() %}
-    <div class="alert">{{ message }}</div>
+<div class="alert">
+    <h1>{{ message }}</h1>
+</div>
 {% endfor %}
 <div class="register_box">
     <h1 class="title">欢迎注册</h1>

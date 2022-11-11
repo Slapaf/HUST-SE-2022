@@ -1,5 +1,5 @@
 /* 提示信息 */
-.alert {
+/* .alert {
     position: relative;
     padding: 7px;
     margin: 7px 0;
@@ -8,10 +8,41 @@
     background-color: #cce5ff;
     border-color: #b8daff;
     border-radius: 5px;
-}
+} */
 
+.alert {
+    position: fixed;
+    top: 10px;
+    pointer-events: auto;
+    width: fit-content;
+    height: fit-content;
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0 0 5px #c2c2c2;
+    padding: 16px 20px;
+    /* display: none; */
+    z-index: 2;
+  }
+  
+  .alert>h1{
+    font-size: large;
+    font-weight: 400;
+    margin: 0 10px;
+  }
+  
+  .alert>h1::before {
+    font-family: "iconfont" !important;
+    content: "\e6ee";
+    font-size: larger;
+    position: relative;
+    top: 2px;
+    margin-right: 10px;
+  }
 
 	body {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
 		background-color: #8ea4f8;
 		background-repeat: no-repeat;
 		background-size: cover; 

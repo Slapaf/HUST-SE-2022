@@ -23,26 +23,29 @@
     {% endfor %}
     <nav>
       <div class="left">
-        <div class="op1">
+        <div id="nav_op1" class="nav_op">
             <a href="{{ url_for('file_collecting') }}">创建收集</a>
           </div>
-          <div class="op2">
+          <div id="nav_op2" class="nav_op">
             <a href="{{ url_for('mycollection') }}">收集记录</a>
           </div>
       </div>
+      <div class="middle">
+        <div id="nav_productName">嘟嘟可收件箱</div>
+      </div>
       <div class="right">
         {% if current_user.is_authenticated %}
-        <div>{{ current_user.name }}</div>
-        <div><a href="{{ url_for('logout') }}">退出登录</a></div>
+        <div id="nav_op3" class="nav_op"><a href="{{url_for('personal_homepage')}}">{{ current_user.name }}</a></div>
+        <div id="nav_op4" class="nav_op"><a href="{{ url_for('logout') }}">退出登录</a></div>
         {% else %}
-        <div><a href="{{ url_for('login') }}">登录</a></div>
-        <div><a href="{{ url_for('register') }}">注册</a></div>
+        <div id="nav_op3" class="nav_op"><a href="{{ url_for('login') }}">登录</a></div>
+        <div id="nav_op4" class="nav_op"><a href="{{ url_for('register') }}">注册</a></div>
         {% endif %}
       </div>
     </nav>
-    <section class="container panel">
+    <section class="container panel one">
       <div class="main">
-        <h1 id="productName">青青草原收件箱</h1>
+        <h1 id="productName">嘟嘟可收件箱</h1>
         <h1 id="EnglishName">Green grasslands Inbox</h1>
         <div class="underProductName">
             <h2>您的生活好帮手嘿嘿嘿嘿嘿嘿</h2>
@@ -57,26 +60,58 @@
       <img id="round_left" src="{{ url_for('static', filename='images/round2.png') }}">
       <img id="svg1" src="{{ url_for('static', filename='images/1.svg') }}" alt="">
     </section>
-    <!-- <section class="description panel blue" style="background-color: blue;">
-        <div>
-          <h1>Layered pinning</h1>
-          <p>Use pinning to layer panels on top of each other as you scroll.</p>
-          <div class="scroll-down">Scroll down<div class="arrow"></div></div>
+    <section class="panel two" style="z-index:10">
+      <div class="textBox">
+        <div class="pageTitle">
+          <h1>收件，</h1>
+          <h2>不止于文件</h2>
         </div>
-      </section> -->
-    <section class="panel red" style="background-color: rgb(97, 167, 233);z-index:10">
-      <a href="baidu.com">aaaaaaaaaaaaaaaaaaaaaaaaa</a>
+        <div class="paragraph">
+          <p>我们提供了6种格式的常见收集选项：</p>
+          <p>姓名、学号、文件、单选、多选、问卷题目</p>
+        </div>
+        <div class="paragraph">
+          <p>您可以对已创建的收集进行修改</p>
+          <p>或者复用以前创建的收集</p>
+        </div>
+      </div>
+      <img src="{{ url_for('static', filename='images/collectioncard_2.png') }}" alt="" id="collectioncard">
     </section>
-    <section class="panel orange" style="background-color: rgb(104, 221, 192);z-index:11">
-      <a href="baidu.com">aaaaaaaaaaaaaaaaaaaaaaaaa</a>
-      TWO
+    <section class="panel three" style="z-index:11">
+      <div class="textBox">
+        <div class="pageTitle">
+          <h1>复用，</h1>
+          <h2>一个收集不只用一次</h2>
+        </div>
+        <div class="paragraph">
+          <p>对于每一个收集，我们提供了多种操作：</p>
+          <p>编辑、复制、停止、重启......</p>
+        </div>
+        <div class="paragraph">
+          <p>您可以对已创建的收集进行修改，</p>
+          <p>或者复用以前创建的收集</p>
+        </div>
+      </div>
+      <img src="{{ url_for('static', filename='images/mycollectioncard_1.png') }}" alt="" id="mycollectioncard">
     </section>
-    <section class="panel purple" style="background-color: rgb(221, 219, 104);z-index:12">
-      <a href="baidu.com">aaaaaaaaaaaaaaaaaaaaaaaaa</a>
-      THREE
+    <section class="panel four" style="z-index:12">
+      <div class="textBox">
+        <div class="pageTitle">
+          <h1>统计，</h1>
+          <h2>提交情况一目了然</h2>
+        </div>
+        <div class="paragraph">
+          <p>您可以将应交名单导入，</p>
+          <p>已提交和未提交姓名将由不同颜色区分</p>
+        </div>
+        <div class="paragraph">
+          <p>对于每一次提交，</p>
+          <p>您可以看到提交者姓名、提交时间、文件数量等信息</p>
+        </div>
+      </div>
+      <img src="{{ url_for('static', filename='images/collectiondetailcard_1.png') }}" alt="" id="collectiondetailcard">
     </section>
-    <section class="panel green" style="background-color: rgb(207, 104, 221);z-index:13">
-      <a href="baidu.com">aaaaaaaaaaaaaaaaaaaaaaaaa</a>
+    <section class="panel five" style="background-color: rgb(207, 104, 221);z-index:13">
       FOUR
     </section>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.3/gsap.min.js"></script>
