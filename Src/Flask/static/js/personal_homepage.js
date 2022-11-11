@@ -98,10 +98,9 @@ function checkKey_4() {
 }
 
 function checkAll1() {
-    let U0 = input0.value;
     let U1 = input1.value;
     let U2 = input2.value;
-    if (U1.match(/^[a-zA-Z0-9]{6,16}$/) && U1 === U2 && U0 === "123456") {
+    if (U1.match(/^[a-zA-Z0-9]{6,16}$/) && U1 === U2) {
         //"123456"要换成用户密码！
         return true;
     }
