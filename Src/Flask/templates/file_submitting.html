@@ -21,7 +21,7 @@
                 收集标题：
             </h3>
             <!-- 字符串 -->
-            <div id="collectionTitle">{{collection.collectionTitle}}</div>
+            <div id="collectionTitle">{{ collection.collectionTitle }}</div>
         </div>
         <div class="collectionInformation">
             <h3>
@@ -31,7 +31,7 @@
                 收集者：
             </h3>
             <!-- 字符串 -->
-            <div id="collector">{{collection.collector}}</div>
+            <div id="collector">{{ collection.collector }}</div>
         </div>
         <div class="collectionInformation">
             <h3>
@@ -41,7 +41,7 @@
                 截止时间：
             </h3>
             <!-- 字符串 -->
-            <div id="deadline">{{collection.deadline}}</div>
+            <div id="deadline">{{ collection.deadline }}</div>
         </div>
         <div class="collectionInformation">
             <h3>
@@ -51,18 +51,18 @@
                 详情：
             </h3>
             <!-- 字符串 -->
-            <div id="description">{{collection.description}}</div>
+            <div id="description">{{ collection.description }}</div>
         </div>
     </div>
     <div class="main">
         <form id="myform" method="post" name="Form" enctype="multipart/form-data">
             <ul id="question_list">
                 <!-- 姓名/学号 -->
-                 <!-- <li>
-                    <h1><input type="text" value="后台获取" class="readOnlyInput"disabled></h1>
-                    <div class="detail"></div>
-                    <input type="text" class="inputContent">
-                </li> -->
+                <!-- <li>
+                   <h1><input type="text" value="后台获取" class="readOnlyInput"disabled></h1>
+                   <div class="detail"></div>
+                   <input type="text" class="inputContent">
+               </li> -->
                 <!-- 文件 -->
                 <!-- <li>
                     <h1><input type="text" value="后台获取" class="disabledInput" disabled></h1>
@@ -142,38 +142,39 @@
 <div class="alert">
     <h1></h1>
     <div id="timeOutClose"></div>
-  </div>
-  <div id="blur"></div>
+</div>
+<div id="blur"></div>
+<div id="refuse-submit" class="refuse-submit" style="display: none">该收集已截止，如有问题请联系收集发布者！</div>
 <script src="{{ url_for('static', filename='js/file_submitting.js') }}"></script>
 <script language="javascript" type="text/javascript">
     //禁用Enter键表单自动提交
     document.onkeydown = function (event) {
-      var target, code, tag;
-      if (!event) {
-        event = window.event; //针对ie浏览器
-        target = event.srcElement;
-        code = event.keyCode;
-        if (code == 13) {
-          tag = target.tagName;
-          if (tag == "textarea") {
-            return true;
-          } else {
-            return false;
-          }
+        var target, code, tag;
+        if (!event) {
+            event = window.event; //针对ie浏览器
+            target = event.srcElement;
+            code = event.keyCode;
+            if (code == 13) {
+                tag = target.tagName;
+                if (tag == "textarea") {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        } else {
+            target = event.target; //针对遵循w3c标准的浏览器，如Firefox
+            code = event.keyCode;
+            if (code == 13) {
+                tag = target.tagName;
+                if (tag == "INPUT") {
+                    return false;
+                } else {
+                    return true;
+                }
+            }
         }
-      } else {
-        target = event.target; //针对遵循w3c标准的浏览器，如Firefox
-        code = event.keyCode;
-        if (code == 13) {
-          tag = target.tagName;
-          if (tag == "INPUT") {
-            return false;
-          } else {
-            return true;
-          }
-        }
-      }
     };
-  </script>
+</script>
 </body>
 </html>

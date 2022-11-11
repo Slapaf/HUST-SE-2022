@@ -1,92 +1,92 @@
-  body {
+body {
     background-color: #e1e1e271;
     display: flex;
     justify-content: center;
-  }
-  
-  .container {
+}
+
+.container {
     width: 50%;
     background-color: white;
-  }
-  
-  
-  .container .header {
+}
+
+
+.container .header {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     background-color: #f3f6f9b0;
-    border-bottom: solid 2px #f3f6f9bd; 
+    border-bottom: solid 2px #f3f6f9bd;
     border-radius: 10px;
     padding: 20px 40px;
-  }
-  
-  .header h3 {
-   font-weight: 400; 
-  }
+}
 
-  .collectionInformation {
+.header h3 {
+    font-weight: 400;
+}
+
+.collectionInformation {
     display: flex;
     align-items: center;
     margin: 5px 20px;
-  }
-  
-  #collectionTitle,
-  #collector,
-  #deadline,
-  #description {
+}
+
+#collectionTitle,
+#collector,
+#deadline,
+#description {
     position: relative;
     bottom: 1px;
     margin-left: 7px;
     font-size: 17px;
     font-weight: 500;
     color: #000;
-  }
-  
-  #description {
-    font-size: 15px;
-  }
-  
-  #test {
-    display: none;
-  }
+}
 
-  #label {
+#description {
+    font-size: 15px;
+}
+
+#test {
+    display: none;
+}
+
+#label {
     width: 100px;
     height: 20px;
     background-color: #000;
-  }
-  
-  /* 题目主体部分 */
-  
-  .container .main ul {
+}
+
+/* 题目主体部分 */
+
+.container .main ul {
     width: 100%;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: stretch;
-  }
-  
-  .container .main ul li {
+}
+
+.container .main ul li {
     width: 100%;
     padding: 10px 50px;
     border-radius: 5px;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-  }
-  
-  
-  .readOnlyInput {
+}
+
+
+.readOnlyInput {
     font-size: 16px;
     border: none;
     outline: none;
     border-radius: 5px;
-    padding:5px 5px;
-    margin:3px 5px;
-    
-  }
+    padding: 5px 5px;
+    margin: 3px 5px;
 
-  .detail {
+}
+
+.detail {
     font-size: 14px;
     margin: 0 5px;
     padding: 5px 5px;
@@ -96,63 +96,62 @@
     width: 100%;
     resize: none;
     overflow: hidden;
-  }
-  
-  
-  .inputContent {
-    padding:8px 5px;
-    margin:5px 5px;
+}
+
+
+.inputContent {
+    padding: 8px 5px;
+    margin: 5px 5px;
     font-size: 13px;
     border-radius: 5px;
     border: 1px solid #c2c2c2;
     transition: 0.5s;
-  }
+}
 
-  .inputContent:focus {
+.inputContent:focus {
     outline: none;
     border: 1px transparent solid;
     box-shadow: 0 0 3px rgba(65, 108, 248, 0.925);
-    transition: 0.3s; 
-  }
-   
-  /* 单选/多选 */
-  .singleQuestionBox,
-  .multiQuestionBox,
-  .qnQuestionBox {
+    transition: 0.3s;
+}
+
+/* 单选/多选 */
+.singleQuestionBox,
+.multiQuestionBox,
+.qnQuestionBox {
     display: flex;
     margin: 5px 5px;
     padding: 0 5px;
     width: 50%;
     font-size: 15px;
-    
-  }
-  
-  .singleOption,
-  .multiOption {
+
+}
+
+.singleOption,
+.multiOption {
     margin-right: 8px;
-  }
+}
 
-  .singleOption label,
-  .multiOption label,
-  .qnOption .qnOptionContent {
+.singleOption label,
+.multiOption label,
+.qnOption .qnOptionContent {
     margin: 0 3px;
-  }
+}
 
-  /* 问卷 */
-  .qnQuestionBox {
+/* 问卷 */
+.qnQuestionBox {
     flex-direction: column;
-  }
-  
-  .qnOption {
+}
+
+.qnOption {
     display: flex;
     justify-content: flex-start;
     align-items: center;
     margin: 3px 0;
-  }
-  
-  
-  
-  #btnForSubmit {
+}
+
+
+#btnForSubmit {
     font-size: 15px;
     width: 150px;
     margin: 30px;
@@ -164,23 +163,22 @@
     position: relative;
     left: 50%;
     margin-left: -75px;
-  }
-  
-  #btnForSubmit:hover {
+}
+
+#btnForSubmit:hover {
     background-color: #3a7dfbe3;
     cursor: pointer;
-  }
-  
-  
-  
-  /* 弹窗 */
-  .popup-header>span,
-  #btn-for-add:hover {
+}
+
+
+/* 弹窗 */
+.popup-header > span,
+#btn-for-add:hover {
     cursor: pointer;
-  }
-  
-  .alert,
-  .popup {
+}
+
+.alert,
+.popup {
     position: fixed;
     top: 25%;
     opacity: 1;
@@ -193,71 +191,71 @@
     padding: 16px 20px;
     display: none;
     z-index: 2;
-  }
-  
-  .popup-header {
+}
+
+.popup-header {
     margin-bottom: 10px;
     display: flex;
     justify-content: flex-end;
-  }
-  
-  .popup-header h2 {
+}
+
+.popup-header h2 {
     font-weight: 400;
     margin: 0 40%;
-  }
-  
-  .popup-header span::after {
+}
+
+.popup-header span::after {
     font-family: "iconfont" !important;
     content: "\e6f3";
     font-size: 17px;
     position: relative;
     top: 2px;
-  }
-  
-  .popup-op {
+}
+
+.popup-op {
     font-size: 15px;
-      display: inline-block;
-      width: 30%;
-      height: 40px;
-      margin: 10px 6px;
-      /* border: 1px solid #c2c2c2; */
-      border-radius: 5px;
-      text-align: center;
-      line-height: 40px;
-      background-color: #f1f1f1;
-      box-shadow: 0 0 2px #c2c2c2;
-      /* color: white; */
-  }
-  
-  .popup-op:hover {
-      cursor: pointer;
-      background-color: #9d9d9dd8;
-      color: white;
-  }
-  
-  textarea {
+    display: inline-block;
+    width: 30%;
+    height: 40px;
+    margin: 10px 6px;
+    /* border: 1px solid #c2c2c2; */
+    border-radius: 5px;
+    text-align: center;
+    line-height: 40px;
+    background-color: #f1f1f1;
+    box-shadow: 0 0 2px #c2c2c2;
+    /* color: white; */
+}
+
+.popup-op:hover {
+    cursor: pointer;
+    background-color: #9d9d9dd8;
+    color: white;
+}
+
+textarea {
     height: 25px;
     resize: none;
-  }
-  
-  .hidden {
+}
+
+.hidden {
     display: none;
-  }
-  
-  #blur {
+}
+
+#blur {
     width: 100%;
     height: 100%;
-    opacity:0.3;/*设置背景色透明度,1为完全不透明,IE需要使用filter:alpha(opacity=80);*/
-    filter:alpha(opacity=80);
+    opacity: 0.3; /*设置背景色透明度,1为完全不透明,IE需要使用filter:alpha(opacity=80);*/
+    filter: alpha(opacity=80);
     display: none;
-    position:fixed;
-    top:0;
-    left:0;
-    z-index:1;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1;
     background: silver;
-  }
-  
-  .alert {
+}
+
+.alert {
     position: fixed;
     top: 10px;
     pointer-events: auto;
@@ -269,19 +267,34 @@
     padding: 16px 20px;
     display: none;
     z-index: 2;
-  }
-  
-  .alert>h1{
+}
+
+.alert > h1 {
     font-size: large;
     font-weight: 400;
     margin: 0 10px;
-  }
-  
-  .alert>h1::before {
+}
+
+.alert > h1::before {
     font-family: "iconfont" !important;
     content: "\e6ee";
     font-size: larger;
     position: relative;
     top: 2px;
     margin-right: 10px;
-  }
+}
+
+.refuse-submit {
+    display: none;
+    position: fixed;
+    background-color: white;
+    font-size: 100px;
+    text-align: left;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    width: 100%;
+    height: 100%;
+}

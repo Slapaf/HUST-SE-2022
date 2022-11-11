@@ -25,7 +25,7 @@ function creatNameOrSnoOrFile(op, topicName, detailText) {
     detail.innerHTML = detailText;
     let inputContent = document.createElement("input");
     inputContent.type = op == "file" ? "file" : "text";
-    inputContent.className = "inputContent";    
+    inputContent.className = "inputContent";
     // if(op!="file") {
     //     inputContent.required = true;
     // } 
@@ -41,7 +41,6 @@ function creatNameOrSnoOrFile(op, topicName, detailText) {
     inputTopic.name = "question_" + op + question_id;
     inputContent.name = "submit_" + op + question_id;
 }
-
 
 
 //添加单选/多选
@@ -87,7 +86,6 @@ function creatSingleOrMultiple(op, topicName, detailText) {
 }
 
 
-
 //参数：编号，题目，详情描述，选项数，选项内容（数组），选择类型（单选/多选）
 function creatQuestionnaire(
     topicName,
@@ -131,7 +129,6 @@ function creatQuestionnaire(
     newli.appendChild(detail);
     newli.appendChild(qBox);
 }
-
 
 
 // TODO:按照这个格式传数据
@@ -242,12 +239,12 @@ function creatQuestion() {
 function addLoadEvent(func) {
     var oldonload = window.onload;
     if (typeof window.onload != "function") {
-      window.onload = func;
+        window.onload = func;
     } else {
-      window.onload = function () {
-        oldonload();
-        func();
-      };
+        window.onload = function () {
+            oldonload();
+            func();
+        };
     }
 }
 
@@ -257,51 +254,51 @@ addLoadEvent(creatQuestion);
 //提交前检查
 function check() {
     let errorNum = 0;
-    let arr=[];
+    let arr = [];
     //检查多选是否至少选了两个
     let multiQuestionBoxes = document.querySelectorAll(".multiQuestionBox");
-    for(let i = 0;i < multiQuestionBoxes.length;i++) {
-      let checkBoxes = multiQuestionBoxes[i].querySelectorAll("input[type='checkbox']");
-      let cnt = 0;
-      for(let i=0;i<checkBoxes.length;i++) {
-        if(checkBoxes[i].checked) cnt++;
-      }
-      if(cnt < 2) {
-        errorNum = 1;
-      }
+    for (let i = 0; i < multiQuestionBoxes.length; i++) {
+        let checkBoxes = multiQuestionBoxes[i].querySelectorAll("input[type='checkbox']");
+        let cnt = 0;
+        for (let i = 0; i < checkBoxes.length; i++) {
+            if (checkBoxes[i].checked) cnt++;
+        }
+        if (cnt < 2) {
+            errorNum = 1;
+        }
     }
     //检查问卷多选是否至少选了两个
     let qnQuestionBoxes = document.querySelectorAll(".qnQuestionBox");
-    for(let i = 0;i < qnQuestionBoxes.length;i++) {
-      let checkBoxes = qnQuestionBoxes[i].querySelectorAll("input[type='checkbox']");
-      let cnt = 0;
-      for(let i=0;i<checkBoxes.length;i++) {
-        if(checkBoxes[i].checked) cnt++;
-      }
-      if(cnt < 2) {
-        errorNum = 2;
-      }
+    for (let i = 0; i < qnQuestionBoxes.length; i++) {
+        let checkBoxes = qnQuestionBoxes[i].querySelectorAll("input[type='checkbox']");
+        let cnt = 0;
+        for (let i = 0; i < checkBoxes.length; i++) {
+            if (checkBoxes[i].checked) cnt++;
+        }
+        if (cnt < 2) {
+            errorNum = 2;
+        }
     }
     //出错提示弹窗
-    if(errorNum) {
-      let h1 = myalert.getElementsByTagName("h1")[0];
-      if(errorNum === 1) {
-        h1.innerHTML = "多选题请至少选择两个选项";
-      }else if(errorNum === 2){
-        h1.innerHTML = "多选题请至少选择两个选项!";
-      }
-      myalert.style.display = "block";
-      myblur.style.display = "block";
-      countdown = 2;
-      timeOutClose();
-      return false;
+    if (errorNum) {
+        let h1 = myalert.getElementsByTagName("h1")[0];
+        if (errorNum === 1) {
+            h1.innerHTML = "多选题请至少选择两个选项";
+        } else if (errorNum === 2) {
+            h1.innerHTML = "多选题请至少选择两个选项!";
+        }
+        myalert.style.display = "block";
+        myblur.style.display = "block";
+        countdown = 2;
+        timeOutClose();
+        return false;
     }
     return true;
 }
-  
+
 //表单提交前触发检查和编号程序
-myform.onsubmit = ()=>{
-    if(check())
+myform.onsubmit = () => {
+    if (check())
         return true;
     else
         return false;
@@ -310,13 +307,28 @@ myform.onsubmit = ()=>{
 //弹窗倒计时
 function timeOutClose() {
     // document.getElementById("timeOutClose").innerHTML = countdown;
-    if(countdown > 0) {
-      setTimeout("timeOutClose();",1000);
-    }else {
-      myalert.style.display = "none";
-      myblur.style.display = "none";
+    if (countdown > 0) {
+        setTimeout("timeOutClose();", 1000);
+    } else {
+        myalert.style.display = "none";
+        myblur.style.display = "none";
     }
     countdown--;
 }
+
+//比较收集是否截止
+function checkDeadline() {
+    let nowtime = new Date().getTime(); // 现在时间转换为时间戳
+    let futruetime = new Date(Object.values(formData)[2]).getTime(); // 截止时间转换为时间戳
+    let msec = futruetime - nowtime; // 毫秒 截止时间-现在时间
+    let time = (msec / 1000);  // 毫秒/1000
+    let day = parseInt(time / 86400); // 天  24*60*60*1000
+    let hour = parseInt(time / 3600) - 24 * day;    // 小时 60*60 总小时数-过去的小时数=现在的小时数
+    let minute = parseInt(time % 3600 / 60); // 分 -(day*24) 以60秒为一整份 取余 剩下秒数 秒数/60 就是分钟数
+    let second = parseInt(time % 60);  // 以60秒为一整份 取余 剩下秒数
+    if (time <= 0) document.getElementById("refuse-submit").style.display = "flex";
+}
+
+checkDeadline();
 
 console.log(myform);
