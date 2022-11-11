@@ -301,6 +301,32 @@ def collection_details(collection_id):
     )
 
 
+# 文件收集界面
+@app.route('/file_collecting')
+def file_collecting():
+    return render_template('file_collecting.html')
+
+
+@app.route('/file_collecting/<string:collection_id>')
+@login_required
+def copy_collection(collection_id):
+    """复制收集
+
+    Args:
+        collection_id (str): 待复制的收集 id
+
+    """
+    if request.method == 'POST':
+        pass
+        return redirect(url_for('index'))
+    collection_id = id_str_to_int(collection_id)
+    question_dict = get_question_dict(collection_id)
+    print(question_dict)
+    if question_dict is None:
+        return render_template("404.html")
+    return render_template('file_collecting.html', collection=question_dict)
+
+
 @app.route('/file_collecting', methods=['GET', 'POST'])
 @login_required
 def generate_collection():
@@ -410,12 +436,6 @@ def register():
         return redirect(url_for('login'))
 
     return render_template('register.html')
-
-
-# 文件收集界面
-@app.route('/file_collecting')
-def file_collecting():
-    return render_template('file_collecting.html')
 
 
 @app.route('/file_editing/<string:collection_id>', methods=['GET', 'POST'])
