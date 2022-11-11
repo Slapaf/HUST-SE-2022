@@ -342,12 +342,12 @@ def add_FC(question_list: list, user_id: int) -> int:
             db.session.commit()
             # 存选择题答案
             ano_list = question_multidict.getlist(f'checked_mulans{seq}')
-            for ano in ano_list:
-                answer = Answer_info(collection_id=collection_id,
-                                     question_id=question.id,
-                                     qno=seq,
-                                     answer_option=ano)
-                db.session.add(answer)
+            ano = '-'.join(ano_list)
+            answer = Answer_info(collection_id=collection_id,
+                                 question_id=question.id,
+                                 qno=seq,
+                                 answer_option=ano)
+            db.session.add(answer)
             db.session.commit()
 
         # ? 若为问卷题
@@ -647,8 +647,7 @@ def get_question_dict(collection_id: int) -> dict:
             seq += 1
             question[f'{seq}_detail{q.qno}'] = q.question_description
             # 多选题答案
-            answer_list = Answer_info.query.filter_by(question_id=q.id).with_entities(Answer_info.answer_option).all()
-            answer_list = list(map(itemgetter(0), answer_list))
+            answer_list = Answer_info.query.filter_by(question_id=q.id).first().answer_option.split('-')
             for answer in answer_list:
                 seq += 1
                 question[f'{seq}_checked_mulans{q.qno}'] = answer
@@ -901,11 +900,81 @@ def modify_collection(collection_id: int, question_list: list) -> None:
     collection.update({'end_date': question_multidict['deadline']})
     db.session.commit()
 
-    qno_list = Question_info.query.filter_by(collection_id=collection_id). \
-        with_entities(Question_info.qno).all()
-    qno_list = list(map(itemgetter(0), qno_list))
-    max_qno = max(qno_list)
-    for seq in range(1, max_qno + 1):
+    # qno_list = Question_info.query.filter_by(collection_id=collection_id). \
+    #     with_entities(Question_info.qno).all()
+    # qno_list = list(map(itemgetter(0), qno_list))
+    # max_qno = max(qno_list)
+    # for seq in range(1, max_qno + 1):
+    #     question = Question_info.query.filter_by(collection_id=collection_id, qno=seq)
+    #     question.update({'question_description': question_multidict[f'detail{seq}']})
+    #     db.session.commit()
+
+    # 问题的键列表
+    key_list = list(question_multidict.keys())
+    question_key_list = [question_key for question_key in key_list if "question" in question_key]
+    seq = 0
+    for question_key in question_key_list:
+        seq += 1
         question = Question_info.query.filter_by(collection_id=collection_id, qno=seq)
-        question.update({'question_description': question_multidict[f'detail{seq}']})
+
+        if 'name' in question_key:
+            question.update({'question_title': question_multidict[f'question_name{seq}'],
+                             'question_description': question_multidict[f'detail{seq}']})
+
+        elif 'sno' in question_key:
+            question.update({'question_title': question_multidict[f'question_sno{seq}'],
+                             'question_description': question_multidict[f'detail{seq}']})
+
+        elif 'file' in question_key:
+            # 确定文件重命名规则
+            rename_rule = []
+            rename_rule_list = []  # * 重命名所需的题目
+            question_num = str(seq)
+            for elem in question_list:
+                if elem[0] == "checked_topic" + question_num:
+                    rename_rule_list.append(elem[1])
+            cnt = 0
+            for elem in question_list:
+                if elem[1] not in rename_rule_list:
+                    continue
+                rename_rule.append(re.findall(r"\d+", elem[0])[0])  # ! 待添加分隔符
+                cnt += 1
+                if cnt >= len(rename_rule_list):  # * 防止获取到文件后面的重命名规则
+                    break
+
+            rename_rule = '-'.join(rename_rule)
+            if rename_rule == '':
+                rename_rule = None
+
+            question.update({'question_title': question_multidict[f'question_file{seq}'],
+                             'question_description': question_multidict[f'detail{seq}'],
+                             'rename_rule': rename_rule})
+
+        elif 'radio' in question_key:
+            question.update({'question_title': question_multidict[f'question_radio{seq}'],
+                             'question_description': question_multidict[f'detail{seq}']})
+            # 更新答案
+            answer = Answer_info.query.filter_by(collection_id=collection_id, qno=seq)
+            answer.update({'answer_option': question_multidict[f'checked_radio{seq}']})
+
+        elif 'multipleChoice' in question_key:
+            question.update({'question_title': question_multidict[f'question_multipleChoice{seq}'],
+                             'question_description': question_multidict[f'detail{seq}']})
+
+            # 更新答案
+            ano_list = question_multidict.getlist(f'checked_mulans{seq}')
+            ano = '-'.join(ano_list)
+            answer = Answer_info.query.filter_by(collection_id=collection_id, qno=seq)
+            answer.update({'answer_option': ano})
+
+        elif 'qnaire' in question_key:
+            question.update({'question_title': question_multidict[f'question_qnaire{seq}'],
+                             'question_description': question_multidict[f'detail{seq}']})
+
+            # 更新选项
+            option_content = question_multidict.getlist(f'qn_option{seq}')
+            for index, value in enumerate(option_content):
+                option = Option_info.query.filter_by(collection_id=collection_id, qno=seq, option_sn=index + 1)
+                option.update({'option_content': value})
+
         db.session.commit()

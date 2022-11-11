@@ -1,15 +1,6 @@
-import re
-import numpy
-import numpy as np
-
-a=np.where()
-str = "fsdfs12"
-t = int(re.findall(r"\d+", str)[0])
-print(t)
-
-for i in range(1, 5):
-    print(i)
-
+l = [1, 2, 3, 4, 5]
+for index, value in enumerate(l):
+    print(index,value)
 # [('question_name1', '姓名lala'),
 #  ('submit_name1', '计胜翔'),
 #  ('question_file2', '文件haha'),
@@ -27,3 +18,26 @@ for i in range(1, 5):
 # [('张隽翊', datetime.datetime(2022, 11, 7, 16, 1, 19, 235046), 1, ['张隽翊', '二十大观看心得.docx', 'U202015362', 'C', 'A-B', '1']),
 #  ('王广凯', datetime.datetime(2022, 11, 7, 16, 1, 19, 235046), 1,['王广凯', '王广凯dsb.pdf', 'U202015323', 'C', 'A-B', '1']),
 #  ('计胜翔', datetime.datetime(2022, 11, 6, 15, 49, 27, 985976), 1,['计胜翔', '二十大观看心得.docx', 'U202015362', 'C', 'A-B', '1'])]
+
+[('collectionTitle', 'ceshi'),
+ ('collector', '凯'),
+ ('deadline', '2022-11-18T22:31:49'),
+ ('description', ''),
+ ('question_name1', '姓名'),
+ ('detail1', ''),
+ ('question_sno2', '学号'),
+ ('detail2', ''),
+ ('question_file3', '文件'),
+ ('detail3', ''),
+ ('question_radio4', '单选题'),
+ ('detail4', ''),
+ ('checked_radio4', 'A'),
+ ('question_multipleChoice5', '多选题'),
+ ('detail5', ''),
+ ('checked_mulans5', 'B'),
+ ('checked_mulans5', 'C'),
+ ('question_qnaire6', '问卷题目'),
+ ('detail6', ''),
+ ('qn_option6', 'asdf'),
+ ('qn_option6', 'adff'),
+ ('choose_type6', 'single')]

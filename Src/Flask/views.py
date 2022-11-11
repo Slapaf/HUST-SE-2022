@@ -355,7 +355,7 @@ def generate_collection():
             return render_template('index.html')
         else:
             a = list(question_list.items(multi=True))
-            print(a)  # ! 调试用
+            print('创建收集：',a)  # ! 调试用
             t = add_FC(a, current_user.id)
             # question = get_question_MultiDict(t)
             # print(question)
@@ -464,7 +464,7 @@ def file_editing(collection_id):
             return render_template('index.html')
         else:
             a = list(question_list.items(multi=True))
-            print(a)  # ! 调试用
+            print("编辑后的内容：",a)  # ! 调试用
             modify_collection(id_str_to_int(collection_id), a)
             print("提交编辑成功！")
             return redirect(url_for('index'))  # 编辑完成，返回主页

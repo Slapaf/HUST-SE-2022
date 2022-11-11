@@ -223,7 +223,7 @@ class Answer_info(db.Model):
     collection_id = db.Column(db.Integer, nullable=False)  # 关联文件收集主表id
     question_id = db.Column(db.Integer, nullable=False)  # 关联问题主表id
     qno = db.Column(db.Integer, nullable=False)  # 关联问题主表问题序号
-    answer_option = db.Column(db.CHAR, nullable=False)  # 答案不可为空
+    answer_option = db.Column(db.String(10), nullable=False)  # 答案不可为空
 
 
 class Option_info(db.Model):
