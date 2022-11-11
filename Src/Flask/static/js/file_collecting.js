@@ -895,8 +895,12 @@ function processFormData() {
 
 function createQuestion() {
     if (formDataLen === 0) {
+        console.log("进来");
         collectionTitle.value = "文件收集";
         collector.value = "张三";
+        op_name.onclick();
+        op_sno.onclick();
+        op_file.onclick();
         return;
     }
     for (let i = 0; i < formDataLen; i++) {
@@ -960,7 +964,4 @@ function createQuestion() {
 
 addLoadEvent(processFormData);
 addLoadEvent(createQuestion);
-addLoadEvent(op_name.onclick);
-addLoadEvent(op_sno.onclick);
-addLoadEvent(op_file.onclick);
 addLoadEvent(deadline_limit);
