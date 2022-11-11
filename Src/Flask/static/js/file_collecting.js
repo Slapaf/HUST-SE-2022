@@ -69,7 +69,7 @@ function getCurrentDatetime() {
         clock += "0";
     clock += hh + ":";
     if (mm < 10) clock += '0';
-    clock += mm;
+    clock += mm + ":";
     timeWithoutSec = clock;
     if (ss < 10) clock += '0';
     clock += ss;
@@ -723,6 +723,10 @@ function addQuestion_for_fileEditing(check_status, qnOptionText) {
 function check() {
     //检查是否有重复题目
     let errorNum = 0;
+    let currentDatetime = getCurrentDatetime();
+    if( currentDatetime >= deadline.value) {
+        errorNum = 6;
+    }
     let arr = [];
     let topics = document.getElementsByClassName("input-topic");
     for (let i = 0; i < topics.length; i++) {
@@ -777,6 +781,8 @@ function check() {
             h1.innerHTML = "问卷选项内容不能为空！";
         } else if (errorNum === 5) {
             h1.innerHTML = "至少有一个题目！";
+        } else if (errorNum === 6) {
+            h1.innerHTML = "截止时间不能早于当前时间！";
         }
         myalert.style.display = "block";
         myblur.style.display = "block";

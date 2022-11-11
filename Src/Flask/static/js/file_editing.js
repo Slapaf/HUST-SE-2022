@@ -22,6 +22,7 @@ let dragElement = null; //存放拖拽的元素
 let qnum = 1;  //单选编号（区分单选用）
 let question_id = 0; //（复选框用）id
 let countdown = 2;
+let timeWithoutSec = "";
 //点击“添加题目”按钮，弹出弹窗
 btn_for_add.onclick = () => {
     popup.style.display = "block";
@@ -68,7 +69,8 @@ function getCurrentDatetime() {
         clock += "0";
     clock += hh + ":";
     if (mm < 10) clock += '0';
-    clock += mm;
+    clock += mm + ":";
+    timeWithoutSec = clock;
     if (ss < 10) clock += '0';
     clock += ss;
     return clock;
@@ -77,7 +79,8 @@ function getCurrentDatetime() {
 //限制截止日期不能比当前时间早
 function deadline_limit() {
     let currentDatetime = getCurrentDatetime();
-    deadline.min = currentDatetime;
+    deadline.min = timeWithoutSec;
+    deadline.max = "2050-12-31T23:59:59";
 }
 
 //姓名
@@ -544,7 +547,6 @@ function numberQuestion() {
         }
         let choose_type = lis[i].querySelectorAll(".hidden_radio");
         if (choose_type) {
-            console.log(choose_type.length);
             for (let i = 0; i < choose_type.length; i++) {
                 choose_type[i].name = "choose_type" + finalId;
             }
@@ -724,8 +726,15 @@ function addQuestion_for_fileEditing(check_status, qnOptionText) {
 
 //提交前检查
 function check() {
-    //检查是否有重复题目
     let errorNum = 0;
+    let currentDatetime = getCurrentDatetime();
+    console.log(currentDatetime);
+    console.log(deadline.value);
+    //检查截止时间是否小于当前时间
+    if(currentDatetime >= deadline.value) {
+        errorNum = 6;
+    }
+    //检查是否有重复题目
     let arr = [];
     let topics = document.getElementsByClassName("input-topic");
     for (let i = 0; i < topics.length; i++) {
@@ -780,6 +789,8 @@ function check() {
             h1.innerHTML = "问卷选项内容不能为空！";
         } else if (errorNum === 5) {
             h1.innerHTML = "至少有一个题目！";
+        } else if (errorNum === 6) {
+            h1.innerHTML = "截止时间不能早于当前时间！";
         }
         myalert.style.display = "block";
         myblur.style.display = "block";
@@ -961,5 +972,6 @@ function createQuestion() {
     }
 }
 
-processFormData();
-createQuestion();
+addLoadEvent(processFormData);
+addLoadEvent(createQuestion);
+addLoadEvent(deadline_limit);
