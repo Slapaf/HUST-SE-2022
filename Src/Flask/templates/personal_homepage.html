@@ -128,7 +128,7 @@
     window.onload = function () {
         {#alert(checkPassword);#}
         let checkPassword = '{{ r_code }}';
-        if (checkPassword !== true) {
+        if (checkPassword === false) {
             user_information.style.display = "none";
             change_password.style.display = "flex";
         }

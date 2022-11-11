@@ -75,7 +75,7 @@ def personal_homepage():
                 print("修改密码成功。")
             else:
                 print("修改密码失败！")
-        return redirect(url_for('personal_homepage', r_code=r_code))
+        return redirect(url_for('personal_homepage', r_code=(r_code == 1)))
     user_authorization_code = current_user.authorization_code
     if user_authorization_code is None:
         user_authorization_code = "未设置"
@@ -83,7 +83,7 @@ def personal_homepage():
         "personal_homepage.html",
         user_authorization_code=user_authorization_code,
         user_pwd_hash=current_user.password_hash,  # TODO 待修改
-        r_code=False
+        r_code=True
     )
 
 
@@ -303,6 +303,7 @@ def collection_details(collection_id):
 
 # 文件收集界面
 @app.route('/file_collecting')
+@login_required
 def file_collecting():
     return render_template('file_collecting.html')
 
@@ -317,7 +318,14 @@ def copy_collection(collection_id):
 
     """
     if request.method == 'POST':
-        pass
+        question_list = request.form
+        if not question_list:
+            flash("复制收集失败！")
+            return render_template('index.html')
+        a = list(question_list.items(multi=True))
+        print(a)
+        add_FC(a, current_user.id)
+        flash("复制收集成功！")
         return redirect(url_for('index'))
     collection_id = id_str_to_int(collection_id)
     question_dict = get_question_dict(collection_id)
