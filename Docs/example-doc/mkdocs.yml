@@ -1,6 +1,8 @@
-site_name: HUST 211 的软工项目文档
+site_name: 嘟嘟可收件箱使用指南
+site_description: HUST 211 的软工项目文档
 site_url: https://hust-example.com/
-nav:
+copyright: Copyright © 2022 一念神魔 HUST 211
+nav: # 文档结构
   - 主页: index.md
   - 指南:
       - 收集者: user-guide/collector.md
@@ -11,6 +13,24 @@ nav:
       - 版本: about/release-notes.md
 theme:
   name: material
+  language: "zh"
+  palette: # 白天/夜间模式切换
+    - scheme: default
+      primary: cyan
+      accent: cyan
+      toggle:
+        icon: material/toggle-switch-off-outline
+        name: Switch to dark mode
+    - scheme: slate
+      primary: deep orange
+      accent: deep orange
+      toggle:
+        icon: material/toggle-switch
+        name: Switch to light mode
+  features: # 标题行在页面下滑后自动隐藏
+    - header.autohide
+plugins:
+  - search
 markdown_extensions:
   - toc:
       permalink: "#"
