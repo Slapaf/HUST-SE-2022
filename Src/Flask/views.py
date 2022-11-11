@@ -1,4 +1,6 @@
 import json
+import os.path
+
 import pandas as pd
 from flask import render_template, request, url_for, redirect, flash
 from flask_login import login_user, login_required, logout_user, current_user
@@ -240,7 +242,7 @@ def collection_details(collection_id):
             namelist_path = './FileStorage/' + \
                             Collection_info.query.filter_by(creator_id=current_user.id).first().namelist_path
             namelist = pd.read_csv(namelist_path + "/应交名单.csv", encoding='utf-8')
-            namelist = namelist[~namelist['姓名'].isin([namelist_data['hidden-input']])]
+            namelist = namelist[~namelist['姓名'].isin([namelist_data['hidden-input']])]  # * 删除被点击的名字
             namelist.to_csv(namelist_path + "/应交名单.csv", encoding='utf-8')  # * 保存为 csv 文件
             return redirect(url_for('collection_details', collection_id=collection_id))
         name_list = namelist_data['name_data'].split(' ')
@@ -252,7 +254,10 @@ def collection_details(collection_id):
         # print(namelist_path)
         # os.mkdir(namelist_path)
         print(namelist_path)
-        namelist_csv.to_csv(namelist_path + "/应交名单.csv", encoding='utf-8')  # * 保存为 csv 文件
+        if os.path.exists(namelist_path + "/应交名单.csv"):
+            pd.DataFrame(data=name_list).to_csv(namelist_path + "/应交名单.csv", mode='a', encoding='utf-8', header=False)
+        else:
+            namelist_csv.to_csv(namelist_path + "/应交名单.csv", encoding='utf-8')  # * 保存为 csv 文件
         return redirect(url_for('collection_details', collection_id=collection_id))
 
     collection_id = id_str_to_int(collection_id)  # * 转换为实际的收集 id
