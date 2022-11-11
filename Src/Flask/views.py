@@ -255,7 +255,8 @@ def collection_details(collection_id):
         # os.mkdir(namelist_path)
         print(namelist_path)
         if os.path.exists(namelist_path + "/应交名单.csv"):
-            pd.DataFrame(data=name_list).to_csv(namelist_path + "/应交名单.csv", mode='a', encoding='utf-8', header=False)
+            pd.DataFrame(data=name_list).to_csv(namelist_path + "/应交名单.csv", mode='a', encoding='utf-8',
+                                                header=False)
         else:
             namelist_csv.to_csv(namelist_path + "/应交名单.csv", encoding='utf-8')  # * 保存为 csv 文件
         return redirect(url_for('collection_details', collection_id=collection_id))
@@ -313,7 +314,7 @@ def file_collecting():
     return render_template('file_collecting.html')
 
 
-@app.route('/file_collecting/<string:collection_id>')
+@app.route('/file_collecting/<string:collection_id>', methods=['GET', 'POST'])
 @login_required
 def copy_collection(collection_id):
     """复制收集
@@ -331,6 +332,7 @@ def copy_collection(collection_id):
         print(a)
         add_FC(a, current_user.id)
         flash("复制收集成功！")
+        print("复制收集成功！")
         return redirect(url_for('index'))
     collection_id = id_str_to_int(collection_id)
     question_dict = get_question_dict(collection_id)
