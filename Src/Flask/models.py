@@ -9,7 +9,7 @@ from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
-class User(db.Model, UserMixin):  # 表名将会是 user（自动生成，小写处理）
+class User(db.Model, UserMixin):
     """ 用户信息
 
     Description:
@@ -23,17 +23,16 @@ class User(db.Model, UserMixin):  # 表名将会是 user（自动生成，小写
         5. userpath: 用户空间路径
     """
     id = db.Column(db.Integer, primary_key=True)  # 主键
-    name = db.Column(db.String(20))  # 名字（用户昵称）
-    username = db.Column(db.String(20), unique=True)  # 用户名（不可重复）
-    password_hash = db.Column(db.String(128))  # 密码散列值
-    userpath = db.Column(db.String(20), unique=True)  # 用户空间路径
-    email = db.Column(db.String(20), nullable=False)  # 用户邮箱
+    name = db.Column(db.String(20), nullable=False)  # 名字（用户昵称）
+    username = db.Column(db.String(20), nullable=False, unique=True)  # 用户名（不可重复）
+    password_hash = db.Column(db.String(128), nullable=False)  # 密码散列值
+    userpath = db.Column(db.String(20), nullable=False, unique=True)  # 用户空间路径
+    email = db.Column(db.String(20))  # 用户邮箱
     authorization_code = db.Column(db.String(20))  # 邮箱授权码
     yag = None
 
     def set_password(self, password):
-        """
-        用来设置密码的方法，接受密码作为参数
+        """设置密码
 
         Args:
             password(string): 密码（明文）
@@ -41,11 +40,10 @@ class User(db.Model, UserMixin):  # 表名将会是 user（自动生成，小写
         Returns:
             None
         """
-        self.password_hash = generate_password_hash(password)  # 将生成的密码保持到对应字段
+        self.password_hash = generate_password_hash(password)  # 根据用户输入的密码生成密码散列值
 
     def validate_password(self, password):
-        """
-        用于验证密码的方法
+        """验证密码
 
         Args:
             password(string): 密码（明文）
@@ -57,7 +55,7 @@ class User(db.Model, UserMixin):  # 表名将会是 user（自动生成，小写
 
     def set_userpath(self):
         """
-        用于设置用户空间路径的方法。路径的前若干位为用户名和 user 标识，后面用随机字符串补齐，总长度 20 位。
+        设置用户空间路径。路径的前若干位为用户名和 user 标识，后面用随机字符串补齐，总长度 20 位。
 
         Returns:
             None
@@ -67,8 +65,7 @@ class User(db.Model, UserMixin):  # 表名将会是 user（自动生成，小写
         )
 
     def set_email(self, email):
-        """
-        用于设置用户邮箱的方法
+        """设置用户邮箱
 
         Args:
             email(str): 需要设置的邮箱
@@ -79,8 +76,7 @@ class User(db.Model, UserMixin):  # 表名将会是 user（自动生成，小写
         self.email = email
 
     def user_authentication(self, user_email: str, user_pwd: str, host='smtp.sina.com'):
-        """
-        用户认证
+        """用户认证
 
         Args:
             user_email(str): 用户邮箱
@@ -97,8 +93,7 @@ class User(db.Model, UserMixin):  # 表名将会是 user（自动生成，小写
         )
 
     def send_email(self, to_email: str or list, email_title: str, email_message: str):
-        """
-        发送邮件，可以单发也可以群发，取决于传入参数 to_email 的类型
+        """发送邮件，可以单发也可以群发，取决于传入参数 to_email 的类型
 
         Args:
             to_email(str or list): 目标邮箱地址，若为列表则代表群发
@@ -155,12 +150,12 @@ class Collection_info(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)  # 主键
     creator = db.Column(db.String(20), nullable=False)  # 创建人员名称（不可以为空）
-    creator_id = db.Column(db.Integer)  # 创建人员ID
+    creator_id = db.Column(db.Integer, nullable=False)  # 创建人员ID
     collection_title = db.Column(db.String(20), nullable=False)  # 收集名称（不可以为空）
     description = db.Column(db.Text, nullable=False)  # 收集描述（不可以为空）
-    start_date = db.Column(db.DateTime, default=datetime.datetime.now())  # 开始时间自动设置为创建收集的时间
+    start_date = db.Column(db.DateTime, nullable=False, default=datetime.datetime.now())  # 开始时间自动设置为创建收集的时间
     end_date = db.Column(db.DateTime, nullable=False)  # 收集结束时间（不可以为空）
-    status = db.Column(db.CHAR)  # 当前状态：0 发布(正在收集);1 暂存;2 已结束;3 已失效
+    status = db.Column(db.CHAR, nullable=False)  # 当前状态：0 发布(正在收集);1 暂存;2 已结束;3 已失效
     namelist_path = db.Column(db.String(30))  # 应交名单路径
 
     def collection_valid(self):
@@ -201,14 +196,14 @@ class Question_info(db.Model):
     MULTI_QUESTIONNAIRE = '6'  # ?问卷题目(多选)
 
     id = db.Column(db.Integer, primary_key=True)  # 主键
-    collection_id = db.Column(db.Integer)  # 关联文件收集主表id
-    qno = db.Column(db.Integer)  # 问题序号
-    question_type = db.Column(db.CHAR)  # 问题类型：0 解答题（需上传文件）;1 单选;2 多选;3 填空;
+    collection_id = db.Column(db.Integer, nullable=False)  # 关联文件收集主表id
+    qno = db.Column(db.Integer, nullable=False)  # 问题序号
+    question_type = db.Column(db.CHAR, nullable=False)  # 问题类型：0 解答题（需上传文件）;1 单选;2 多选;3 填空;
     question_title = db.Column(db.String(20), nullable=False)  # 问题标题（不可以为空）
     question_description = db.Column(db.Text)  # 问题描述
     # required_flag = db.Column(db.BOOLEAN, nullable=False)  # （暂定） 0 必填;1 非必填
     rename_rule = db.Column(db.String(20))  # 文件重命名规则，其值为题目顺序
-    file_path = db.Column(db.String(30))  # 提交文件路径（文件上传题需设置，其余类型不必）
+    file_path = db.Column(db.String(30), unique=True)  # 提交文件路径（文件上传题需设置，其余类型不必）
 
 
 class Answer_info(db.Model):
@@ -225,9 +220,9 @@ class Answer_info(db.Model):
         5. answer_option: 答案不可为空
     """
     id = db.Column(db.Integer, primary_key=True)  # 主键
-    collection_id = db.Column(db.Integer)  # 关联文件收集主表id
-    question_id = db.Column(db.Integer)  # 关联问题主表id
-    qno = db.Column(db.Integer)  # 关联问题主表问题序号
+    collection_id = db.Column(db.Integer, nullable=False)  # 关联文件收集主表id
+    question_id = db.Column(db.Integer, nullable=False)  # 关联问题主表id
+    qno = db.Column(db.Integer, nullable=False)  # 关联问题主表问题序号
     answer_option = db.Column(db.CHAR, nullable=False)  # 答案不可为空
 
 
@@ -244,10 +239,10 @@ class Option_info(db.Model):
         6、option_content：选项内容（不可以为空）
     """
     id = db.Column(db.Integer, primary_key=True)  # 主键
-    collection_id = db.Column(db.Integer)  # 关联文件收集主表id
-    question_id = db.Column(db.Integer)  # 关联问题主表id
-    qno = db.Column(db.Integer)  # 关联问题主表问题序号
-    option_sn = db.Column(db.Integer)  # 选项序号
+    collection_id = db.Column(db.Integer, nullable=False)  # 关联文件收集主表id
+    question_id = db.Column(db.Integer, nullable=False)  # 关联问题主表id
+    qno = db.Column(db.Integer, nullable=False)  # 关联问题主表问题序号
+    option_sn = db.Column(db.Integer, nullable=False)  # 选项序号
     option_content = db.Column(db.Text, nullable=False)  # 选项内容（不可以为空）
 
 
@@ -264,10 +259,9 @@ class Submission_info(db.Model):
         6、submit_time：提交时间（不可以为空）
     """
     id = db.Column(db.Integer, primary_key=True)  # 主键
-    collection_id = db.Column(db.Integer)  # 关联文件收集主表id
-    collection_title = db.Column(db.String(20))  # 关联文件收集主表收集名称
-    submitter_id = db.Column(db.Integer)  # 提交者的用户id
-    submitter_name = db.Column(db.String(20))  # 提交者的用户名username
+    collection_id = db.Column(db.Integer, nullable=False)  # 关联文件收集主表id
+    collection_title = db.Column(db.String(20), nullable=False)  # 关联文件收集主表收集名称
+    submitter_name = db.Column(db.String(20), nullable=False)  # 提交者的用户名username
     submit_time = db.Column(db.DateTime, nullable=False, default=datetime.datetime.now())  # 提交时间（不可以为空）
 
 
@@ -284,9 +278,8 @@ class Submit_Content_info(db.Model):
         6、result：某个人对这一题的填写结果（若为文件上传题，则此字段存放上传的文件名称）（不可为空）
     """
     id = db.Column(db.Integer, primary_key=True)  # 主键
-    submission_id = db.Column(db.Integer)  # 关联问卷提交信息表id
+    submission_id = db.Column(db.Integer, nullable=False)  # 关联问卷提交信息表id
     collection_id = db.Column(db.Integer, nullable=False)  # 关联文件收集主表id（不可为空）
     question_id = db.Column(db.Integer, nullable=False)  # 关联问题主表id（不可为空）
-    qno = db.Column(db.Integer)  # 问题序号
-    # TODO result的nullable限制待定
+    qno = db.Column(db.Integer, nullable=False)  # 问题序号
     result = db.Column(db.String(30), nullable=False)  # 某个人对这一题的填写结果（若为文件上传题，则此字段存放上传的文件名称）（不可为空）
