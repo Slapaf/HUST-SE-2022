@@ -53,7 +53,7 @@ def personal_homepage():
         {'psw_confirm': '123456', 'submit': ''}
         '''
         value_type_check(tmp_data)
-        if len(tmp_data) > 2:  # * 修改个人信息
+        if 'username' in tmp_data.keys():  # * 修改个人信息
             # TODO 需要数据库提供更新邮箱授权码的接口
             r_code = modify_personal_info(
                 current_user.id,
@@ -68,21 +68,22 @@ def personal_homepage():
         else:  # * 修改密码
             r_code = modify_password(
                 current_user.id,
-                "123456",
+                tmp_data['psw_initial'],
                 tmp_data['psw_confirm']
             )  # TODO 待修改
             if r_code == 1:
                 print("修改密码成功。")
             else:
                 print("修改密码失败！")
-        return redirect(url_for('personal_homepage'))
+        return redirect(url_for('personal_homepage', r_code=r_code))
     user_authorization_code = current_user.authorization_code
     if user_authorization_code is None:
         user_authorization_code = "未设置"
     return render_template(
         "personal_homepage.html",
         user_authorization_code=user_authorization_code,
-        user_pwd_hash=current_user.password_hash  # TODO 待修改
+        user_pwd_hash=current_user.password_hash,  # TODO 待修改
+        r_code=False
     )
 
 

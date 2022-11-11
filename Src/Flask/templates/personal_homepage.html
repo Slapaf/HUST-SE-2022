@@ -103,14 +103,16 @@
 <!-- 修改密码 -->
 <div class="item change_password">
     <div class="user_data" onsubmit="return checkAll1()">
-        <div class="input_box"> 输入原密码：<input type="password" id="input0" placeholder="设置密码" autocomplete="new-password"
-                                                  class="input"></div>
-        <span class="tip_box" id="tip1"></span>
-        <div class="input_box"> 输入新密码：<input type="password" name="psw" id="input1" placeholder="设置密码"
-                                                  onblur="checkKey_1()" autocomplete="new-password"
-                                                  class="input"></div>
-        <span class="tip_box" id="tip2"></span>
         <form method="post" id="form2">
+            <div class="input_box"> 输入原密码：<input type="password" name="psw_initial" id="input0"
+                                                      placeholder="设置密码"
+                                                      autocomplete="new-password"
+                                                      class="input"></div>
+            <span class="tip_box" id="tip1"></span>
+            <div class="input_box"> 输入新密码：<input type="password" name="psw" id="input1" placeholder="设置密码"
+                                                      onblur="checkKey_1()" autocomplete="new-password"
+                                                      class="input"></div>
+            <span class="tip_box" id="tip2"></span>
             <div class="input_box"> 确认新密码：<input type="password" name="psw_confirm" id="input2" class="input"
                                                       placeholder="确认密码" autocomplete="new-password"
                                                       onblur="checkKey_2()"></div>
@@ -120,5 +122,17 @@
     </div>
 </div>
 <script src="{{ url_for('static', filename='js/personal_homepage.js') }}" type="text/javascript"></script>
+<script>
+    {#let checkPassword = false;#}
+    let checkPassword = false;
+
+    window.onload = function () {
+        if (checkPassword) {
+            user_information.style.display = "none";
+            change_password.style.display = "flex";
+        }
+        checkPassword = '{{ r_code }}';
+    }
+</script>
 </body>
 </html>

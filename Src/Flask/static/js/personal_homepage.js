@@ -5,16 +5,6 @@ const user_information = document.querySelector(".user_information");
 const change_password = document.querySelector(".change_password");
 let countdown = 1;
 
-let checkPassword = false;
-
-window.onload = function () {
-    if (checkPassword != true) {
-        user_information.style.display = "none";
-        change_password.style.display = "flex";
-    }
-}
-
-
 nav_item1.onclick = () => {
     user_information.style.display = "flex";
     change_password.style.display = "none";
