@@ -895,7 +895,6 @@ function processFormData() {
 
 function createQuestion() {
     if (formDataLen === 0) {
-        console.log("进来");
         collectionTitle.value = "文件收集";
         collector.value = "张三";
         op_name.onclick();
@@ -903,6 +902,10 @@ function createQuestion() {
         op_file.onclick();
         return;
     }
+    collectionTitle.value = Object.values(formData)[0];
+    collector.value = Object.values(formData)[1];
+    deadline.value = Object.values(formData)[2];
+    description.value = Object.values(formData)[3];
     for (let i = 0; i < formDataLen; i++) {
         let q = formDataArr[i];
         let keys = Object.keys(formDataArr[i]);
