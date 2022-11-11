@@ -147,6 +147,7 @@ body {
     background-color: rgba(236, 236, 236, 0.792);
     height: 40px;
     border-radius: 8px;
+    font-size: 15px;
 }
 
 .paraname1 {
@@ -155,6 +156,7 @@ body {
     background-color: #b8daff;
     height: 40px;
     border-radius: 8px;
+    font-size: 15px;
 }
 
 .div1 {
@@ -224,18 +226,21 @@ body {
 .list_head {
     display: flex;
     height: 60px;
-    justify-content: center;
+    margin-top: 20px;
+    justify-content: space-around;
     align-items: center;
     text-align: center;
-    font-size: 15px;
+    font-size: 16px;
+    color: #000;
 }
 
 .list_member {
     display: flex;
     height: 60px;
-    justify-content: center;
+    justify-content: space-around;
     align-items: center;
     text-align: center;
+    font-size: 15px;
 }
 
 .list_date,
@@ -246,28 +251,34 @@ body {
 .member_number {
     margin-left: 8px;
     margin-right: 8px;
-    width: 15%;
+    width: 25%;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 
 .member_condition {
-    color: rgb(0, 225, 255);
+    color: rgb(0, 149, 255);
+}
+
+.member_condition:hover {
+    text-decoration: underline;
+    color: #826ef3;
+    cursor: pointer;
 }
 
 .list_name,
 .member_name {
     margin-left: 8px;
     margin-right: 8px;
-    width: 55%;
+    width: 25%;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 
 .popup_body1 {
-    position: absolute;
+    position: fixed;
     border-radius: 12px;
     padding: 20px;
     width: 40%;
@@ -281,9 +292,20 @@ body {
 }
 
 .pop {
+    margin-left: 95%;
     margin-bottom: 10px;
-    display: block;
+    display: inline-block;
     height: 20px;
+}
+
+.pop::before {
+    font-family: "iconfont" !important;
+    content: "\e6f3";
+    font-size: 15px;
+}
+
+.pop:hover {
+    cursor: pointer;
 }
 
 .popup-content {

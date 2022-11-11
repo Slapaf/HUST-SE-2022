@@ -124,4 +124,9 @@ html, body {
   top: 60px;
 }
 
+.red {
+    background-image: url(/static/images/123.png);
+    background-size: cover;
+}
+
 

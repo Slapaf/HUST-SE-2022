@@ -26,9 +26,10 @@ function creatNameOrSnoOrFile(op, topicName, detailText) {
     let inputContent = document.createElement("input");
     inputContent.type = op == "file" ? "file" : "text";
     inputContent.className = "inputContent";    
-    if(op!="file") {
-        inputContent.required = true;
-    }
+    // if(op!="file") {
+    //     inputContent.required = true;
+    // } 
+    inputContent.required = true;
     inputContent.maxLength = 25;
     questionList.appendChild(newli);
     newli.appendChild(newh);
