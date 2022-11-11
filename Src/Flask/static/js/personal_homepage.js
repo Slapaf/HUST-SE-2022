@@ -28,21 +28,21 @@ function changedata() {
     }
 }
 
-function checkKey_0() {
-    let k = document.getElementById("tip1");
-    console.log(k);
-    let U0 = input0.value;
-    // TODO 待修改
-    if (U0 === "123456") {
-        //此处"123456"要换成用户密码的值!
-        k.innerHTML = "";
-    } else {
-        k.innerHTML = "请输入正确的密码！";
-        k.style.display = "block";
-        countdown = 1;
-        timeOutClose(k);
-    }
-}
+// function checkKey_0() {
+//     let k = document.getElementById("tip1");
+//     console.log(k);
+//     let U0 = input0.value;
+//     // TODO 待修改
+//     if (U0 === "123456") {
+//         //此处"123456"要换成用户密码的值!
+//         k.innerHTML = "";
+//     } else {
+//         k.innerHTML = "请输入正确的密码！";
+//         k.style.display = "block";
+//         countdown = 1;
+//         timeOutClose(k);
+//     }
+// }
 
 function checkKey_1() {
     let k = document.getElementById("tip2");

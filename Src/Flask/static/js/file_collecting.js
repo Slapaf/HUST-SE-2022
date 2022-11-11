@@ -70,7 +70,7 @@ function getCurrentDatetime() {
     clock += hh + ":";
     if (mm < 10) clock += '0';
     clock += mm;
-    timeWithoutSec = clock; 
+    timeWithoutSec = clock;
     if (ss < 10) clock += '0';
     clock += ss;
     return clock;
@@ -872,7 +872,7 @@ const reg = /(\d+)$/;
 let lastNum = 1;
 
 function processFormData() {
-    if(!tmp_json) return;
+    if (!tmp_json) return;
     tmp_json = eval("(" + tmp_json + ")");
     formData = JSON.parse(JSON.stringify(tmp_json));
     for (item in formData) {
@@ -894,7 +894,7 @@ function processFormData() {
 }
 
 function createQuestion() {
-    if(formDataLen === 0) {
+    if (formDataLen === 0) {
         collectionTitle.value = "文件收集";
         collector.value = "张三";
         return;
@@ -950,7 +950,7 @@ function createQuestion() {
                 if (keys[j].indexOf("checked_topic") != -1) {
                     for (let k = 0; k < texts.length; k++) {
                         if (texts[k].innerHTML == values[j])
-                            texts[k].previousSibling.checked = "chekced";
+                            texts[k].previousSibling.checked = "checked";
                     }
                 }
             }

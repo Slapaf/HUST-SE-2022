@@ -255,7 +255,7 @@ function addmember(collection_title, username, collection_status, collection_id,
         //复制按钮
         document.getElementById("hidden-input").value = "copy" + "$" + memberid.title;
         document.getElementById("hidden").submit();
-        window.location.href = 'file_collecting';
+        window.location.href = 'file_collecting/' + memberid.title;
     }
     // ? 点击 “停止” 按钮
     op5.onclick = function () {
