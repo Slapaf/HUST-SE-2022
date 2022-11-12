@@ -830,12 +830,18 @@ def save_submission(submission_list: list, collection_id: int, file: werkzeug.da
     """
     submission_multidict = MultiDict(submission_list)
     key_list = list(submission_multidict.keys())  # 提取问题的键值列表
-    qno = re.findall(r"\d+", list(filter(lambda x: x.find("name") >= 0, key_list))[0])[0]
-
-    # 创建一个提交记录，并加入数据库
-    submission = Submission_info(collection_id=collection_id,
-                                 submitter_name=submission_multidict['submit_name' + qno],
-                                 submit_time=datetime.now())
+    name_key_list = list(filter(lambda x: x.find("name") >= 0, key_list))
+    if len(name_key_list) != 0:
+        name_key = name_key_list[0]
+        qno = re.findall(r"\d+", name_key)[0]
+        # 创建一个提交记录，并加入数据库
+        submission = Submission_info(collection_id=collection_id,
+                                     submitter_name=submission_multidict['submit_name' + qno],
+                                     submit_time=datetime.now())
+    else:
+        submission = Submission_info(collection_id=collection_id,
+                                     submitter_name='',
+                                     submit_time=datetime.now())
 
     # ! 判断提交时间是否超过截止时间
     deadline = Collection_info.query.get(collection_id).end_date
