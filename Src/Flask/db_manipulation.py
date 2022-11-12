@@ -185,7 +185,8 @@
         - file：flask表单数据，python ImmutableMultiDict类，用于获取提交的文件名
         
         Returns: 
-        - submission_id：int类型，表示该提交记录在表Submission_info中的id
+            若提交时间超时，则输出超时提示，并返回-1；
+            若提交成功，则返回submission_id：int类型，表示该提交记录在表Submission_info中的id。
         
     13、modify_collection(collection_id: int, question_list: list)
         ！未测试正确性
@@ -198,20 +199,15 @@
         Returns: None
 '''''
 
-import string
+import string, random, os, time, shutil, re, werkzeug
 from copy import deepcopy
-import random
-import os
 from flask_login import current_user
 from models import User, Collection_info, Question_info, Answer_info, Submit_Content_info, Option_info, Submission_info
 from init import db
 from datetime import datetime
 from werkzeug.datastructures import MultiDict
-import shutil
 from operator import itemgetter
 from pathlib import Path
-import re
-import werkzeug
 
 
 def id_int_to_str(id_int: int):
@@ -817,17 +813,26 @@ def save_submission(submission_list: list, collection_id: int, file: werkzeug.da
         file: 网页提交表单中的文件数据
 
     Returns:
-        提交记录id
-
+        若提交时间超过收集截止时间，则返回-1；
+        若未超时，则返回提交记录id。
     """
     submission_multidict = MultiDict(submission_list)
     key_list = list(submission_multidict.keys())  # 提取问题的键值列表
     qno = re.findall(r"\d+", list(filter(lambda x: x.find("name") >= 0, key_list))[0])[0]
-    # collection_id = submission_multidict['collection_id']
+
     # 创建一个提交记录，并加入数据库
     submission = Submission_info(collection_id=collection_id,
-                                 # submitter_id=submission_multidict['submitter_id'],
-                                 submitter_name=submission_multidict['submit_name' + qno])
+                                 submitter_name=submission_multidict['submit_name' + qno],
+                                 submit_time=datetime.now())
+
+    # ! 判断提交时间是否超过截止时间
+    deadline = Collection_info.query.get(collection_id).end_date
+    diff = (submission.submit_time - deadline).total_seconds()
+    if diff > 0:
+        print('提交时间超时！')
+        return -1
+
+    # 若未超时
     submission.collection_title = Collection_info.query.get(collection_id).collection_title
     db.session.add(submission)
     db.session.commit()
@@ -872,8 +877,8 @@ def save_submission(submission_list: list, collection_id: int, file: werkzeug.da
             submit_content.result = result
 
         db.session.add(submit_content)
-        db.session.commit()
 
+    db.session.commit()
     return submission_id
 
 

@@ -56,7 +56,6 @@ def personal_homepage():
         '''
         value_type_check(tmp_data)
         if 'username' in tmp_data.keys():  # * 修改个人信息
-            # TODO 需要数据库提供更新邮箱授权码的接口
             r_code = modify_personal_info(
                 current_user.id,
                 tmp_data['username'],
@@ -467,7 +466,7 @@ def file_editing(collection_id):
             print("编辑后的内容：",a)  # ! 调试用
             modify_collection(id_str_to_int(collection_id), a)
             print("提交编辑成功！")
-            return redirect(url_for('index'))  # 编辑完成，返回主页
+            return redirect(url_for('mycollection'))  # 编辑完成，返回主页
     collection_id = id_str_to_int(collection_id)
     question_dict = get_question_dict(collection_id)
     print(question_dict)
