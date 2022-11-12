@@ -75,6 +75,7 @@ function getCurrentDatetime() {
 }
 
 //限制截止日期不能比当前时间早
+//同时设置最晚截止时间
 function deadline_limit() {
     let currentDatetime = getCurrentDatetime();
     deadline.min = currentDatetime;
@@ -462,9 +463,6 @@ function onDrop(e) {
     // 当拖动结束的时候，给拖动div所在的位置下面的div做drop事件
     let dropElement = e.currentTarget;
     if (dragElement === dropElement) return;
-    if (dragElement != null) {
-        ul.insertBefore(dragElement, dropElement);
-    }
     //交换复选框中的位置
     let dragId = dragElement.id;
     let dropId = dropElement.id;
@@ -472,14 +470,18 @@ function onDrop(e) {
     let dropElementType = dropElement.getElementsByClassName("input-topic")[0].name;
     if (dragElementType === "question_name" || dragElementType === "question_sno") {
         if (dropElementType === "question_name" || dropElementType === "question_sno") {
-            for_checkbox("swap", dragId, dropId);
+            if(dragElement.nextSibling === dropElement) {
+                for_checkbox("swap",dropId,dragId);
+            } else {
+                for_checkbox("swap", dragId, dropId);
+            }
         } else {
             let next = dropElement.nextSibling;
             let nextType = null;
             let flag = 0;
             while (next) {
                 nextType = next.getElementsByClassName("input-topic")[0].name;
-                if (nextType && (nextType === "question_file" || nextType === "question_radio")) {
+                if (nextType && (nextType === "question_name" || nextType === "question_sno")) {
                     for_checkbox("swap", dragId, next.id);
                     flag = 1;
                     break;
@@ -489,6 +491,14 @@ function onDrop(e) {
             if (!flag) {
                 for_checkbox("swap", dragId, 0);
             }
+        }
+    }
+    //实际交换位置
+    if (dragElement != null) {
+        if(dragElement.nextSibling === dropElement) {
+            ul.insertBefore(dropElement, dragElement);
+        } else {
+            ul.insertBefore(dragElement, dropElement);
         }
     }
 
