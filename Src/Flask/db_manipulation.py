@@ -197,6 +197,18 @@
         - question_list：list类型，表示问题信息列表
         
         Returns: None
+        
+    14、file_upload(collection_id: int,question_list: list,file: werkzeug.datastructures.ImmutableMultiDict)
+        Function: 将提交的文件存储到题目对应的路径中，
+        
+        Inputs:
+        - collection_id: int类型，表示收集id
+        - question_list: list类型，表示问题信息列表
+        - file: 网页提交表单中的文件数据
+        
+        Returns: 
+        - file: 经过重命名后的文件数据，以便调用save_submission函数时使用
+
 '''''
 
 import string, random, os, shutil, re, werkzeug
@@ -372,7 +384,7 @@ def add_FC(question_list: list, user_id: int) -> int:
 
         # ? 若为文件上传题
         elif "file" in question_key:
-            # TODO 确定文件重命名规则
+            # 确定文件重命名规则
             file_counter += 1
             rename_rule = []
             rename_rule_list = []  # * 重命名所需的题目
@@ -986,3 +998,49 @@ def modify_collection(collection_id: int, question_list: list) -> None:
                 db.session.add(option)
 
         db.session.commit()
+
+
+def file_upload(collection_id: int,
+                question_list: list,
+                file: werkzeug.datastructures.ImmutableMultiDict) -> werkzeug.datastructures.ImmutableMultiDict:
+    """将提交的文件重命名后，存储到题目相应的路径中
+
+    Args:
+        collection_id: 收集id
+        question_list: 问题信息列表
+        file: 网页提交表单中的文件数据
+
+    Returns:
+        返回重命名后的表单中的文件数据，以便调用save_submission函数时使用
+    """
+    question_multidict = MultiDict(question_list)
+    key_list = list(question_multidict.keys())
+    file_key_list = list(filter(lambda x: 'file' in x, key_list))
+    submit_key_list = list(filter(lambda x: 'submit' in x, key_list))
+    for file_key in file_key_list:
+        qno_str = re.findall(r"\d+", file_key)[0]
+        question = Question_info.query.filter_by(collection_id=collection_id, qno=int(qno_str)).first()
+        f = file['submit_file' + qno_str]
+
+        # 确定文件存储路径
+        path = './FileStorage/' + question.file_path
+
+        # 重命名文件
+        rename_rule = question.rename_rule
+        if rename_rule is not None:  # 若重命名规则不为空
+            filename_list = f.filename.split('.')  # 将文件名分为名称和后缀两部分，便于后面修改名称
+            new_filename = ''
+            rename_qno_list = rename_rule.split('-')  # 重命名依赖的题目序号列表
+            for index, qno in enumerate(rename_qno_list):
+                key = list(filter(lambda x: qno in x, submit_key_list))[0]
+                new_filename += question_multidict[key]
+                if index != len(rename_qno_list) - 1:
+                    new_filename += '_'
+            filename_list[0] = new_filename
+            f.filename = '.'.join(filename_list)  # 修改文件名
+
+        # print("重命名后文件名为：", f.filename)
+        # 保存文件到指定路径
+        f.save(os.path.join(path, f.filename))
+
+    return file

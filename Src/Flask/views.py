@@ -110,18 +110,8 @@ def file_submitting(collection_message):
         submission = request.form
         tmp_file = request.files
         a = list(submission.items(multi=True))
-        # TODO 数据库封装一下 file_upload，重命名也在此处理
-        t = MultiDict(a)
-        file_key_list = list(t.keys())
-        file_key_list = [key for key in file_key_list if "file" in key]
-        for file_key in file_key_list:
-            f = tmp_file['submit_file' + file_key[-1]]
-            print(type(f))
-            path = './FileStorage/' + Question_info.query.filter_by(id=int(file_key[-1])).first().file_path
-            print(path)
-            f.save(os.path.join(path, f.filename))
-        # TODO
-        save_submission(a, collection_id, tmp_file)
+        # file_upload(collection_id, a, tmp_file)
+        save_submission(a, collection_id, file_upload(collection_id, a, tmp_file))
         return redirect(url_for('index'))
     else:
         question_dict = get_question_dict(collection_id)
