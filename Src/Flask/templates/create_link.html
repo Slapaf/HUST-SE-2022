@@ -1,5 +1,6 @@
 <!doctype html>
-<link rel="stylesheet" href="css/create_link.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/create_link.css') }}">
+<link rel="stylesheet" href="http://at.alicdn.com/t/c/font_3751655_xww4ywut3q.css">
 <html lang="zh-CN">
 
 <head>
@@ -20,14 +21,16 @@
             </div>
             <button class="copy" onclick="mycopy()">复制</button>
         </div>
-        <div class="btn">
-            <button class="click" onclick="window.location.href = 'index.html'">确定</button>
-        </div>
+        <a href="{{ url_for('mycollection') }}" class="click">查看我的收集</a>
+        <!-- <div class="btn">
+            <button class="click" onclick="window.location.href = "mycollection.html">查看我的收集</button>
+        </div> -->
     </div>
     <textarea id="input"></textarea>
 </body>
 <script>
-    let n = document.getElementById("link");
+    const n = document.getElementById("link");
+    const copyBox = document.querySelector(".copy"); 
     n.title = document.getElementById("link").innerText;
     function mycopy() {
         var text = document.getElementById("link").innerText;
@@ -35,7 +38,12 @@
         input.textContent = text; // 修改文本框的内容
         input.select(); // 选中文本
         document.execCommand("copy"); // 执行浏览器复制命令
+        copyBox.innerHTML = "已复制";
+        setTimeout(() => {
+            copyBox.innerHTML = "复制";
+        }, 1500);
     }
+    
 </script>
 
 </html>

@@ -316,6 +316,9 @@ function mycopy() {
     input.select(); // 选中文本
     document.execCommand("copy"); // 执行浏览器复制命令
     copy.innerHTML = "已复制";
+    setTimeout(() => {
+        copy.innerHTML = "复制";
+    }, 1500);
 }
 
 function closebox() {
@@ -323,7 +326,6 @@ function closebox() {
     y.style.display = "none";
     let popLayer = document.getElementById('popLayer');
     popLayer.style.display = "none";
-    copy.innerHTML = "复制";
 }
 
 

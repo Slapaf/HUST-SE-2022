@@ -51,6 +51,15 @@
      color: #606B7C;
  }
 
+ .link::before {
+    font-family: "iconfont" !important;
+    content:"\e6fe";
+    font-size: 20px;
+    position: relative;
+    top:2px;
+    right: 15px;
+ }
+
  .main {
      display: flex;
  }
@@ -69,13 +78,34 @@
  .click {
      display: block;
      margin: auto;
+     width: 150px;
+     height: 50px;
+     line-height: 50px;
+     margin-top: 40px;
+     text-align: center;
+     text-decoration: none;
+     color: #000;
      border-radius: 8px;
      border: none;
-     width: 100px;
-     height: 50px;
-     margin-top: 40px;
+     background-color: #f0f0f0;
  }
 
+
+.click::after {
+    font-family: "iconfont" !important;
+    content:"\e6ff";
+    font-size: 20px;
+    position: relative;
+    top:2px;
+    left: 3px;
+}
+
+.copy:hover,
+.click:hover {
+    cursor: pointer;
+    background-color: #6c94f0;
+    color: #fff;
+}
  #input {
      position: absolute;
      top: 0;
