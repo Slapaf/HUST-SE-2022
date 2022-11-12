@@ -16,9 +16,6 @@ function getData() {
         addmember(tmp_json[i].collection_title, tmp_json[i].username, tmp_json[i].collection_status,
             tmp_json[i].collection_id, tmp_json[i].submit_count, tmp_json[i].deadline);
     }
-    console.log("进入了getData(刷新)");
-    console.log(x);
-    // makeCard();
 }
 
 // collection_title, username, collection_status, submit_count, time_before_ddl

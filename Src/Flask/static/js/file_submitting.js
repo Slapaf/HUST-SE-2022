@@ -112,7 +112,8 @@ function creatQuestionnaire(
         let opBox = document.createElement("div");
         opBox.className = "qnOption";
         let inputChoice = document.createElement("input");
-        inputChoice.type = chooseType == "single" ? "radio" : "checkbox";
+        inputChoice.className = "qnOptionChoice";
+        inputChoice.type = chooseType === "single" ? "radio" : "checkbox";
         inputChoice.name = "submit_checked_qnaire" + question_id;
         inputChoice.value = (i + 1).toString();
         inputChoice.required = chooseType === "single" ? true : false;
@@ -267,12 +268,13 @@ function check() {
     //检查问卷多选是否至少选了两个
     let qnQuestionBoxes = document.querySelectorAll(".qnQuestionBox");
     for (let i = 0; i < qnQuestionBoxes.length; i++) {
+        console.log(qnQuestionBoxes[i]);
         let checkBoxes = qnQuestionBoxes[i].querySelectorAll("input[type='checkbox']");
         let cnt = 0;
         for (let i = 0; i < checkBoxes.length; i++) {
             if (checkBoxes[i].checked) cnt++;
         }
-        if (cnt < 2) {
+        if (cnt < 2 && checkBoxes.length > 0) {
             errorNum = 2;
         }
     }
