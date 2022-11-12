@@ -327,6 +327,7 @@ function checkDeadline() {
         document.getElementById("refuse-submit").style.display = "flex";
         return false;
     }
+    return true;
 }
 
 addLoadEvent(checkDeadline);
