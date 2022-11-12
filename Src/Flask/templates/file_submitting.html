@@ -144,7 +144,11 @@
     <div id="timeOutClose"></div>
 </div>
 <div id="blur"></div>
-<div id="refuse-submit" class="refuse-submit" style="display: none">该收集已截止，如有问题请联系收集发布者！</div>
+<div id="refuse-submit" class="refuse-submit" style="display: none">
+    <h1>该收集已经截止啦!</h1>
+    <h2>如有问题请联系收集发布者哦！</h2>
+    <img src="{{ url_for('static', filename='images/keli.gif') }}" alt="" id="keli">
+</div>
 <script src="{{ url_for('static', filename='js/file_submitting.js') }}"></script>
 <script language="javascript" type="text/javascript">
     //禁用Enter键表单自动提交
