@@ -56,7 +56,10 @@ theme:
       quote: octicons/quote-16
 plugins:
   - search
-  - mkdocstrings
+  - mkdocstrings:
+      handlers:
+        python:
+          paths: [Src/Flask]
 markdown_extensions:
   - toc:
       permalink: "#"
