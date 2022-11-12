@@ -69,6 +69,11 @@ body {
     justify-content: center;
 }
 
+.tab_list {
+    display: flex;
+    justify-content: space-between;
+}
+
 .tab_list ul {
     height: 39px;
     display: flex;
@@ -86,6 +91,10 @@ body {
     background-color: rgba(236, 236, 236, 0.792);
     border-radius: 12px 12px 0px 0px;
     font-size: 16px;
+}
+
+#watchCollection {
+    display: flex;
 }
 
 .tab_list .current {
