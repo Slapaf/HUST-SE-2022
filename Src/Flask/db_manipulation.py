@@ -199,7 +199,7 @@
         Returns: None
 '''''
 
-import string, random, os, time, shutil, re, werkzeug
+import string, random, os, shutil, re, werkzeug
 from copy import deepcopy
 from flask_login import current_user
 from models import User, Collection_info, Question_info, Answer_info, Submit_Content_info, Option_info, Submission_info
