@@ -893,21 +893,12 @@ def modify_collection(collection_id: int, question_list: list) -> None:
 
     # 更新Collection_info表中的信息
     collection = Collection_info.query.filter_by(id=collection_id)
-    collection.update({'start_date': datetime.now()})
-    collection.update({'collection_title': question_multidict['collectionTitle']})
-    collection.update({'creator': question_multidict['collector']})
-    collection.update({'description': question_multidict['description']})
-    collection.update({'end_date': question_multidict['deadline']})
+    collection.update({'start_date': datetime.now(),
+                       'collection_title': question_multidict['collectionTitle'],
+                       'creator': question_multidict['collector'],
+                       'description': question_multidict['description'],
+                       'end_date': question_multidict['deadline']})
     db.session.commit()
-
-    # qno_list = Question_info.query.filter_by(collection_id=collection_id). \
-    #     with_entities(Question_info.qno).all()
-    # qno_list = list(map(itemgetter(0), qno_list))
-    # max_qno = max(qno_list)
-    # for seq in range(1, max_qno + 1):
-    #     question = Question_info.query.filter_by(collection_id=collection_id, qno=seq)
-    #     question.update({'question_description': question_multidict[f'detail{seq}']})
-    #     db.session.commit()
 
     # 问题的键列表
     key_list = list(question_multidict.keys())
@@ -971,10 +962,22 @@ def modify_collection(collection_id: int, question_list: list) -> None:
             question.update({'question_title': question_multidict[f'question_qnaire{seq}'],
                              'question_description': question_multidict[f'detail{seq}']})
 
+            if question_multidict[f'choose_type{seq}'] == 'single':
+                question.update({'question_type': Question_info.SINGLE_QUESTIONNAIRE})
+            else:
+                question.update({'question_type': Question_info.MULTI_QUESTIONNAIRE})
+
+            # 先删除原来的选项内容，在创建新的
+            Option_info.query.filter_by(question_id=question.first().id).delete()
+
             # 更新选项
             option_content = question_multidict.getlist(f'qn_option{seq}')
             for index, value in enumerate(option_content):
-                option = Option_info.query.filter_by(collection_id=collection_id, qno=seq, option_sn=index + 1)
-                option.update({'option_content': value})
+                option = Option_info(collection_id=collection_id,
+                                     question_id=question.first().id,
+                                     qno=seq,
+                                     option_sn=index,
+                                     option_content=value)
+                db.session.add(option)
 
         db.session.commit()
