@@ -22,3 +22,23 @@
             submitter.md        # How to use if you are a submitter.
         index.md                # The documentation homepage.
         ...                     # Other markdown pages, images and other files.
+
+    mkdocs.yml                  # 配置文件
+    doc/
+        about/
+            about-us.md         # 关于我们
+            release_notes.md    # 发行注记
+        developer/
+            web.md              # 前端网页设计
+            flask.md            # Flask 响应设计
+            database.md         # 数据库设计
+        user-guide/
+            collector.md        # 收集者使用指南
+            submitter.md        # 提交者使用指南
+        index.md                # 文档主页
+    src/
+        Flask/
+            static/
+            templates/
+        ...
+    ...
