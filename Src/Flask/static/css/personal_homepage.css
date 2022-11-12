@@ -212,6 +212,7 @@ body {
 .change_password,
 #form2,
 #data1,
+/* #data2, */
 #Form {
     display: flex;
     flex-direction: column;
@@ -254,6 +255,24 @@ body {
 #btn2 {
     position:relative;
     top: 30px;
+}
+
+#goBackToData1 {
+    position: absolute;
+    top: 15px;
+    left: 20px;
+    font-size: 14px;
+}
+
+#goBackToData1::before {
+    font-family: "iconfont"!important;
+    content: "\e6fa";
+    font-size: 14px;
+}
+
+#goBackToData1:hover {
+    color: #9c8bf2;
+    cursor: pointer;
 }
 
 .tip_box1,

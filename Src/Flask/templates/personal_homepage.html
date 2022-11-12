@@ -58,9 +58,9 @@
             <div class="input_box"> 用户名称：<input type="text" name="username" class="input" readonly
                                                 id="input4_1" value={{ current_user.username }}>
             </div>
-            <div class="input_box"> 用户手机：<input type="text" name="phone" class="input" readonly
+            <!-- <div class="input_box"> 用户手机：<input type="text" name="phone" class="input" readonly
                                                 id="input5_1" value="未设置">
-            </div>
+            </div>-->
             <div class="input_box"> 用户邮箱：<input type="email" name="email" class="input" readonly
                                                 id="input6_1" value={{ current_user.email }}>
             </div>
@@ -70,6 +70,7 @@
             <button class="btn" onclick="changedata()">点击修改信息</button>
         </div>
         <div id="data2" style="display:none">
+            <div id="goBackToData1" onclick="data2ToData1()">返回</div>
             <form method="post" onsubmit="return checkAll2()" id="Form">
                 {#div中value的值用变量替代#}
                 <div class="input_box">
@@ -79,11 +80,11 @@
                            value={{ current_user.username }}>
                 </div>
                 <span class="tip_box1" id="tip4"></span>
-                <div class="input_box">
+                <!-- <div class="input_box">
                     用户手机：
                     <input type="text" name="phone" class="input" id="input5"
                            value="未设置" onblur="checkKey_4()">
-                </div>
+                </div> -->
                 <span class="tip_box1" id="tip5"></span>
                 <div class="input_box">
                     用户邮箱：
@@ -95,7 +96,7 @@
                            id="input7"
                            value={{ user_authorization_code }}>
                 </div>
-                <button type="submit" class="btn">确认修改</button>
+                <button type="submit" class="btn">提交修改</button>
             </form>
         </div>
     </div>

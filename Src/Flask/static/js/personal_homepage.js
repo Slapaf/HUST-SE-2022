@@ -3,6 +3,8 @@ const nav_item2 = document.querySelector("#item2");
 const nav_item3 = document.querySelector("#item3");
 const user_information = document.querySelector(".user_information");
 const change_password = document.querySelector(".change_password");
+const data1 = document.getElementById("data1");
+const data2 = document.getElementById("data2");
 let countdown = 1;
 
 nav_item1.onclick = () => {
@@ -15,19 +17,22 @@ nav_item2.onclick = () => {
     change_password.style.display = "flex";
 };
 
+nav_item3.onclick = () => {
+    window.location.href = 'index';
+}
+
 function changedata() {
-    document.getElementById("data1").style.display = "none";
-    document.getElementById("data2").style.display = "block";
-    // document.querySelector("#input4").value = document.querySelector("#input4_1").value;
-    if (document.querySelector("#input5").value === "未设置") {
-        document.querySelector("#input5_1").value = '';
-    }
-    // document.querySelector("#input6").value = document.querySelector("#input6_1").value;
+    data1.style.display = "none";
+    data2.style.display = "block";
     if (document.querySelector("#input7").value === "未设置") {
         document.querySelector("#input7_1").value = '';
     }
 }
 
+function data2ToData1() {
+    data2.style.display = "none";
+    data1.style.display = "flex";
+}
 // function checkKey_0() {
 //     let k = document.getElementById("tip1");
 //     console.log(k);
