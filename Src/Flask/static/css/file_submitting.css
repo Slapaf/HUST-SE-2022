@@ -90,12 +90,11 @@ body {
     font-size: 14px;
     margin: 0 5px;
     padding: 5px 5px;
-    /* border-radius:5px; */
     border: none;
+    border-radius: 5px;
     outline: none;
     width: 100%;
-    resize: none;
-    overflow: hidden;
+    background-color: #f9f9f9cb;
 }
 
 
@@ -233,10 +232,10 @@ body {
     color: white;
 }
 
-textarea {
+/* textarea {
     height: 25px;
     resize: none;
-}
+} */
 
 .hidden {
     display: none;

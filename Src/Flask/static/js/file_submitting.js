@@ -22,19 +22,18 @@ function creatNameOrSnoOrFile(op, topicName, detailText) {
     inputTopic.readOnly = "true";
     let detail = document.createElement("div");
     detail.className = "detail";
-    detail.innerHTML = detailText;
+    detail.innerHTML = textareaToDiv(detailText);
     let inputContent = document.createElement("input");
     inputContent.type = op == "file" ? "file" : "text";
     inputContent.className = "inputContent";
-    // if(op!="file") {
-    //     inputContent.required = true;
-    // } 
     inputContent.required = true;
     inputContent.maxLength = 25;
     questionList.appendChild(newli);
     newli.appendChild(newh);
     newh.appendChild(inputTopic);
-    newli.appendChild(detail);
+    if(detail.innerHTML) {
+        newli.appendChild(detail);
+    }
     newli.appendChild(inputContent);
     //加id，加name
     newli.id = question_id.toString();
@@ -58,7 +57,7 @@ function creatSingleOrMultiple(op, topicName, detailText) {
         "question_" + (op === "single" ? "radio" : "multipleChoice") + question_id;
     let detail = document.createElement("div");
     detail.className = "detail";
-    detail.innerHTML = detailText;
+    detail.innerHTML = textareaToDiv(detailText);
     let qBox = document.createElement("div");
     qBox.className = op === "single" ? "singleQuestionBox" : "multiQuestionBox";
     let ABCD = ["A", "B", "C", "D"];
@@ -80,7 +79,10 @@ function creatSingleOrMultiple(op, topicName, detailText) {
     questionList.appendChild(newli);
     newli.appendChild(newh);
     newh.appendChild(inputTopic);
-    newli.appendChild(detail);
+    if(detail.innerHTML) {
+        console.log(detail.innerHTML);
+        newli.appendChild(detail);
+    }
     newli.appendChild(qBox);
     //加id，加name
 }
@@ -105,7 +107,7 @@ function creatQuestionnaire(
     inputTopic.name = "question_qnaire" + question_id;
     let detail = document.createElement("div");
     detail.className = "detail";
-    detail.innerHTML = detailText;
+    detail.innerHTML = textareaToDiv(detailText);
     let qBox = document.createElement("div");
     qBox.className = "qnQuestionBox";
     for (let i = 0; i < qnOptionNum; i++) {
@@ -119,7 +121,7 @@ function creatQuestionnaire(
         inputChoice.required = chooseType === "single" ? true : false;
         let optionContent = document.createElement("div");
         optionContent.className = "qnOptionContent";
-        optionContent.innerHTML = qnOptionContent[i];
+        optionContent.innerHTML = textareaToDiv(qnOptionContent[i]);
         opBox.appendChild(inputChoice);
         opBox.appendChild(optionContent);
         qBox.appendChild(opBox);
@@ -127,7 +129,9 @@ function creatQuestionnaire(
     questionList.appendChild(newli);
     newli.appendChild(newh);
     newh.appendChild(inputTopic);
-    newli.appendChild(detail);
+    if(detail.innerHTML) {
+        newli.appendChild(detail);
+    }
     newli.appendChild(qBox);
 }
 
@@ -332,6 +336,17 @@ function checkDeadline() {
     return true;
 }
 
+//将文本域中换行显示在div中
+function textareaToDiv(val) {
+    val = val.replace(/\r\n/g, '<br/>'); //IE9、FF、chrome
+    val = val.replace(/\n/g, '<br/>'); //IE7-8
+    val = val.replace(/\s/g, ' '); //空格处理
+    return val;
+}
+
 addLoadEvent(checkDeadline);
 addLoadEvent(processFormData);
 addLoadEvent(creatQuestion);
+addLoadEvent(()=>{
+    description.innerHTML = textareaToDiv(description.innerHTML);
+});
