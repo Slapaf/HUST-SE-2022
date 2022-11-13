@@ -94,7 +94,7 @@ function addname() {
     document.getElementById("name_data").value = str;
     if (str != "") {
         let n = str.split(/[\s\n]+|\,+|[\r\n]+/);//将 textarea 中字符串以,和换行符切分
-        let flag = 1;alert(n.length);
+        let flag = 1;
         if (n.length != 0) {
             let list = n[0];
             while (flag < n.length) {
