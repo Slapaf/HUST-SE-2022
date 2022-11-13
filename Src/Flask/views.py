@@ -235,7 +235,7 @@ def collection_details(collection_id):
             namelist = namelist[~namelist['姓名'].isin([namelist_data['hidden-input']])]  # * 删除被点击的名字
             namelist.to_csv(namelist_path + "/应交名单.csv", encoding='utf-8')  # * 保存为 csv 文件
             return redirect(url_for('collection_details', collection_id=collection_id))
-        name_list = namelist_data['name_data'].split(' ')
+        name_list = namelist_data['name_data'].split()
         # TODO 若输入名单最后多按下了回车，则最后一个名字末尾有多余的 \r\n
         namelist_csv = pd.DataFrame(columns=["姓名"], data=name_list)
         # print(namelist_csv)
