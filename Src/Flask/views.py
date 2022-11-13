@@ -4,7 +4,7 @@ import os.path
 import pandas as pd
 from flask import render_template, request, url_for, redirect, flash
 from flask_login import login_user, login_required, logout_user, current_user
-from init import app, db
+from init import app, db, APP_ROOT
 from db_manipulation import *
 
 # ! 分享页面的链接（上线前用域名地址替换）
@@ -229,8 +229,12 @@ def collection_details(collection_id):
     if request.method == 'POST':
         namelist_data = request.form.to_dict()  # * 获取应交名单数据
         if 'hidden-input' in namelist_data.keys():
-            namelist_path = './FileStorage/' + \
-                            Collection_info.query.filter_by(creator_id=current_user.id).first().namelist_path
+            # namelist_path = './FileStorage/' + \
+            #                 Collection_info.query.filter_by(creator_id=current_user.id).first().namelist_path
+            namelist_path = os.path.join(APP_ROOT, 'FileStorage',
+                                         Collection_info.query.filter_by(
+                                             creator_id=current_user.id
+                                         ).first().namelist_path)
             namelist = pd.read_csv(namelist_path + "/应交名单.csv", encoding='utf-8')
             namelist = namelist[~namelist['姓名'].isin([namelist_data['hidden-input']])]  # * 删除被点击的名字
             namelist.to_csv(namelist_path + "/应交名单.csv", encoding='utf-8')  # * 保存为 csv 文件
@@ -239,8 +243,10 @@ def collection_details(collection_id):
         # TODO 若输入名单最后多按下了回车，则最后一个名字末尾有多余的 \r\n
         namelist_csv = pd.DataFrame(columns=["姓名"], data=name_list)
         # print(namelist_csv)
-        namelist_path = './FileStorage/' + Collection_info.query.filter_by(
-            creator_id=current_user.id).first().namelist_path
+        # namelist_path = './FileStorage/' + Collection_info.query.filter_by(
+        #     creator_id=current_user.id).first().namelist_path
+        namelist_path = os.path.join(APP_ROOT, 'FileStorage',
+                                     Collection_info.query.filter_by(creator_id=current_user.id).first().namelist_path)
         # print(namelist_path)
         # os.mkdir(namelist_path)
         print(namelist_path)
@@ -257,8 +263,10 @@ def collection_details(collection_id):
     print(submission_list)
     # TODO 数据库提供方法
     who_has_submitted_list = [submission[0] for submission in submission_list]  # * 已提交列表
-    namelist_path = './FileStorage/' + \
-                    Collection_info.query.filter_by(creator_id=current_user.id).first().namelist_path
+    # namelist_path = './FileStorage/' + \
+    #                 Collection_info.query.filter_by(creator_id=current_user.id).first().namelist_path
+    namelist_path = os.path.join(APP_ROOT, 'FileStorage',
+                                 Collection_info.query.filter_by(creator_id=current_user.id).first().namelist_path)
     who_should_submit_list = []
     if os.path.exists(namelist_path + "/应交名单.csv"):
         who_should_submit_list = pd.read_csv(namelist_path + "/应交名单.csv",
@@ -431,7 +439,9 @@ def register():
         db.session.add(user)
         db.session.commit()  # 提交数据库会话
         flash('Successfully Registered!')
-        path = './FileStorage/' + user.userpath
+        # path = './FileStorage/' + user.userpath
+        path = os.path.join(APP_ROOT, 'FileStorage', user.userpath)
+        print(path)
         # ! 异常处理
         try:
             os.makedirs(path)  # 创建用户目录

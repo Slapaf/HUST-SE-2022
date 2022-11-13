@@ -1,6 +1,6 @@
 from models import User
 import click
-from init import app, db
+from init import app, db, APP_ROOT
 import shutil
 import os
 
@@ -13,8 +13,10 @@ def initdb(drop):
         db.drop_all()
     db.create_all()
     click.echo('Initialized database.')  # 输出提示信息
-    if os.path.exists('./FileStorage/'):
-        shutil.rmtree('./FileStorage/')
+    # if os.path.exists('./FileStorage/'):
+    #     shutil.rmtree('./FileStorage/')
+    if os.path.exists(os.path.join(APP_ROOT, 'FileStorage')):
+        shutil.rmtree(os.path.join(APP_ROOT, 'FileStorage'))
 
 
 @app.cli.command()

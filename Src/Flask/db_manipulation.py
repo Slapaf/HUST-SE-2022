@@ -215,7 +215,7 @@ import string, random, os, shutil, re, werkzeug
 from copy import deepcopy
 from flask_login import current_user
 from models import User, Collection_info, Question_info, Answer_info, Submit_Content_info, Option_info, Submission_info
-from init import db
+from init import db, APP_ROOT
 from datetime import datetime
 from werkzeug.datastructures import MultiDict
 from operator import itemgetter
@@ -423,7 +423,8 @@ def add_FC(question_list: list, user_id: int) -> int:
             )
             db.session.add(question)
             db.session.commit()
-            path = './FileStorage/' + question.file_path
+            # path = './FileStorage/' + question.file_path
+            path = os.path.join(APP_ROOT, 'FileStorage', question.file_path)
             print(path)  # ! 调试
             try:
                 os.makedirs(path)  # 创建该题的文件存储目录
@@ -497,14 +498,16 @@ def count_filenum(user_id: int = None, collection_id: int = None, question_id: i
 
     # 若给了参数question_id
     if question_id is not None:
-        path = './FileStorage/' + Question_info.query.filter_by(id=question_id).first().file_path
+        # path = './FileStorage/' + Question_info.query.filter_by(id=question_id).first().file_path
+        path = os.path.join(APP_ROOT, 'FileStorage', Question_info.query.filter_by(id=question_id).first().file_path)
         files = os.listdir(path)
         file_num = len(files)
         return file_num
 
     # 若给了collection_id和qno
     if collection_id is not None and qno is not None:
-        path = './FileStorage/' + Question_info.query.filter_by(id=question_id).first().file_path
+        # path = './FileStorage/' + Question_info.query.filter_by(id=question_id).first().file_path
+        path = os.path.join(APP_ROOT, 'FileStorage', Question_info.query.filter_by(id=question_id).first().file_path)
         files = os.listdir(path)
         file_num = len(files)
         return file_num
@@ -519,7 +522,8 @@ def count_filenum(user_id: int = None, collection_id: int = None, question_id: i
         file_num = 0
         # 遍历该收集中所有文件上传题，统计已收文件总数
         for q_id in question_id_list:
-            path = './FileStorage/' + Question_info.query.filter_by(id=q_id).first().file_path
+            # path = './FileStorage/' + Question_info.query.filter_by(id=q_id).first().file_path
+            path = os.path.join(APP_ROOT, 'FileStorage', Question_info.query.filter_by(id=q_id).first().file_path)
             files = os.listdir(path)
             file_num += len(files)
         return file_num
@@ -538,7 +542,8 @@ def count_filenum(user_id: int = None, collection_id: int = None, question_id: i
             question_id_list = list(map(itemgetter(0), question_id_list))
             file_num = 0
             for id2 in question_id_list:
-                path = './FileStorage/' + Question_info.query.filter_by(id=id2).first().file_path
+                # path = './FileStorage/' + Question_info.query.filter_by(id=id2).first().file_path
+                path = os.path.join(APP_ROOT, 'FileStorage', Question_info.query.filter_by(id=id2).first().file_path)
                 files = os.listdir(path)
                 file_num += len(files)
             file_num_dict[id1] = file_num
@@ -576,7 +581,8 @@ def delete_collection(collection_id: int) -> None:
     # 删除该收集中所有文件上传题的文件存储路径下的文件
     question = Question_info.query. \
         filter_by(collection_id=collection_id, question_type=Question_info.FILE_UPLOAD).first()
-    file_path = Path('./FileStorage/' + question.file_path).parent
+    # file_path = Path('./FileStorage/' + question.file_path).parent
+    file_path = Path(os.path.join(APP_ROOT, 'FileStorage', question.file_path)).parent
     shutil.rmtree(file_path)
 
     Question_info.query.filter_by(collection_id=collection_id).delete()
@@ -1035,7 +1041,8 @@ def file_upload(collection_id: int,
         f = file['submit_file' + qno_str]
 
         # 确定文件存储路径
-        path = './FileStorage/' + question.file_path
+        # path = './FileStorage/' + question.file_path
+        path = os.path.join(APP_ROOT, 'FileStorage', question.file_path)
 
         # 重命名文件
         rename_rule = question.rename_rule
