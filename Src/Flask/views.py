@@ -76,7 +76,7 @@ def personal_homepage():
                 print("修改密码成功。")
             else:
                 print("修改密码失败！")
-        return redirect(url_for('personal_homepage', r_code=(r_code == 1)))
+        return redirect(url_for('personal_homepage', r_code=r_code))
     user_authorization_code = current_user.authorization_code
     if user_authorization_code is None:
         user_authorization_code = "未设置"
@@ -84,7 +84,7 @@ def personal_homepage():
         "personal_homepage.html",
         user_authorization_code=user_authorization_code,
         user_pwd_hash=current_user.password_hash,  # TODO 待修改
-        r_code=True
+        r_code=2
     )
 
 
