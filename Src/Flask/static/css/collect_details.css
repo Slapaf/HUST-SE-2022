@@ -276,6 +276,16 @@ body {
     cursor: pointer;
 }
 
+.member_condition1 {
+    margin-left: 8px;
+    margin-right: 8px;
+    width: 25%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: grey;
+}
+
 .list_name,
 .member_name {
     margin-left: 8px;
