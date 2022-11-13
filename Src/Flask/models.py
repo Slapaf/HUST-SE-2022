@@ -5,7 +5,9 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 
 class User(db.Model, UserMixin):
-    """ 用户信息，记录已注册用户的相关信息。
+    """ 用户信息表。
+
+    记录已注册用户的相关信息。
 
     Attributes:
         id: 主键，自增
@@ -17,12 +19,12 @@ class User(db.Model, UserMixin):
         authorization_code: 邮箱授权码
     """
     id = db.Column(db.Integer, primary_key=True)  # 主键
-    name = db.Column(db.String(20), nullable=False)  # 用户昵称
-    username = db.Column(db.String(20), nullable=False, unique=True)  # 用户名（
+    name = db.Column(db.String(30), nullable=False)  # 用户昵称
+    username = db.Column(db.String(30), nullable=False, unique=True)  # 用户名（
     password_hash = db.Column(db.String(128), nullable=False)  # 密码散列值
-    userpath = db.Column(db.String(20), nullable=False, unique=True)  # 用户空间路径
-    email = db.Column(db.String(20), nullable=False)  # 用户邮箱
-    authorization_code = db.Column(db.String(20))  # 邮箱授权码
+    userpath = db.Column(db.String(50), nullable=False, unique=True)  # 用户空间路径
+    email = db.Column(db.String(30), nullable=False)  # 用户邮箱
+    authorization_code = db.Column(db.String(30))  # 邮箱授权码
     yag = None
 
     def set_password(self, password: str) -> None:
@@ -112,7 +114,9 @@ class User(db.Model, UserMixin):
 
 
 class Collection_info(db.Model):
-    """ 收集主表,记录已创建收集的相关信息。
+    """ 收集表。
+
+    记录已创建收集的相关信息。
 
     Attributes:
         id: 主键
@@ -129,14 +133,14 @@ class Collection_info(db.Model):
     RELEASE, SAVED, FINISHED, OVERDUE = '0', '1', '2', '3'  # ? 发布，暂存，已结束，已失效
 
     id = db.Column(db.Integer, primary_key=True)  # 主键
-    creator = db.Column(db.String(20), nullable=False)  # 创建人员名称
+    creator = db.Column(db.String(30), nullable=False)  # 创建人员名称
     creator_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete="CASCADE"), nullable=False)  # 创建人员ID
-    collection_title = db.Column(db.String(20), nullable=False)  # 收集名称
+    collection_title = db.Column(db.String(50), nullable=False)  # 收集名称
     description = db.Column(db.Text, nullable=False)  # 收集描述
     start_date = db.Column(db.DateTime, nullable=False, default=datetime.datetime.now())  # 开始时间
     end_date = db.Column(db.DateTime, nullable=False)  # 收集结束时间
-    status = db.Column(db.CHAR, nullable=False)  # 当前状态：0 发布(正在收集);1 暂存;2 已结束;3 已失效
-    namelist_path = db.Column(db.String(30))  # 应交名单路径
+    status = db.Column(db.Enum(RELEASE, SAVED, FINISHED, OVERDUE), nullable=False)  # 当前状态
+    namelist_path = db.Column(db.String(50))  # 应交名单路径
 
     # def collection_valid(self) -> bool:
     #     """判断收集是否截止
@@ -149,15 +153,17 @@ class Collection_info(db.Model):
 
 
 class Question_info(db.Model):
-    """ 题目表,记录已创建收集的题目相关信息。
+    """ 题目表。
+
+    记录已创建收集的题目相关信息。
 
     Attributes:
-        id: int类型，主键
-        collection_id: int类型，收集id（外键：关联collection_info.id）（不可为空）
-        qno: int类型，题目序号（不可为空）
-        question_type: char类型，题目类型（不可为空）: '0' 上传文件题; '1' 单选; '2' 多选; '3' 姓名题; '4' 学号题; '5' 问卷题(单选); '6' 问卷题(多选)
-        question_title：varchar(20)类型，问题标题（不可为空）
-        question_description: text类型问题描述
+        id: 主键
+        collection_id: 收集id（外键：关联collection_info.id）（不可为空）
+        qno: 题目序号（不可为空）
+        question_type: 题目类型（不可为空）: '0' 上传文件题; '1' 单选; '2' 多选; '3' 姓名题; '4' 学号题; '5' 问卷题(单选); '6' 问卷题(多选)
+        question_title: 问题标题（不可为空）
+        question_description: 问题描述
         rename_rule: 文件重命名规则
         file_path: 提交文件路径（不可重复）（文件上传题需设置，其余类型不必）
     """
@@ -175,22 +181,26 @@ class Question_info(db.Model):
                               db.ForeignKey('collection_info.id', ondelete="CASCADE"),
                               nullable=False)  # 关联收集id
     qno = db.Column(db.Integer, nullable=False)  # 题目序号
-    question_type = db.Column(db.CHAR, nullable=False)  # 题目类型
-    question_title = db.Column(db.String(20), nullable=False)  # 问题标题
+    question_type = db.Column(
+        db.Enum(FILE_UPLOAD, SINGLE_CHOICE, MULTI_CHOICE, NAME, SNO, SINGLE_QUESTIONNAIRE, MULTI_QUESTIONNAIRE),
+        nullable=False)  # 题目类型
+    question_title = db.Column(db.String(50), nullable=False)  # 问题标题
     question_description = db.Column(db.Text)  # 问题描述
     rename_rule = db.Column(db.String(20))  # 文件重命名规则，其值为题目顺序
-    file_path = db.Column(db.String(30), unique=True)  # 提交文件路径
+    file_path = db.Column(db.String(50), unique=True)  # 提交文件路径
 
 
 class Answer_info(db.Model):
-    """ 答案表,记录单选题和多选题的答案。
+    """ 答案表。
+
+    记录单选题和多选题的答案。
 
     Attributes:
         id: 主键
-        collection_id：关联文件收集主表id
-        question_id: 关联问题主表 id、
-        qno：关联问题主表问题序号
-        answer_option: 答案不可为空
+        question_id: 题目id（外键：关联question_info.id）（不可为空）
+        collection_id: 收集id（不可为空）
+        qno: 题目序号（不可为空）
+        answer_option: 答案选项（单选题格式为x，多选题格式为x-x-x-……）（不可为空）
     """
     id = db.Column(db.Integer, primary_key=True)  # 主键
     question_id = db.Column(db.Integer,
@@ -198,19 +208,21 @@ class Answer_info(db.Model):
                             nullable=False)  # 关联题目id
     collection_id = db.Column(db.Integer, nullable=False)  # 收集id
     qno = db.Column(db.Integer, nullable=False)  # 题目序号
-    answer_option = db.Column(db.String(10), nullable=False)  # 答案
+    answer_option = db.Column(db.String(30), nullable=False)  # 答案
 
 
 class Option_info(db.Model):
-    """题目选项表
+    """问卷题选项表
+
+    记录问卷题的每一个选项内容。
 
     Attributes:
         id：主键
-        collection_id：关联文件收集主表id
-        question_id：关联问题主表id
-        qno：关联问题主表问题序号
-        option_sn：选项序号
-        option_content：选项内容（不可以为空）
+        question_id: 题目id（外键：关联question_info.id）（不可为空）
+        collection_id: 收集id（不可为空）
+        qno: 题目序号（不可为空）
+        option_sn: 选项序号（不可为空）
+        option_content: 选项内容（不可为空）
     """
     id = db.Column(db.Integer, primary_key=True)  # 主键
     question_id = db.Column(db.Integer, db.ForeignKey('question_info.id', ondelete="CASCADE"), nullable=False)  # 关联题目id
@@ -221,35 +233,38 @@ class Option_info(db.Model):
 
 
 class Submission_info(db.Model):
-    """问卷提交信息
+    """收集提交记录
+
+    记录所有收集的提交记录。
 
     Attributes:
         id: 主键
-        collection_id: 关联文件收集主表id（不可为空）
-        collection_title：关联文件收集主表收集名称（不可以为空）
-        submitter_id：提交者的用户id
-        submitter_name：提交者的用户名username
-        submit_time：提交时间（不可以为空）
+        collection_id: 收集id（外键：关联collection_info.id）（不可为空）
+        collection_title: 收集标题（不可以为空）
+        submitter_name: 提交者姓名（不可以为空）
+        submit_time: 提交时间（不可以为空），默认为datetime.datetime.now()
     """
     id = db.Column(db.Integer, primary_key=True)  # 主键
     collection_id = db.Column(db.Integer,
                               db.ForeignKey('collection_info.id', ondelete="CASCADE"),
                               nullable=False)  # 关联收集id
-    collection_title = db.Column(db.String(20), nullable=False)  # 收集标题
-    submitter_name = db.Column(db.String(20), nullable=False)  # 提交者名称
+    collection_title = db.Column(db.String(50), nullable=False)  # 收集标题
+    submitter_name = db.Column(db.String(30), nullable=False)  # 提交者名称
     submit_time = db.Column(db.DateTime, nullable=False, default=datetime.datetime.now())  # 提交时间
 
 
 class Submit_Content_info(db.Model):
-    """ 提交内容信息表，记录收集填写情况。
+    """ 提交内容信息表。
+
+    记录收集每一题的填写情况。
 
     Attributes:
         id: 主键
-        Submission_id: 关联问卷提交信息表id
-        collection_id: 关联文件收集主表id（不可为空）
-        question_id: 关联问题主表id（不可为空）
-        qno：问题序号
-        result：某个人对这一题的填写结果（若为文件上传题，则此字段存放上传的文件名称）（不可为空）
+        submission_id: 提交记录id（外键：关联submission_info.id）（不可为空）
+        question_id: 题目id（外键：关联question_info.id）（不可为空）
+        collection_id: 收集id（不可为空）
+        qno: 题目序号（不可为空）
+        result: 某个人对这一题的填写结果（若为文件上传题，则此字段存放上传的文件名称）（不可为空）
     """
     id = db.Column(db.Integer, primary_key=True)  # 主键
     submission_id = db.Column(db.Integer,
@@ -260,4 +275,4 @@ class Submit_Content_info(db.Model):
                             nullable=False)  # 题目id
     collection_id = db.Column(db.Integer, nullable=False)  # 收集id
     qno = db.Column(db.Integer, nullable=False)  # 问题序号
-    result = db.Column(db.String(30), nullable=False)  # 某个人对这一题的填写结果（若为文件上传题，则此字段存放上传的文件名称）
+    result = db.Column(db.String(50), nullable=False)  # 填写结果
