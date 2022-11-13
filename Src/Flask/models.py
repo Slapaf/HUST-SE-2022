@@ -1,90 +1,73 @@
-import random
-import string
-import datetime
-import re
-import yagmail
-
+import random, string, datetime, re, yagmail
 from init import db
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
 class User(db.Model, UserMixin):
-    """ 用户信息
-
-    Description:
-        记录已注册用户的相关信息。
+    """ 用户信息，记录已注册用户的相关信息。
 
     Attributes:
-        1. id: 主键
-        2. name: 名字（用户昵称）
-        3. username: 用户名
-        4. password_hash: 密码散列值
-        5. userpath: 用户空间路径
+        id: 主键，自增
+        name: 用户昵称（不可为空）
+        username: 用户名（不可为空，不可重复）
+        password_hash: 密码散列值（不可为空）
+        userpath: 用户空间路径（不可为空，不可重复）
+        email: 用户邮箱（不可为空）
+        authorization_code: 邮箱授权码
     """
     id = db.Column(db.Integer, primary_key=True)  # 主键
-    name = db.Column(db.String(20), nullable=False)  # 名字（用户昵称）
-    username = db.Column(db.String(20), nullable=False, unique=True)  # 用户名（不可重复）
+    name = db.Column(db.String(20), nullable=False)  # 用户昵称
+    username = db.Column(db.String(20), nullable=False, unique=True)  # 用户名（
     password_hash = db.Column(db.String(128), nullable=False)  # 密码散列值
     userpath = db.Column(db.String(20), nullable=False, unique=True)  # 用户空间路径
-    email = db.Column(db.String(20))  # 用户邮箱
+    email = db.Column(db.String(20), nullable=False)  # 用户邮箱
     authorization_code = db.Column(db.String(20))  # 邮箱授权码
     yag = None
 
-    def set_password(self, password):
+    def set_password(self, password: str) -> None:
         """设置密码
 
         Args:
-            password(string): 密码（明文）
+            password: 密码（明文）
 
-        Returns:
-            None
         """
         self.password_hash = generate_password_hash(password)  # 根据用户输入的密码生成密码散列值
 
-    def validate_password(self, password):
+    def validate_password(self, password: str) -> bool:
         """验证密码
 
         Args:
-            password(string): 密码（明文）
+            password: 密码（明文）
 
         Returns:
-            (bool): 匹配结果
+            布尔值，表示密码是否正确
         """
-        return check_password_hash(self.password_hash, password)  # 返回布尔值
+        return check_password_hash(self.password_hash, password)
 
-    def set_userpath(self):
-        """
-        设置用户空间路径。路径的前若干位为用户名和 user 标识，后面用随机字符串补齐，总长度 20 位。
+    def set_userpath(self) -> None:
+        """设置用户空间路径"""
 
-        Returns:
-            None
-        """
+        # 路径的前若干位为用户名和 user 标识，后面用随机字符串补齐，总长度 20 位。
         self.userpath = self.username + 'user' + ''.join(
             random.sample(string.ascii_letters + string.digits, 20 - len(self.username) - len('user'))
         )
 
-    def set_email(self, email):
+    def set_email(self, email: str) -> None:
         """设置用户邮箱
 
         Args:
-            email(str): 需要设置的邮箱
-
-        Returns:
-            None
+            email: 邮箱
         """
         self.email = email
 
-    def user_authentication(self, user_email: str, user_pwd: str, host='smtp.sina.com'):
+    def user_authentication(self, user_email: str, user_pwd: str, host: str = 'smtp.sina.com') -> None:
         """用户认证
 
         Args:
-            user_email(str): 用户邮箱
-            user_pwd(str): 邮箱授权码
-            host(str): 发送邮件服务器地址
-
-        Returns:
-            None
+            user_email: 用户邮箱
+            user_pwd: 邮箱授权码
+            host: 发送邮件服务器地址
         """
         self.yag = yagmail.SMTP(
             user=user_email,
@@ -92,16 +75,16 @@ class User(db.Model, UserMixin):
             host=host
         )
 
-    def send_email(self, to_email: str or list, email_title: str, email_message: str):
+    def send_email(self, to_email: str or list, email_title: str, email_message: str) -> bool:
         """发送邮件，可以单发也可以群发，取决于传入参数 to_email 的类型
 
         Args:
-            to_email(str or list): 目标邮箱地址，若为列表则代表群发
-            email_title(str): 邮件标题
-            email_message(str): 邮件正文，可以使用 HTML 格式的字符串
+            to_email: 目标邮箱地址，若为列表则代表群发
+            email_title: 邮件标题
+            email_message: 邮件正文，可以使用 HTML 格式的字符串
 
         Returns:
-
+            布尔值，表示是否发送成功
         """
         if self.yag is None:
             return False
@@ -129,62 +112,54 @@ class User(db.Model, UserMixin):
 
 
 class Collection_info(db.Model):
-    """ 文件收集主表
-
-    Description:
-        记录已创建收集的相关信息。
+    """ 收集主表,记录已创建收集的相关信息。
 
     Attributes:
-        1. id: 主键
-        2. creator: 创建人员名称（不可为空）
-        3. creator_id: 创建人员 ID
-        4. collection_title: 收集名称（不可为空）
-        5. description: 收集描述（不可为空）
-        6. start_date: 开始时间，自动设置为创建收集的时间
-        7. end_date: 结束时间（不可为空）
-        8. status: 收集的状态（0 发布，1 暂存，2 已结束，3 已失效）
-        9. namelist_path: 应交名单路径
+        id: 主键
+        creator: 创建人员名称（不可为空）
+        creator_id: 创建人员ID（外键：关联user.id；不可为空）
+        collection_title: 收集标题（不可为空）
+        description: 收集描述（不可为空）
+        start_date: 开始时间，自动设置为创建收集的时间（不可为空）
+        end_date: 结束时间（不可为空）
+        status: 收集的状态（'0' 发布，'1' 暂存，'2' 已结束，'3' 已失效）（不可为空）
+        namelist_path: 应交名单路径
     """
     # * 收集状态常量定义
     RELEASE, SAVED, FINISHED, OVERDUE = '0', '1', '2', '3'  # ? 发布，暂存，已结束，已失效
 
     id = db.Column(db.Integer, primary_key=True)  # 主键
-    creator = db.Column(db.String(20), nullable=False)  # 创建人员名称（不可以为空）
-    creator_id = db.Column(db.Integer, nullable=False)  # 创建人员ID
-    collection_title = db.Column(db.String(20), nullable=False)  # 收集名称（不可以为空）
-    description = db.Column(db.Text, nullable=False)  # 收集描述（不可以为空）
-    start_date = db.Column(db.DateTime, nullable=False, default=datetime.datetime.now())  # 开始时间自动设置为创建收集的时间
-    end_date = db.Column(db.DateTime, nullable=False)  # 收集结束时间（不可以为空）
+    creator = db.Column(db.String(20), nullable=False)  # 创建人员名称
+    creator_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete="CASCADE"), nullable=False)  # 创建人员ID
+    collection_title = db.Column(db.String(20), nullable=False)  # 收集名称
+    description = db.Column(db.Text, nullable=False)  # 收集描述
+    start_date = db.Column(db.DateTime, nullable=False, default=datetime.datetime.now())  # 开始时间
+    end_date = db.Column(db.DateTime, nullable=False)  # 收集结束时间
     status = db.Column(db.CHAR, nullable=False)  # 当前状态：0 发布(正在收集);1 暂存;2 已结束;3 已失效
     namelist_path = db.Column(db.String(30))  # 应交名单路径
 
-    def collection_valid(self):
-        """
-        判断收集是否截止
-
-        Returns:
-            (bool): 截止情况
-        """
-        current_date = datetime.datetime.now()
-        return current_date < self.end_date  # 当前时间小于截止时间时收集有效
+    # def collection_valid(self) -> bool:
+    #     """判断收集是否截止
+    #
+    #     Returns:
+    #         bool: 截止情况
+    #     """
+    #     current_date = datetime.datetime.now()
+    #     return current_date < self.end_date  # 当前时间小于截止时间时收集有效
 
 
 class Question_info(db.Model):
-    """ 问题主表
-
-    Description:
-        记录已创建收集的相关信息。
+    """ 题目表,记录已创建收集的题目相关信息。
 
     Attributes:
-        1. id: 主键
-        2. collection_id: 关联文件收集主表的 id
-        3. num: 问题序号
-        4. question_type: 问题类型——0:解答题（需上传文件），1:单选，2:多选，3:填空
-        5、question_title：问题标题
-        5. question_description: 问题描述（不可为空）
-        TODO 6. required_flag: 是否为必填项（暂定）
-        7. rename_rule: 文件重命名规则
-        8. file_path: 提交文件路径
+        id: int类型，主键
+        collection_id: int类型，收集id（外键：关联collection_info.id）（不可为空）
+        qno: int类型，题目序号（不可为空）
+        question_type: char类型，题目类型（不可为空）: '0' 上传文件题; '1' 单选; '2' 多选; '3' 姓名题; '4' 学号题; '5' 问卷题(单选); '6' 问卷题(多选)
+        question_title：varchar(20)类型，问题标题（不可为空）
+        question_description: text类型问题描述
+        rename_rule: 文件重命名规则
+        file_path: 提交文件路径（不可重复）（文件上传题需设置，其余类型不必）
     """
     # * 问题类型常量
     FILE_UPLOAD = '0'  # ? 解答题
@@ -196,90 +171,93 @@ class Question_info(db.Model):
     MULTI_QUESTIONNAIRE = '6'  # ?问卷题目(多选)
 
     id = db.Column(db.Integer, primary_key=True)  # 主键
-    collection_id = db.Column(db.Integer, nullable=False)  # 关联文件收集主表id
-    qno = db.Column(db.Integer, nullable=False)  # 问题序号
-    question_type = db.Column(db.CHAR, nullable=False)  # 问题类型：0 解答题（需上传文件）;1 单选;2 多选;3 填空;
-    question_title = db.Column(db.String(20), nullable=False)  # 问题标题（不可以为空）
+    collection_id = db.Column(db.Integer,
+                              db.ForeignKey('collection_info.id', ondelete="CASCADE"),
+                              nullable=False)  # 关联收集id
+    qno = db.Column(db.Integer, nullable=False)  # 题目序号
+    question_type = db.Column(db.CHAR, nullable=False)  # 题目类型
+    question_title = db.Column(db.String(20), nullable=False)  # 问题标题
     question_description = db.Column(db.Text)  # 问题描述
-    # required_flag = db.Column(db.BOOLEAN, nullable=False)  # （暂定） 0 必填;1 非必填
     rename_rule = db.Column(db.String(20))  # 文件重命名规则，其值为题目顺序
-    file_path = db.Column(db.String(30), unique=True)  # 提交文件路径（文件上传题需设置，其余类型不必）
+    file_path = db.Column(db.String(30), unique=True)  # 提交文件路径
 
 
 class Answer_info(db.Model):
-    """ 答案表
-
-    Description:
-        记录已创建收集的相关信息。
+    """ 答案表,记录单选题和多选题的答案。
 
     Attributes:
-        1. id: 主键
-        2、collection_id：关联文件收集主表id
-        3. question_id: 关联问题主表 id、
-        4、qno：关联问题主表问题序号
-        5. answer_option: 答案不可为空
+        id: 主键
+        collection_id：关联文件收集主表id
+        question_id: 关联问题主表 id、
+        qno：关联问题主表问题序号
+        answer_option: 答案不可为空
     """
     id = db.Column(db.Integer, primary_key=True)  # 主键
-    collection_id = db.Column(db.Integer, nullable=False)  # 关联文件收集主表id
-    question_id = db.Column(db.Integer, nullable=False)  # 关联问题主表id
-    qno = db.Column(db.Integer, nullable=False)  # 关联问题主表问题序号
-    answer_option = db.Column(db.String(10), nullable=False)  # 答案不可为空
+    question_id = db.Column(db.Integer,
+                            db.ForeignKey('question_info.id', ondelete="CASCADE"),
+                            nullable=False)  # 关联题目id
+    collection_id = db.Column(db.Integer, nullable=False)  # 收集id
+    qno = db.Column(db.Integer, nullable=False)  # 题目序号
+    answer_option = db.Column(db.String(10), nullable=False)  # 答案
 
 
 class Option_info(db.Model):
-    """
-    问卷题目选项表
+    """题目选项表
 
     Attributes:
-        1、id：主键
-        2、collection_id：关联文件收集主表id
-        3、question_id：关联问题主表id
-        4、qno：关联问题主表问题序号
-        5、option_sn：选项序号
-        6、option_content：选项内容（不可以为空）
+        id：主键
+        collection_id：关联文件收集主表id
+        question_id：关联问题主表id
+        qno：关联问题主表问题序号
+        option_sn：选项序号
+        option_content：选项内容（不可以为空）
     """
     id = db.Column(db.Integer, primary_key=True)  # 主键
-    collection_id = db.Column(db.Integer, nullable=False)  # 关联文件收集主表id
-    question_id = db.Column(db.Integer, nullable=False)  # 关联问题主表id
-    qno = db.Column(db.Integer, nullable=False)  # 关联问题主表问题序号
+    question_id = db.Column(db.Integer, db.ForeignKey('question_info.id', ondelete="CASCADE"), nullable=False)  # 关联题目id
+    collection_id = db.Column(db.Integer, nullable=False)  # 收集id
+    qno = db.Column(db.Integer, nullable=False)  # 题目序号
     option_sn = db.Column(db.Integer, nullable=False)  # 选项序号
-    option_content = db.Column(db.Text, nullable=False)  # 选项内容（不可以为空）
+    option_content = db.Column(db.Text, nullable=False)  # 选项内容
 
 
 class Submission_info(db.Model):
-    """
-    问卷提交信息
+    """问卷提交信息
 
     Attributes:
-        1、id: 主键
-        2、collection_id: 关联文件收集主表id（不可为空）
-        3、collection_title：关联文件收集主表收集名称（不可以为空）
-        4、submitter_id：提交者的用户id
-        5、submitter_name：提交者的用户名username
-        6、submit_time：提交时间（不可以为空）
+        id: 主键
+        collection_id: 关联文件收集主表id（不可为空）
+        collection_title：关联文件收集主表收集名称（不可以为空）
+        submitter_id：提交者的用户id
+        submitter_name：提交者的用户名username
+        submit_time：提交时间（不可以为空）
     """
     id = db.Column(db.Integer, primary_key=True)  # 主键
-    collection_id = db.Column(db.Integer, nullable=False)  # 关联文件收集主表id
-    collection_title = db.Column(db.String(20), nullable=False)  # 关联文件收集主表收集名称
-    submitter_name = db.Column(db.String(20), nullable=False)  # 提交者的用户名username
-    submit_time = db.Column(db.DateTime, nullable=False, default=datetime.datetime.now())  # 提交时间（不可以为空）
+    collection_id = db.Column(db.Integer,
+                              db.ForeignKey('collection_info.id', ondelete="CASCADE"),
+                              nullable=False)  # 关联收集id
+    collection_title = db.Column(db.String(20), nullable=False)  # 收集标题
+    submitter_name = db.Column(db.String(20), nullable=False)  # 提交者名称
+    submit_time = db.Column(db.DateTime, nullable=False, default=datetime.datetime.now())  # 提交时间
 
 
 class Submit_Content_info(db.Model):
-    """
-    提交内容信息表，记录问卷填写情况。
+    """ 提交内容信息表，记录收集填写情况。
 
     Attributes:
-        1. id: 主键
-        2. Submission_id: 关联问卷提交信息表id
-        3. collection_id: 关联文件收集主表id（不可为空）
-        4. question_id: 关联问题主表id（不可为空）
-        5、qno：问题序号
-        6、result：某个人对这一题的填写结果（若为文件上传题，则此字段存放上传的文件名称）（不可为空）
+        id: 主键
+        Submission_id: 关联问卷提交信息表id
+        collection_id: 关联文件收集主表id（不可为空）
+        question_id: 关联问题主表id（不可为空）
+        qno：问题序号
+        result：某个人对这一题的填写结果（若为文件上传题，则此字段存放上传的文件名称）（不可为空）
     """
     id = db.Column(db.Integer, primary_key=True)  # 主键
-    submission_id = db.Column(db.Integer, nullable=False)  # 关联问卷提交信息表id
-    collection_id = db.Column(db.Integer, nullable=False)  # 关联文件收集主表id（不可为空）
-    question_id = db.Column(db.Integer, nullable=False)  # 关联问题主表id（不可为空）
+    submission_id = db.Column(db.Integer,
+                              db.ForeignKey('submission_info.id', ondelete="CASCADE"),
+                              nullable=False)  # 关联提交记录id
+    question_id = db.Column(db.Integer,
+                            db.ForeignKey('question_info.id', ondelete="CASCADE"),
+                            nullable=False)  # 题目id
+    collection_id = db.Column(db.Integer, nullable=False)  # 收集id
     qno = db.Column(db.Integer, nullable=False)  # 问题序号
-    result = db.Column(db.String(30), nullable=False)  # 某个人对这一题的填写结果（若为文件上传题，则此字段存放上传的文件名称）（不可为空）
+    result = db.Column(db.String(30), nullable=False)  # 某个人对这一题的填写结果（若为文件上传题，则此字段存放上传的文件名称）
