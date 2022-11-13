@@ -188,4 +188,18 @@ function getCollectionId() {
     return relUrl;
 }
 
+//获取excel表格,向后端发送"excel$"+id
+function getExcel() {
+    let str = getCollectionId().substring(1);
+    document.getElementById("hidden-input").value = "excel$" + str;
+    document.getElementById("hidden").submit();
+}
+
+//下载所有文件,向后端发送"download$"+id
+function getExcel() {
+    let str = getCollectionId().substring(1);
+    document.getElementById("hidden-input").value = "download$" + str;
+    document.getElementById("hidden").submit();
+}
+
 console.log(getCollectionId());
