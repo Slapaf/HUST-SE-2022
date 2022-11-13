@@ -228,6 +228,7 @@ def mycollection():
 def collection_details(collection_id):
     if request.method == 'POST':
         namelist_data = request.form.to_dict()  # * 获取应交名单数据
+        print("前端数据: ", namelist_data)
         if 'hidden-input' in namelist_data.keys():
             # namelist_path = './FileStorage/' + \
             #                 Collection_info.query.filter_by(creator_id=current_user.id).first().namelist_path
@@ -236,11 +237,12 @@ def collection_details(collection_id):
                                              creator_id=current_user.id
                                          ).first().namelist_path)
             namelist = pd.read_csv(namelist_path + "/应交名单.csv", encoding='utf-8')
-            namelist = namelist[~namelist['姓名'].isin([namelist_data['hidden-input']])]  # * 删除被点击的名字
-            namelist.to_csv(namelist_path + "/应交名单.csv", encoding='utf-8')  # * 保存为 csv 文件
+            # * 删除被点击的名字
+            namelist = namelist[~namelist['姓名'].isin([namelist_data['hidden-input']])]
+            # namelist = namelist[~(namelist['姓名'].str == namelist_data['hidden-input'])]
+            namelist.to_csv(namelist_path + "/应交名单.csv", encoding='utf-8', index=False)  # * 保存为 csv 文件
             return redirect(url_for('collection_details', collection_id=collection_id))
-        name_list = namelist_data['name_data'].split()
-        # TODO 若输入名单最后多按下了回车，则最后一个名字末尾有多余的 \r\n
+        name_list = list(set(namelist_data['name_data'].split()))
         namelist_csv = pd.DataFrame(columns=["姓名"], data=name_list)
         # print(namelist_csv)
         # namelist_path = './FileStorage/' + Collection_info.query.filter_by(
@@ -251,8 +253,12 @@ def collection_details(collection_id):
         # os.mkdir(namelist_path)
         print(namelist_path)
         if os.path.exists(namelist_path + "/应交名单.csv"):
-            pd.DataFrame(data=name_list).to_csv(namelist_path + "/应交名单.csv", mode='a', encoding='utf-8',
-                                                header=False)
+            tmp_csv = pd.read_csv(namelist_path + '/应交名单.csv', encoding='utf-8')
+            for name in name_list:
+                if name in tmp_csv['姓名'].values:
+                    name_list.remove(name)
+            pd.DataFrame(data=name_list).to_csv(namelist_path + "/应交名单.csv", mode='a', header=False,
+                                                encoding='utf-8')
         else:
             namelist_csv.to_csv(namelist_path + "/应交名单.csv", encoding='utf-8')  # * 保存为 csv 文件
         return redirect(url_for('collection_details', collection_id=collection_id))
