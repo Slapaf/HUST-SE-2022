@@ -33,6 +33,7 @@ function data2ToData1() {
     data2.style.display = "none";
     data1.style.display = "flex";
 }
+
 // function checkKey_0() {
 //     let k = document.getElementById("tip1");
 //     console.log(k);
@@ -133,4 +134,18 @@ function timeOutClose(tip) {
         tip.style.display = "none";
     }
     countdown--;
+}
+
+function getCollectionId() {
+    let url = document.location.toString();
+    console.log(url)
+    let arrUrl = url.split("//");
+    let start = arrUrl[1].lastIndexOf("personal_homepage");
+    let relUrl = arrUrl[1].substring(start);//stop省略，截取从start开始到结尾的所有字符
+    if (relUrl.indexOf("?") !== -1) {
+        relUrl = relUrl.split("?")[1];
+    }
+    if (relUrl === "personal_homepage") relUrl = true;
+    else if (relUrl === "r_code=0") relUrl = false;
+    return relUrl;
 }
