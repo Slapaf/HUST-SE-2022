@@ -163,16 +163,21 @@ function addmember(submitter_order_idx, submitter_name, submit_time, file_submit
     // ! 11/08
     memberid.style.display = "none";
     // ! 11/08
-    membercondition.onclick = function () {
-        let popup1 = document.getElementById("popup1");
-        popup1.style.display = "block";
-        let popLayer = document.getElementById('popLayer');
-        popLayer.style.display = "block";
-        let wgk = document.getElementById("popup-content");
-        let jsx = document.createElement("div");
-        jsx.id = "return";
-        wgk.appendChild(jsx);
-        addfile(file_submitted_list);
+    if (membernumber.title !== '0') {
+        membercondition.onclick = function () {
+
+            let popup1 = document.getElementById("popup1");
+            popup1.style.display = "block";
+            let popLayer = document.getElementById('popLayer');
+            popLayer.style.display = "block";
+            let wgk = document.getElementById("popup-content");
+            let jsx = document.createElement("div");
+            jsx.id = "return";
+            wgk.appendChild(jsx);
+            addfile(file_submitted_list);
+        }
+    } else {
+        membercondition.className = "member_condition1";
     }
 }
 
