@@ -257,6 +257,9 @@ def add_FC(question_list: list, user_id: int) -> int:
 
     # 前端传来的deadLine为string类型，在此转化为datetime类型
     deadline = question_multidict['deadline']
+    # ! 解决 00 秒的问题
+    if len(deadline) < 19:
+        deadline += ':00'
     deadline = deadline.replace("T", " ")
     question_multidict['deadline'] = datetime.strptime(deadline, '%Y-%m-%d %H:%M:%S')
 
@@ -911,6 +914,9 @@ def modify_collection(collection_id: int, question_list: list) -> None:
 
     # 前端传来的deadLine为string类型，在此转化为datetime类型
     deadline = question_multidict['deadline']
+    # ! 解决 00 秒的问题
+    if len(deadline) < 19:
+        deadline += ':00'
     deadline = deadline.replace("T", " ")
     question_multidict['deadline'] = datetime.strptime(deadline, '%Y-%m-%d %H:%M:%S')
 
