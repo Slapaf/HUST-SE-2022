@@ -82,7 +82,12 @@ function deadline_limit() {
     deadline.max = "2050-12-31T23:59:59";
 }
 
-//姓名
+
+/**
+ * 根据topicName和detailText创建一个“姓名”类型的题目
+ * @param {string} topicName 题目名称
+ * @param {string} detailText 详情描述的内容 
+ */
 function createName(topicName, detailText) {
     //新建一些元素节点
     let newli = document.createElement("li");
@@ -90,9 +95,9 @@ function createName(topicName, detailText) {
     let newinput_topic = document.createElement("input");
     newinput_topic.className = "input-topic";
     newinput_topic.required = "required";
-    //TODO 增加 id 属性
+    // 增加 id 属性
     newli.id = (++question_id).toString();
-    //TODO 增加 name 属性
+    // 增加 name 属性
     newinput_topic.name = "question_name";
     newinput_topic.type = "text";
     newinput_topic.value = topicName;
@@ -105,11 +110,12 @@ function createName(topicName, detailText) {
     let newinput_content = document.createElement("input");
     newinput_content.className = "input-content";
     newinput_content.type = "text";
+    // 此项由提交者填写，所以属性添加disabled
     newinput_content.disabled = "disabled";
     newinput_content.placeholder = "此项由提交者填写";
     let newbtn = document.createElement("button");
     newbtn.className = "removeTopic";
-    //把各元素节点插到其父元素下
+    // 把各元素节点插到其父元素下
     newbtn.appendChild(document.createTextNode("删除题目"));
     newh1.appendChild(newinput_topic);
     newli.appendChild(newh1);
@@ -118,15 +124,16 @@ function createName(topicName, detailText) {
     newli.appendChild(newbtn);
     ul.appendChild(newli);
     cancel.onclick();
-    //更新checkbox;
+    // 在所有的文件重命名选项增加这个选项
     for_checkbox("add", newli.id, newinput_topic.value);
-    //给新增的题目添加删除事件
+    // 给新增的题目添加删除事件
     newbtn.addEventListener("click", () => {
-        //删除对应复选框
+        // 在所有的文件重命名选项增加这个选项
         for_checkbox("remove", newli.id, newinput_topic.value);
         ul.removeChild(newli);
     });
-    //实时监听内容变化，并且改变复选框中的值
+    // 实时监听题目的名称变化
+    // 以便于实时修改其在文件重命名选项中的对应名称
     newinput_topic.onchange = () => {
         for_checkbox("modify", newli.id, newinput_topic.value);
     };
@@ -192,17 +199,21 @@ function createSno(topicName, detailText) {
     newli.ondrop = onDrop;
 };
 
-//文件
+/**
+ * 根据topicName和detailText创建一个“文件”类型的题目
+ * @param {string} topicName 题目名称
+ * @param {string} detailText 详情描述的内容
+ */
 function createFile(topicName, detailText) {
-    //新建一些元素节点
+    // 新建一些元素节点
     let newli = document.createElement("li");
     let newh1 = document.createElement("h1");
     let newinput_topic = document.createElement("input");
     newinput_topic.className = "input-topic";
     newinput_topic.required = "required";
-    //TODO 增加 id 属性
+    // 增加 id 属性
     newli.id = (++question_id).toString();
-    //TODO 增加 name 属性
+    // 增加 name 属性
     newinput_topic.name = "question_file";
     newinput_topic.type = "text";
     newinput_topic.value = topicName;
@@ -214,56 +225,62 @@ function createFile(topicName, detailText) {
     newdetail.value = detailText;
     let newspan = document.createElement("span");
     newspan.className = "nameRules";
+    // 鼠标经过问好时显示的文字
     newspan.setAttribute("data-hint", "提交的文件将按照勾选的选项自动重命名");
     newspan.appendChild(document.createTextNode("重命名规则："));
+    // 重命名规则的勾选框
     let newselect = document.createElement("div");
     newselect.className = "selectTopic";
     let newinput_content = document.createElement("input");
     newinput_content.className = "input-content";
+    // 创建收集者不提交文件，所以设为disabled
     newinput_content.disabled = "disabled";
     newinput_content.type = "file";
     let newbtn = document.createElement("button");
     newbtn.className = "removeTopic";
-    //把各元素节点插到其父节点下
+    // 把各元素节点插到其父节点下
     newbtn.appendChild(document.createTextNode("删除题目"));
     newh1.appendChild(newinput_topic);
     newli.appendChild(newh1);
     newli.appendChild(newdetail);
     newli.appendChild(newspan);
-    //维护复选框
+    // 添加重命名勾选框中的内容
     updateCheckbox(newselect);
     newli.appendChild(newselect);
     newli.appendChild(newinput_content);
     newli.appendChild(newbtn);
     ul.appendChild(newli);
     cancel.onclick();
-    //给新增的题目添加删除事件
+    // 给新增的题目添加删除事件
     newbtn.addEventListener("click", () => {
         ul.removeChild(newli);
     });
-    //添加拖拽效果
+    // 添加拖拽效果
     newli.draggable = "true";
     newli.ondragstart = onDragStart;
     newli.ondragover = onDragOver;
     newli.ondrop = onDrop;
 };
 
-//当增加一个“文件”题目时，调用此函数
+
+/**
+ * 给文件重命名勾选框加入内容
+ * 当新建一个“文件”类型题目时，调用此函数
+ * @param {object} selectBox 勾选框对象
+ */
 function updateCheckbox(selectBox) {
-    // let len = selectBox.children.length;
-    // for (let i = 0; i < len; i++) {
-    //     selectBox.children[0].remove();
-    // }
     for (let i = 0; i < lis.length; i++) {
         let input_topic = lis[i].getElementsByClassName("input-topic")[0];
         let input_content = lis[i].getElementsByClassName("input-content")[0];
+        // 只有姓名和学号类型的题目要加入重命名勾选框
         if (!input_content) continue;
         if (input_content.type === "file") continue;
         let newcheckbox = document.createElement("input");
         let newspan = document.createElement("span");
         newspan.className = "checked_topic_text";
         newcheckbox.type = "checkbox";
-        //设为同一id
+        // 将勾选框选项的id与该题目的id设为相同的值
+        // 以便于修改勾选框选项内容和交换顺序
         newcheckbox.id = lis[i].id;
         newcheckbox.name = "checked_topic";
         newcheckbox.value = input_topic.value;
@@ -273,9 +290,17 @@ function updateCheckbox(selectBox) {
     }
 }
 
-//修改复选框中的内容
-//当有题目的增加/删除/修改/交换顺序时，调用此函数
-//option有四种取值："add","remove","modify","swap"
+
+
+/**
+ * 修改复选框中的内容
+*  当有题目的增加/删除/修改/交换顺序时，调用此函数
+ * @param {string} option 操作类型，
+ *                        有四种取值："add","remove","modify","swap"
+ * @param {string} id 勾选框选项的id
+ * @param {string} value 勾选框选项的内容
+ * @returns null
+ */
 function for_checkbox(option, id, value) {
     for (let i = 0; i < lis.length; i++) {
         let input_content = lis[i].getElementsByClassName("input-content")[0];

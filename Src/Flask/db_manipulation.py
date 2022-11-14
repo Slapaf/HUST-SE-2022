@@ -153,6 +153,18 @@
         例如：
         [('计胜翔', datetime.datetime(2022, 11, 5, 20, 25, 32, 142115), 2, ['jsx1.pdf', 'jsx2.doc']), 
         ('张隽翊', datetime.datetime(2022, 11, 5, 20, 25, 32, 142115), 1, ['zjy1.pdf'])]
+    
+    10、submission_record_v2(collection_id: int)
+        Function: 获取id为collection_id的收集的提交信息
+        
+        Inputs:
+        - collection_id：int类型，表示收集id
+        
+        Returns: 
+        一个元组列表，元组按Submission.id排序，每个元组格式为（姓名：string，提交时间:datetime，文件数量:int，文件详情:list）。
+        例如：
+        [('计胜翔', datetime.datetime(2022, 11, 5, 20, 25, 32, 142115), 2, ['jsx1.pdf', 'jsx2.doc']), 
+        ('张隽翊', datetime.datetime(2022, 11, 5, 20, 25, 32, 142115), 1, ['zjy1.pdf'])]
         
     11、stop_collection(collection_id: int, action_list)
         Function: 将id为collection_id的收集的状态修改为“截止”
@@ -459,65 +471,63 @@ def update_status(user_id: int) -> None:
     db.session.commit()
 
 
-def count_submission(user_id: int = None, collection_id: int = None):
-    """统计问卷提交数量
+def count_submission(collection_id: int = None) -> int:
+    """统计一个收集的提交数量
 
     Args:
-        user_id: 用户id
         collection_id: 收集id
 
     Returns:
         若collection_id不为None， 则返回该问卷的提交数量，是一个整数;
-        若collection_id为None，user_id不为None，则返回该用户创建的每一个问卷的提交数量，是一个字典，键为问卷id，值为该问卷的提交数量;
-        若2个参数都为None，则返回None。
+        # 若collection_id为None，user_id不为None，则返回该用户创建的每一个问卷的提交数量，是一个字典，键为问卷id，值为该问卷的提交数量;
+        # 若2个参数都为None，则返回None。
     """
 
     # 先看是否给了参数collection_id
     if collection_id is not None:
         return Submission_info.query.filter_by(collection_id=collection_id).count()
 
-    # 若没给参数collection_id，但给了参数user_id
-    if user_id is not None:
-        collection_id_list = Collection_info.query.filter_by(creator_id=user_id).with_entities(Collection_info.id).all()
-        collection_id_list = list(map(itemgetter(0), collection_id_list))
-        submission_dict = {}
-        for collection_id in collection_id_list:
-            submission_dict[collection_id] = Submission_info.query.filter_by(collection_id=collection_id).count()
-        return submission_dict
+    # # 若没给参数collection_id，但给了参数user_id
+    # if user_id is not None:
+    #     collection_id_list = Collection_info.query.filter_by(creator_id=user_id).with_entities(Collection_info.id).all()
+    #     collection_id_list = list(map(itemgetter(0), collection_id_list))
+    #     submission_dict = {}
+    #     for collection_id in collection_id_list:
+    #         submission_dict[collection_id] = Submission_info.query.filter_by(collection_id=collection_id).count()
+    #     return submission_dict
 
     return None
 
 
-def count_filenum(user_id: int = None, collection_id: int = None, question_id: int = None, qno: int = None):
-    """统计已收文件数
+def count_filenum(collection_id: int = None) -> int:
+    """统计一个收集的已收文件数
 
     Args:
-        user_id: 用户id
         collection_id: 收集id
-        qno: 题目序号
 
     Return:
-        若question_id不为None，或collection_id、qno不为None，则返回该题的已收文件数，是一个整数。
-        若question_id为None，collection_id不为None，则返回该问卷的已收文件数，是一个整数。
-        若question_id为None、collection_id为None，user_id不为None，则返回该用户所有问卷的已收文件数，是一个字典，键为问卷id，值为该问卷的已收文件数。
-        若都为None，则返回None。
+        若collection_id不为None，则返回该问卷的已收文件数，是一个整数。
+        # 若question_id不为None，或collection_id、qno不为None，则返回该题的已收文件数，是一个整数。
+        # 若question_id为None，
+        # 若question_id为None、collection_id为None，user_id不为None，则返回该用户所有问卷的已收文件数，是一个字典，键为问卷id，值为该问卷的已收文件数。
+        # 若都为None，则返回None。
     """
 
-    # 若给了参数question_id
-    if question_id is not None:
-        # path = './FileStorage/' + Question_info.query.filter_by(id=question_id).first().file_path
-        path = os.path.join(APP_ROOT, 'FileStorage', Question_info.query.filter_by(id=question_id).first().file_path)
-        files = os.listdir(path)
-        file_num = len(files)
-        return file_num
+    # # 若给了参数question_id
+    # if question_id is not None:
+    #     # path = './FileStorage/' + Question_info.query.filter_by(id=question_id).first().file_path
+    #     path = os.path.join(APP_ROOT, 'FileStorage', Question_info.query.filter_by(id=question_id).first().file_path)
+    #     files = os.listdir(path)
+    #     file_num = len(files)
+    #     return file_num
 
-    # 若给了collection_id和qno
-    if collection_id is not None and qno is not None:
-        # path = './FileStorage/' + Question_info.query.filter_by(id=question_id).first().file_path
-        path = os.path.join(APP_ROOT, 'FileStorage', Question_info.query.filter_by(id=question_id).first().file_path)
-        files = os.listdir(path)
-        file_num = len(files)
-        return file_num
+    # # 若给了collection_id和qno
+    # if collection_id is not None and qno is not None:
+    #     # path = './FileStorage/' + Question_info.query.filter_by(id=question_id).first().file_path
+    #     path = os.path.join(APP_ROOT, 'FileStorage', Question_info.query.filter_by(id=question_id).first().file_path)
+    #     files = os.listdir(path)
+    #     file_num = len(files)
+    #     return file_num
 
     # 若没给参数question_id，但给了参数collection_id
     if collection_id is not None:
@@ -535,26 +545,26 @@ def count_filenum(user_id: int = None, collection_id: int = None, question_id: i
             file_num += len(files)
         return file_num
 
-    # 若没给参数question_id、collection_id，但给了参数user_id
-    if user_id is not None:
-        collection_id_list = Collection_info.query.filter_by(creator_id=user_id).with_entities(Collection_info.id).all()
-        collection_id_list = list(map(itemgetter(0), collection_id_list))
-        file_num_dict = {}
-        # 遍历该用户的所有收集
-        for id1 in collection_id_list:
-            # 查询收集中所有文件上传题
-            question_id_list = Question_info.query.filter_by(
-                collection_id=id1, question_type=Question_info.FILE_UPLOAD
-            ).with_entities(Question_info.id).all()
-            question_id_list = list(map(itemgetter(0), question_id_list))
-            file_num = 0
-            for id2 in question_id_list:
-                # path = './FileStorage/' + Question_info.query.filter_by(id=id2).first().file_path
-                path = os.path.join(APP_ROOT, 'FileStorage', Question_info.query.filter_by(id=id2).first().file_path)
-                files = os.listdir(path)
-                file_num += len(files)
-            file_num_dict[id1] = file_num
-        return file_num_dict
+    # # 若没给参数question_id、collection_id，但给了参数user_id
+    # if user_id is not None:
+    #     collection_id_list = Collection_info.query.filter_by(creator_id=user_id).with_entities(Collection_info.id).all()
+    #     collection_id_list = list(map(itemgetter(0), collection_id_list))
+    #     file_num_dict = {}
+    #     # 遍历该用户的所有收集
+    #     for id1 in collection_id_list:
+    #         # 查询收集中所有文件上传题
+    #         question_id_list = Question_info.query.filter_by(
+    #             collection_id=id1, question_type=Question_info.FILE_UPLOAD
+    #         ).with_entities(Question_info.id).all()
+    #         question_id_list = list(map(itemgetter(0), question_id_list))
+    #         file_num = 0
+    #         for id2 in question_id_list:
+    #             # path = './FileStorage/' + Question_info.query.filter_by(id=id2).first().file_path
+    #             path = os.path.join(APP_ROOT, 'FileStorage', Question_info.query.filter_by(id=id2).first().file_path)
+    #             files = os.listdir(path)
+    #             file_num += len(files)
+    #         file_num_dict[id1] = file_num
+    #     return file_num_dict
 
     return None
 
@@ -604,8 +614,30 @@ def get_question_dict(collection_id: int) -> dict:
         collection_id: 收集id
 
     Returns:
-        一个字典，包含该收集的相关信息（收集标题、收集描述、创建者、截止时间、题目等等）
-
+        一个字典，包含该收集的相关信息（收集标题、收集描述、创建者、截止时间、题目等等）。
+        格式如下：
+        [('collectionTitle', 'ceshi'),
+         ('collector', '凯'),
+         ('deadline', '2022-11-18T22:31:49'),
+         ('description', ''),
+         ('question_name1', '姓名'),
+         ('detail1', ''),
+         ('question_sno2', '学号'),
+         ('detail2', ''),
+         ('question_file3', '文件'),
+         ('detail3', ''),
+         ('question_radio4', '单选题'),
+         ('detail4', ''),
+         ('checked_radio4', 'A'),
+         ('question_multipleChoice5', '多选题'),
+         ('detail5', ''),
+         ('checked_mulans5', 'B'),
+         ('checked_mulans5', 'C'),
+         ('question_qnaire6', '问卷题目'),
+         ('detail6', ''),
+         ('qn_option6', 'asdf'),
+         ('qn_option6', 'adff'),
+         ('choose_type6', 'single')]
     """
     seq = 0
     question = {}
@@ -812,6 +844,79 @@ def submission_record(collection_id: int) -> list:
         file_list.append(file)
 
     record = list(zip(name_list, time_list, file_num_list, file_list))
+    # 对元组列表根据submit_time进行降序排序
+    record = list(reversed(sorted(record, key=lambda x: (x[1].timestamp(), x[0]))))
+    return record
+
+
+def submission_record_v2(collection_id: int) -> list:
+    """获取id为collection_id的收集的提交记录（姓名，提交时间，文件数量，文件详情）
+
+    Args:
+        collection_id: 收集id
+
+    Returns:
+        一个元组列表，每个元组表示一条提交信息。
+        格式如下:
+        [(1, '计胜翔', datetime.datetime(2022, 11, 5, 20, 25, 32, 142115), 2, ['jsx1.pdf', 'jsx2.doc']),
+        (2, '张隽翊', datetime.datetime(2022, 11, 5, 20, 25, 32, 142115), 1, ['zjy1.pdf'])]
+    """
+    # 获取提交记录id
+    id_list = Submission_info.query. \
+        filter_by(collection_id=collection_id). \
+        order_by("id"). \
+        with_entities(Submission_info.id). \
+        all()
+    id_list = list(map(itemgetter(0), id_list))
+
+    # 获取提交名单列表
+    name_list = Submission_info.query. \
+        filter_by(collection_id=collection_id). \
+        order_by("id"). \
+        with_entities(Submission_info.submitter_name). \
+        all()
+    name_list = list(map(itemgetter(0), name_list))
+
+    # 获取提交时间列表
+    time_list = Submission_info.query. \
+        filter_by(collection_id=collection_id). \
+        order_by("id"). \
+        with_entities(Submission_info.submit_time). \
+        all()
+    time_list = list(map(itemgetter(0), time_list))
+
+    # 获取提交信息id列表
+    submission_id_list = Submission_info.query. \
+        filter_by(collection_id=collection_id). \
+        order_by('id'). \
+        with_entities(Submission_info.id). \
+        all()
+    submission_id_list = list(map(itemgetter(0), submission_id_list))
+
+    # 获取文件上传题的问题id列表
+    question_id_list = Question_info.query. \
+        filter_by(collection_id=collection_id, question_type=Question_info.FILE_UPLOAD). \
+        with_entities(Question_info.id).all()
+    question_id_list = list(map(itemgetter(0), question_id_list))
+
+    file_num_list = []
+    for id in submission_id_list:
+        num = Submit_Content_info.query. \
+            filter(Submit_Content_info.submission_id == id,
+                   Submit_Content_info.question_id.in_(question_id_list)).count()
+        file_num_list.append(num)
+
+    # 构建文件详情列表
+    file_list = []
+    for id in submission_id_list:
+        file = Submit_Content_info.query.filter(Submit_Content_info.submission_id == id,
+                                                Submit_Content_info.question_id.in_(question_id_list)). \
+            with_entities(Submit_Content_info.result). \
+            all()
+        file = list(map(itemgetter(0), file))
+        file_list.append(file)
+
+    record = list(zip(id_list, name_list, time_list, file_num_list, file_list))
     # 对元组列表根据submit_time进行降序排序
     record = list(reversed(sorted(record, key=lambda x: (x[1].timestamp(), x[0]))))
     return record
@@ -1070,3 +1175,155 @@ def file_upload(collection_id: int,
         f.save(os.path.join(path, f.filename))
 
     return file
+
+
+def get_submission_dict(collection_id: int, submission_id: int) -> dict:
+    """获取id为collection_id的收集、提交记录id为submission_id的用户提交内容信息
+
+    Args:
+        collection_id: 收集id
+        submission_id: 提交记录id
+
+    Returns:
+        一个字典，包含该提交记录中用户的提交内容。
+        格式如下：
+        {'1_collectionTitle': '核酸检测',
+         '2_collector': '张三',
+         '3_deadline': '2022-11-15 15:23:09',
+         '4_description': '',
+         '5_question_name1': '姓名',
+         '6_detail1': '',
+         '7_submit_name1': '王广凯',
+         '8_question_sno2': '学号',
+         '9_detail2': '',
+         '10_submit_sno2': 'U202012345',
+         '11_question_file3': '文件',
+         '12_detail3': '',
+         '13_submit_file3': '系统设计.md',
+         '14_question_radio4': '单选题',
+         '15_detail4': '',
+         '16_checked_radio4': 'A',
+         '17_submit_radio4': 'B',
+         '18_question_multipleChoice5': '多选题',
+         '19_detail5': '',
+         '20_checked_mulans5': 'C',
+         '21_checked_mulans5': 'D',
+         '22_submit_mulans5': 'A',
+         '23_submit_mulans5': 'B',
+         '24_question_qnaire6': '问卷题目',
+         '25_detail6': '是否已做核酸',
+         '26_qn_option6': '是',
+         '27_qn_option6': '否',
+         '28_submit_qnaire6': '2'}
+    """
+    seq = 0
+    submission = {}
+    collection = Collection_info.query.get(collection_id)
+    if collection is None:
+        return None
+    seq += 1
+    submission[f'{seq}_collectionTitle'] = collection.collection_title
+    seq += 1
+    submission[f'{seq}_collector'] = collection.creator
+    seq += 1
+    submission[f'{seq}_deadline'] = collection.end_date.strftime("%Y-%m-%d %H:%M:%S")
+    seq += 1
+    submission[f'{seq}_description'] = collection.description
+    question_list = Question_info.query.filter_by(collection_id=collection_id).order_by("qno").all()
+    submission_content_list = Submit_Content_info.query.filter_by(submission_id=submission_id).order_by("qno").all()
+    for q, s in list(zip(question_list, submission_content_list)):
+        # 若是姓名题
+        if q.question_type == Question_info.NAME:
+            seq += 1
+            submission[f'{seq}_question_name{q.qno}'] = q.question_title
+            seq += 1
+            submission[f'{seq}_detail{q.qno}'] = q.question_description
+            seq += 1
+            submission[f'{seq}_submit_name{q.qno}'] = s.result
+
+        # 若是姓名题
+        if q.question_type == Question_info.SNO:
+            seq += 1
+            submission[f'{seq}_question_sno{q.qno}'] = q.question_title
+            seq += 1
+            submission[f'{seq}_detail{q.qno}'] = q.question_description
+            seq += 1
+            submission[f'{seq}_submit_sno{q.qno}'] = s.result
+
+        # 若是文件上传题
+        if q.question_type == Question_info.FILE_UPLOAD:
+            seq += 1
+            submission[f'{seq}_question_file{q.qno}'] = q.question_title
+            seq += 1
+            submission[f'{seq}_detail{q.qno}'] = q.question_description
+            # # 重命名规则
+            # if q.rename_rule is None:
+            #     seq += 1
+            #     submission[f'{seq}_checked_topic{q.qno}'] = ''
+            # else:
+            #     qno_list = list(map(int, q.rename_rule.split('-')))
+            #     for qno in qno_list:
+            #         seq += 1
+            #         submission[f'{seq}_checked_topic{q.qno}'] = Question_info.query. \
+            #             filter_by(collection_id=collection_id, qno=qno).first().question_title
+            seq += 1
+            submission[f'{seq}_submit_file{q.qno}'] = s.result
+
+        # 若是单选题
+        if q.question_type == Question_info.SINGLE_CHOICE:
+            seq += 1
+            submission[f'{seq}_question_radio{q.qno}'] = q.question_title
+            seq += 1
+            submission[f'{seq}_detail{q.qno}'] = q.question_description
+            # 单选题答案
+            seq += 1
+            submission[f'{seq}_checked_radio{q.qno}'] = Answer_info.query. \
+                filter_by(question_id=q.id).first().answer_option
+            # 用户提交答案
+            seq += 1
+            submission[f'{seq}_submit_radio{q.qno}'] = s.result
+
+        # 若是多选题
+        if q.question_type == Question_info.MULTI_CHOICE:
+            seq += 1
+            submission[f'{seq}_question_multipleChoice{q.qno}'] = q.question_title
+            seq += 1
+            submission[f'{seq}_detail{q.qno}'] = q.question_description
+            # 多选题答案
+            answer_list = Answer_info.query.filter_by(question_id=q.id).first().answer_option.split('-')
+            for answer in answer_list:
+                seq += 1
+                submission[f'{seq}_checked_mulans{q.qno}'] = answer
+            # 用户提交答案
+            submit_option_list = s.result.split('-')
+            for submit_option in submit_option_list:
+                seq += 1
+                submission[f'{seq}_submit_mulans{q.qno}'] = submit_option
+
+        # 若是问卷题
+        if q.question_type == Question_info.SINGLE_QUESTIONNAIRE or \
+                q.question_type == Question_info.MULTI_QUESTIONNAIRE:
+            seq += 1
+            submission[f'{seq}_question_qnaire{q.qno}'] = q.question_title
+            seq += 1
+            submission[f'{seq}_detail{q.qno}'] = q.question_description
+            # 选项内容
+            option_list = Option_info.query.filter_by(question_id=q.id).order_by("option_sn").all()
+            for option in option_list:
+                seq += 1
+                submission[f'{seq}_qn_option{q.qno}'] = option.option_content
+            # if q.question_type == Question_info.SINGLE_QUESTIONNAIRE:
+            #     seq += 1
+            #     submission[f'{seq}_choose_type{q.qno}'] = "single"
+            # else:
+            #     seq += 1
+            #     submission[f'{seq}_choose_type{q.qno}'] = "multiple"
+
+            # 用户提交选项
+            submit_option_list = s.result.split('-')
+            for submit_option in submit_option_list:
+                seq += 1
+                submission[f'{seq}_submit_qnaire{q.qno}'] = submit_option
+
+    print(submission)
+    return submission
