@@ -91,12 +91,7 @@ def personal_homepage():
 # 用于测试数据库接口函数
 @app.route('/test')
 def test():
-    # # submission_record(3)
-    # delete_collection(1)
-    # save_submission(sample1)
-    # save_submission(sample2)
-    a = count_filenum(collection_id=1)
-    print(a)
+    get_submission_dict(2,2)
     return redirect(url_for('index'))
 
 
@@ -120,32 +115,6 @@ def file_submitting(collection_message):
             return render_template("404.html")
         return render_template("file_submitting.html",
                                collection=question_dict)
-
-
-# ! 写错地方了，先留着
-def time_format(time_to_format):
-    """
-    将 datetime.timedelta 类型的数据转换成网页上显示的格式，按“天”、“小时”、“分”、“秒”的优先级显示
-
-    Args:
-        time_to_format: datetime.timedelta
-
-    Returns:
-        time_formatted: str
-    """
-    if time_to_format.days < 0:
-        return ""
-    if time_to_format.days > 0:
-        return str(time_to_format.days) + "天"
-    seconds = time_to_format.seconds
-    hours = seconds // 3600
-    if hours > 0:
-        return str(hours) + "小时"
-    minute = seconds // 60
-    if minute > 0:
-        return str(minute) + "分"
-    seconds = seconds % 60
-    return str(seconds) + "秒"
 
 
 @app.route('/mycollection', methods=['GET', 'POST'])

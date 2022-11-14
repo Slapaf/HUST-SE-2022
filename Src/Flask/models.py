@@ -83,7 +83,7 @@ class User(db.Model, UserMixin):
             host=host
         )
 
-    def send_email(self, to_email: str | list, email_title: str, email_message: str) -> bool:
+    def send_email(self, to_email: str or list, email_title: str, email_message: str) -> bool:
         """发送邮件，可以单发也可以群发，取决于传入参数 to_email 的类型
 
         Args:
@@ -148,7 +148,7 @@ class Collection_info(db.Model):
                            default=datetime.datetime.now())  # 开始时间
     end_date = db.Column(db.DateTime, nullable=False)  # 收集结束时间
     status = db.Column(db.Enum(RELEASE, SAVED, FINISHED,
-                       OVERDUE), nullable=False)  # 当前状态
+                               OVERDUE), nullable=False)  # 当前状态
     namelist_path = db.Column(db.String(50))  # 应交名单路径
 
     # def collection_valid(self) -> bool:

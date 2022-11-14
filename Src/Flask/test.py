@@ -1,19 +1,21 @@
-l = [1, 2, 3, 4, 5]
-for index, value in enumerate(l):
-    print(index,value)
-# [('question_name1', '姓名lala'),
-#  ('submit_name1', '计胜翔'),
-#  ('question_file2', '文件haha'),
-#  ('submit_file2', '二十大观看心得.docx'),
-#  ('question_sno3', '学号xixi'),
-#  ('submit_sno3', 'U202015362'),
-#  ('question_radio4', '单选题nie'),
-#  ('submit_checked_radio4', 'C'),
-#  ('question_multipleChoice5', '多选题kk'),
-#  ('submit_checked_mulans5', 'A'),
-#  ('submit_checked_mulans5', 'B'),
-#  ('question_qnaire6', '你喜欢跑步吗？'),
-#  ('submit_checked_qnaire6', '1')]
+l1 = [1, 2, 3, 4, 5]
+l2 = [11, 22, 33, 44, 55]
+
+for v1, v2 in list(zip(l1, l2)):
+    print(v1, v2)
+[('question_name1', '姓名lala'),
+ ('submit_name1', '计胜翔'),
+ ('question_file2', '文件haha'),
+ ('submit_file2', '二十大观看心得.docx'),
+ ('question_sno3', '学号xixi'),
+ ('submit_sno3', 'U202015362'),
+ ('question_radio4', '单选题nie'),
+ ('submit_checked_radio4', 'C'),
+ ('question_multipleChoice5', '多选题kk'),
+ ('submit_checked_mulans5', 'A'),
+ ('submit_checked_mulans5', 'B'),
+ ('question_qnaire6', '你喜欢跑步吗？'),
+ ('submit_checked_qnaire6', '1')]
 
 # [('张隽翊', datetime.datetime(2022, 11, 7, 16, 1, 19, 235046), 1, ['张隽翊', '二十大观看心得.docx', 'U202015362', 'C', 'A-B', '1']),
 #  ('王广凯', datetime.datetime(2022, 11, 7, 16, 1, 19, 235046), 1,['王广凯', '王广凯dsb.pdf', 'U202015323', 'C', 'A-B', '1']),
@@ -41,3 +43,32 @@ for index, value in enumerate(l):
  ('qn_option6', 'asdf'),
  ('qn_option6', 'adff'),
  ('choose_type6', 'single')]
+
+{'1_collectionTitle': '核酸检测',
+ '2_collector': '张三',
+ '3_deadline': '2022-11-15 15:23:09',
+ '4_description': '',
+ '5_question_name1': '姓名',
+ '6_detail1': '',
+ '7_submit_name1': '王广凯',
+ '8_question_sno2': '学号',
+ '9_detail2': '',
+ '10_submit_sno2': 'U202012345',
+ '11_question_file3': '文件',
+ '12_detail3': '',
+ '13_submit_file3': '系统设计.md',
+ '14_question_radio4': '单选题',
+ '15_detail4': '',
+ '16_checked_radio4': 'A',
+ '17_submit_radio4': 'B',
+ '18_question_multipleChoice5': '多选题',
+ '19_detail5': '',
+ '20_checked_mulans5': 'C',
+ '21_checked_mulans5': 'D',
+ '22_submit_mulans5': 'A',
+ '23_submit_mulans5': 'B',
+ '24_question_qnaire6': '问卷题目',
+ '25_detail6': '是否已做核酸',
+ '26_qn_option6': '是',
+ '27_qn_option6': '否',
+ '28_submit_qnaire6': '2'}
