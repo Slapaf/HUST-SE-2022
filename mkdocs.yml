@@ -61,12 +61,13 @@ plugins:
         python:
           paths: [Src/Flask]
 markdown_extensions:
+  - admonition
+  - attr_list
   - toc:
       permalink: "#"
   - pymdownx.highlight:
       anchor_linenums: true
   - pymdownx.details
-  - admonition
   - pymdownx.inlinehilite
   - pymdownx.snippets
   - pymdownx.superfences
