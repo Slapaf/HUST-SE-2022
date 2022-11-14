@@ -89,7 +89,7 @@ def personal_homepage():
 
 
 @app.route('/file_preview')
-def test():
+def file_preview():
     return render_template("file_preview")
 
 
