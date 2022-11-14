@@ -1,0 +1,68 @@
+.singleOption,
+.multiOption {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 10px;
+    margin-right: 3px;
+}
+
+.optionContent {
+    font-size: 15px;
+    margin-right: 10px;
+}
+
+.correctAnswerBox {
+    font-size: 13px;
+    margin: 8px 10px;
+}
+
+/* 注意顺序 */
+input[type="radio"]:disabled:checked::before {
+    font-family: "iconfont" !important;
+    content: "\e703";
+    display: inline-block;
+    position: relative;
+    top: -2px;
+}
+
+input[type="checkbox"]:disabled:checked::before {
+    font-family: "iconfont" !important;
+    content: "\e702";
+    display: inline-block;
+    position: relative;
+    top: -3px;
+}
+
+.correctSingle::before {
+    font-family: "iconfont" !important;
+    content: "\e668" !important;
+    display: inline-block;
+    position: relative;
+    top: -2px;
+}
+
+.wrongSingle::before {
+    font-family: "iconfont" !important;
+    content: "\e701" !important;
+    display: inline-block;
+    position: relative;
+    top: -2px;
+}
+
+.correctMulti::before {
+    font-family: "iconfont" !important;
+    content: "\e669" !important;
+    display: inline-block;
+    position: relative;
+    top: -2px;
+}
+
+.wrongMulti::before {
+    font-family: "iconfont" !important;
+    content: "\e700" !important;
+    display: inline-block;
+    position: relative;
+    top: -2px;
+}
+
+

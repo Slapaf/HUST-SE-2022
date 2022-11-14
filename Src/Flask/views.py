@@ -92,7 +92,7 @@ def personal_homepage():
 
 @app.route('/file_preview')
 def file_preview():
-    return render_template("file_preview")
+    return render_template("file_preview.html")
 
 
 # 用于测试数据库接口函数

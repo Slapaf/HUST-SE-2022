@@ -11,7 +11,7 @@ let question_id = 0;
 let countdown = 2;
 
 //添加名字/学号/文件
-function creatNameOrSnoOrFile(op, topicName, detailText) {
+function createNameOrSnoOrFile(op, topicName, detailText, submitContent) {
   let newli = document.createElement("li");
   let newh = document.createElement("h1");
   let inputTopic = document.createElement("div");
@@ -22,6 +22,7 @@ function creatNameOrSnoOrFile(op, topicName, detailText) {
   detail.innerHTML = textareaToDiv(detailText);
   let inputContent = document.createElement("div");
   inputContent.className = "inputContent";
+  inputContent.innerHTML = submitContent;
   questionList.appendChild(newli);
   newli.appendChild(newh);
   newh.appendChild(inputTopic);
@@ -34,30 +35,34 @@ function creatNameOrSnoOrFile(op, topicName, detailText) {
 }
 
 //添加单选/多选
-function creatSingleOrMultiple(op, topicName, detailText) {
+function createSingleOrMultiple(
+  op,
+  topicName,
+  detailText,
+  checkedChoiceArr,
+  correctAnswerArr
+) {
   let newli = document.createElement("li");
   newli.id = question_id.toString();
   let newh = document.createElement("h1");
   let inputTopic = document.createElement("div");
-  inputTopic.value = topicName;
+  inputTopic.innerHTML = topicName;
   inputTopic.className = "readOnlyInput";
   let detail = document.createElement("div");
   detail.className = "detail";
   detail.innerHTML = textareaToDiv(detailText);
   let qBox = document.createElement("div");
   qBox.className = op === "single" ? "singleQuestionBox" : "multiQuestionBox";
-  let ABCD = ["A", "B", "C", "D"];
-  for (let i = 0; i < 4; i++) {
-    let opBox = document.createElement("div");
-    opBox.className = op === "single" ? "singleOption" : "multiOption";
-    let inputChoice = document.createElement("input");
-    inputChoice.type = op === "single" ? "radio" : "checkbox";
-    inputChoice.disabled = "disabled";
-    let newlabel = document.createElement("label");
-    newlabel.innerHTML = ABCD[i];
-    opBox.appendChild(inputChoice);
-    opBox.appendChild(newlabel);
-    qBox.appendChild(opBox);
+  if (op === "single") {
+    qBox = addChoice_for_filePreview(0, checkedChoiceArr, correctAnswerArr);
+  } else {
+    qBox = addChoice_for_filePreview(1, checkedChoiceArr, correctAnswerArr);
+  }
+  let correctAnswerBox = document.createElement("div");
+  correctAnswerBox.className = "correctAnswerBox";
+  correctAnswerBox.innerHTML = "正确答案：";
+  for (let i = 0; i < correctAnswerArr.length; i++) {
+    correctAnswerBox.innerHTML += " " + correctAnswerArr[i] + " ";
   }
   questionList.appendChild(newli);
   newli.appendChild(newh);
@@ -66,14 +71,49 @@ function creatSingleOrMultiple(op, topicName, detailText) {
     newli.appendChild(detail);
   }
   newli.appendChild(qBox);
+  newli.appendChild(correctAnswerBox);
+}
+
+//添加单选题/多选题
+function addChoice_for_filePreview(op, checkedChoiceArr, correctAnswerArr) {
+  let newqbox = document.createElement("div");
+  let optionArr = ["A", "B", "C", "D"];
+  let correctClass = op === 0 ? "correctSingle" : "correctMulti";
+  let wrongClass = op === 0 ? "wrongSingle" : "wrongMulti";
+  for (let i = 0; i < 4; i++) {
+    let inputChoice = document.createElement("input");
+    inputChoice.type = op === 0 ? "radio" : "checkbox"; //op=0是单选，op=1是多选
+    inputChoice.value = optionArr[i];
+    inputChoice.disabled = true;
+    inputChoice.className = op === 0 ? "singleOption" : "multiOption";
+    let newop = document.createElement("span");
+    newop.className = "optionContent";
+    newop.appendChild(document.createTextNode(optionArr[i]));
+    newqbox.appendChild(inputChoice);
+    newqbox.appendChild(newop);
+    if (checkedChoiceArr.indexOf(optionArr[i].charCodeAt() - 65) != -1) {
+      if (correctAnswerArr.indexOf(optionArr[i]) != -1) {
+        inputChoice.classList.toggle(correctClass);
+      } else {
+        inputChoice.classList.toggle(wrongClass);
+      }
+    }
+  }
+  for (let i = 0; i < checkedChoiceArr.length; i++) {
+    newqbox.children[checkedChoiceArr[i] * 2].checked = "true";
+  }
+  for (let i = 0; i < checkedChoiceArr.length; i++) {
+    checkedChoiceArr[i] = String.fromCharCode(checkedChoiceArr[i] + 65);
+  }
+  return newqbox;
 }
 
 //参数：编号，题目，详情描述，选项数，选项内容（数组），选择类型（单选/多选）
-function creatQuestionnaire(
+function createQuestionnaire(
   topicName,
   detailText,
-  qnOptionNum,
-  qnOptionContent,
+  qnOptionArr,
+  checkedChoiceArr,
   chooseType
 ) {
   let newli = document.createElement("li");
@@ -87,19 +127,24 @@ function creatQuestionnaire(
   detail.innerHTML = textareaToDiv(detailText);
   let qBox = document.createElement("div");
   qBox.className = "qnQuestionBox";
-  for (let i = 0; i < qnOptionNum; i++) {
-    let opBox = document.createElement("div");
-    opBox.className = "qnOption";
-    let inputChoice = document.createElement("input");
-    inputChoice.className = "qnOptionChoice";
-    inputChoice.type = chooseType === "single" ? "radio" : "checkbox";
-    inputChoice.disabled = "disabled";
-    let optionContent = document.createElement("div");
-    optionContent.className = "qnOptionContent";
-    optionContent.innerHTML = textareaToDiv(qnOptionContent[i]);
-    opBox.appendChild(inputChoice);
-    opBox.appendChild(optionContent);
-    qBox.appendChild(opBox);
+  let flag = 0;
+  for (let i = 0; i < qnOptionArr.length; i++) {
+    flag = 0;
+    for (let j = 0; j < checkedChoiceArr.length; j++) {
+      if (checkedChoiceArr[j] - 1 === i) {
+        flag = 1;
+        break;
+      }
+    }
+    if (flag) {
+      qBox.appendChild(
+        addQuestion_for_filePreview(chooseType, qnOptionArr[i], true)
+      );
+    } else {
+      qBox.appendChild(
+        addQuestion_for_filePreview(chooseType, qnOptionArr[i], false)
+      );
+    }
   }
   questionList.appendChild(newli);
   newli.appendChild(newh);
@@ -110,8 +155,25 @@ function creatQuestionnaire(
   newli.appendChild(qBox);
 }
 
+//添加一个问卷选项(传参触发)
+function addQuestion_for_filePreview(chooseType, qnOptionText, if_checked) {
+  let opBox = document.createElement("div");
+  opBox.className = "qnOption";
+  let inputChoice = document.createElement("input");
+  inputChoice.className = "qnOptionChoice";
+  inputChoice.type = chooseType === "single" ? "radio" : "checkbox";
+  inputChoice.disabled = "disabled";
+  inputChoice.checked = if_checked;
+  let optionContent = document.createElement("div");
+  optionContent.className = "qnOptionContent";
+  optionContent.innerHTML = textareaToDiv(qnOptionText);
+  opBox.appendChild(inputChoice);
+  opBox.appendChild(optionContent);
+  return opBox;
+}
+
 // TODO:按照这个格式传数据
-let jsonFromHtml = {
+let tmp_json = {
   "1_collectionTitle": "核酸检测",
   "2_collector": "张三",
   "3_deadline": "2022-11-15 15:23:09",
@@ -128,22 +190,25 @@ let jsonFromHtml = {
   "14_question_radio4": "单选题",
   "15_detail4": "",
   "16_checked_radio4": "A",
-  "17_submit_radio4": "B",
+  "17_submit_radio4": "C",
   "18_question_multipleChoice5": "多选题",
   "19_detail5": "",
-  "20_checked_mulans5": "C",
-  "21_checked_mulans5": "D",
+  "20_checked_mulans5": "A",
+  "21_checked_mulans5": "C",
   "22_submit_mulans5": "A",
-  "23_submit_mulans5": "B",
-  "24_question_qnaire6": "问卷题目",
-  "25_detail6": "是否已做核酸",
-  "26_qn_option6": "是",
-  "27_qn_option6": "否",
-  "28_submit_qnaire6": "2",
+  "23_submit_mulans5": "C",
+  "24_submit_mulans5": "D",
+  "25_question_qnaire6": "问卷题目",
+  "26_detail6": "是否已做核酸",
+  "27_qn_option6": "是",
+  "28_qn_option6": "否",
+  "29_submit_qnaire6": "1",
+  "30_submit_qnaire6": "2",
 };
 
-let tmp_json = document.getElementById("collection").innerHTML;
-tmp_json = eval("(" + tmp_json + ")"); // ! 有风险
+// let tmp_json = document.getElementById("collection").innerHTML;
+// tmp_json = eval("(" + tmp_json + ")"); // ! 有风险
+
 // console.log(typeof tmp_json);
 // console.log(tmp_json);
 // console.log(typeof jsonFromHtml);
@@ -174,7 +239,7 @@ function processFormData() {
   formDataLen = formDataArr.length;
 }
 
-function creatQuestion() {
+function createQuestion() {
   collectionTitle.innerHTML = Object.values(formData)[0];
   collector.innerHTML = Object.values(formData)[1];
   deadline.innerHTML = Object.values(formData)[2];
@@ -183,34 +248,52 @@ function creatQuestion() {
     let q = formDataArr[i];
     let keys = Object.keys(formDataArr[i]);
     let values = Object.values(formDataArr[i]);
-    // console.log(keys);
-    // console.log(values);
     question_id++;
     if (keys[0].indexOf("question_name") != -1) {
-      creatNameOrSnoOrFile("name", values[0], values[1]);
+      createNameOrSnoOrFile("name", values[0], values[1], values[2]);
     } else if (keys[0].indexOf("question_sno") != -1) {
-      creatNameOrSnoOrFile("sno", values[0], values[1]);
+      createNameOrSnoOrFile("sno", values[0], values[1], values[2]);
     } else if (keys[0].indexOf("question_file") != -1) {
-      creatNameOrSnoOrFile("file", values[0], values[1]);
+      createNameOrSnoOrFile("file", values[0], values[1], values[2]);
     } else if (keys[0].indexOf("question_radio") != -1) {
-      creatSingleOrMultiple("single", values[0], values[1]);
+      let k =
+        values[values.length - 1].toString().charCodeAt() - "A".charCodeAt();
+      let t = values[values.length - 2].toString();
+      createSingleOrMultiple("single", values[0], values[1], [k], [t]);
     } else if (keys[0].indexOf("question_multipleChoice") != -1) {
-      creatSingleOrMultiple("multiple", values[0], values[1]);
-    } else {
-      let qnOptionNum = 0;
-      let qnOptionContent = [];
+      let submitArr = [];
+      let correctArr = [];
       for (let j = 0; j < keys.length; j++) {
-        if (keys[j].indexOf("qn_option") != -1) {
-          qnOptionNum++;
-          qnOptionContent.push(values[j]);
+        if (keys[j].indexOf("submit_mulans") != -1) {
+          submitArr.push(values[j].toString().charCodeAt() - "A".charCodeAt());
+        } else if (keys[j].indexOf("checked_mulans") != -1) {
+          correctArr.push(values[j].toString());
         }
       }
-      creatQuestionnaire(
+      createSingleOrMultiple(
+        "multiple",
         values[0],
         values[1],
-        qnOptionNum,
-        qnOptionContent,
-        values[values.length - 1]
+        submitArr,
+        correctArr
+      );
+    } else {
+      let qnOptionArr = [];
+      let checkedChoiceArr = [];
+      for (let j = 0; j < keys.length; j++) {
+        if (keys[j].indexOf("qn_option") != -1) {
+          qnOptionArr.push(values[j]);
+        } else if (keys[j].indexOf("submit_qnaire") != -1) {
+          checkedChoiceArr.push(values[j]);
+        }
+      }
+      let chooseType = checkedChoiceArr.length > 1 ? "multiple" : "single";
+      createQuestionnaire(
+        values[0],
+        values[1],
+        qnOptionArr,
+        checkedChoiceArr,
+        chooseType
       );
     }
   }
@@ -250,10 +333,11 @@ function textareaToDiv(val) {
 }
 
 addLoadEvent(processFormData);
-addLoadEvent(creatQuestion);
-addLoadEvent(() => {
-  description.innerHTML = textareaToDiv(description.innerHTML);
-});
+console.log(formDataArr);
+addLoadEvent(createQuestion);
+// addLoadEvent(() => {
+//   description.innerHTML = textareaToDiv(description.innerHTML);
+// });
 
 function loadXMLDoc() {
   let xmlhttp;
