@@ -201,33 +201,70 @@ def mycollection():
     )
 
 
+@app.route('/download')
+def send_statistic_file():
+    """返回请求的文件，用户查看汇总和下载文件
+
+    Returns:
+        请求的文件
+    """
+    tmp_data = request.args.to_dict()
+    print(tmp_data)
+    collection_id = id_str_to_int(tmp_data['collectionId'])
+    file_type = tmp_data['fileType']
+    # if file_type == 'zip':
+    file_type = 'zip'  # ! 后续修改
+    print("collection_id: ", collection_id)
+    tmp_path = Collection_info.query.get(collection_id).namelist_path
+    # if sys.platform.startswith('win'):
+    #                 #     tmp_path = tmp_path.replace("/", "\\")
+    # print("收集文件路径: ", tmp_path)
+    zip_file_name = Collection_info.query.get(collection_id).collection_title
+    # print("收集标题: ", zip_file_name)
+    source_dir = os.path.join(APP_FILE, tmp_path)
+    destination_dir = os.path.join(APP_FILE, current_user.userpath)
+    print("源路径: ", source_dir)
+    print("目标路径: ", destination_dir)
+    dir2zip(source_dir, destination_dir, zip_file_name)
+    # ! 返回压缩包
+    zip_file_name += '.zip'
+    f = open(os.path.join(destination_dir, zip_file_name), "rb")
+    response = Response(f.readlines())
+    mime_type = mimetypes.guess_type(zip_file_name)[0]
+    response.headers['Content-Type'] = mime_type
+    response.headers['Content-Disposition'] = 'attachment; filename={}'.format(
+        zip_file_name.encode().decode('latin-1')
+    )
+    return response
+
+
 @app.route('/collection_details/<string:collection_id>', methods=['GET', 'POST'])
 @login_required
 def collection_details(collection_id):
     if request.method == 'POST':
-        tmp_form = request.form
-        print(tmp_form)
-        print(tmp_form.to_dict())
-        if 'hidden-input' in tmp_form.keys():
-            opcode, col_id = tmp_form['hidden-input'].split('$')
-            print("opcode: ", opcode)
-            print("col_id: ", col_id)
-            if opcode == 'download':  # * 下载所有文件
-                tmp_path = Collection_info.query.get(col_id).namelist_path
-                # if sys.platform.startswith('win'):
-                #                 #     tmp_path = tmp_path.replace("/", "\\")
-                # print("收集文件路径: ", tmp_path)
-                zip_file_name = Collection_info.query.get(col_id).collection_title
-                # print("收集标题: ", zip_file_name)
-                source_dir = os.path.join(APP_FILE, tmp_path)
-                destination_dir = os.path.join(APP_FILE, current_user.userpath)
-                print("源路径: ", source_dir)
-                print("目标路径: ", destination_dir)
-                dir2zip(source_dir, destination_dir, zip_file_name)
-            elif opcode == 'excel':  # * 返回统计信息 Excel
-                pass
-        # ! 调试
-        return redirect(url_for('collection_details', collection_id=collection_id))
+        # tmp_form = request.form
+        # print(tmp_form)
+        # print(tmp_form.to_dict())
+        # if 'hidden-input' in tmp_form.keys():
+        #     opcode, col_id = tmp_form['hidden-input'].split('$')
+        #     print("opcode: ", opcode)
+        #     print("col_id: ", col_id)
+        #     if opcode == 'download':  # * 下载所有文件
+        #         tmp_path = Collection_info.query.get(col_id).namelist_path
+        #         # if sys.platform.startswith('win'):
+        #         #                 #     tmp_path = tmp_path.replace("/", "\\")
+        #         # print("收集文件路径: ", tmp_path)
+        #         zip_file_name = Collection_info.query.get(col_id).collection_title
+        #         # print("收集标题: ", zip_file_name)
+        #         source_dir = os.path.join(APP_FILE, tmp_path)
+        #         destination_dir = os.path.join(APP_FILE, current_user.userpath)
+        #         print("源路径: ", source_dir)
+        #         print("目标路径: ", destination_dir)
+        #         dir2zip(source_dir, destination_dir, zip_file_name)
+        #     elif opcode == 'excel':  # * 返回统计信息 Excel
+        #         pass
+        # # ! 调试
+        # return redirect(url_for('collection_details', collection_id=collection_id))
         namelist_data = request.form.to_dict()  # * 获取应交名单数据
         print("前端数据: ", namelist_data)
         if 'hidden-input' in namelist_data.keys():
