@@ -40,20 +40,20 @@ theme:
         name: 亮色模式
   features: # 标题行在页面下滑后自动隐藏
     - header.autohide
-  icon:
-    admonition:
-      note: octicons/tag-16
-      abstract: octicons/checklist-16
-      info: octicons/info-16
-      tip: octicons/squirrel-16
-      success: octicons/check-16
-      question: octicons/question-16
-      warning: octicons/alert-16
-      failure: octicons/x-circle-16
-      danger: octicons/zap-16
-      bug: octicons/bug-16
-      example: octicons/beaker-16
-      quote: octicons/quote-16
+  # icon:
+  #   admonition:
+  #     note: octicons/tag-16
+  #     abstract: octicons/checklist-16
+  #     info: octicons/info-16
+  #     tip: octicons/squirrel-16
+  #     success: octicons/check-16
+  #     question: octicons/question-16
+  #     warning: octicons/alert-16
+  #     failure: octicons/x-circle-16
+  #     danger: octicons/zap-16
+  #     bug: octicons/bug-16
+  #     example: octicons/beaker-16
+  #     quote: octicons/quote-16
 plugins:
   - search
   - mkdocstrings:
@@ -61,12 +61,19 @@ plugins:
         python:
           paths: [Src/Flask]
 markdown_extensions:
+  - admonition
+  - attr_list
   - toc:
       permalink: "#"
   - pymdownx.highlight:
       anchor_linenums: true
   - pymdownx.details
-  - admonition
   - pymdownx.inlinehilite
   - pymdownx.snippets
   - pymdownx.superfences
+  # Formatting 标记
+  - pymdownx.critic
+  - pymdownx.caret
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.tilde

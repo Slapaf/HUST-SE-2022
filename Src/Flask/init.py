@@ -8,6 +8,7 @@ app = Flask(__name__)
 
 # ! 设置应用根目录
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
+LOG_ROOT = os.path.join(APP_ROOT, 'LOGS')
 
 # app.config['SECRET_KEY'] = 'dev'  # 等同于 app.secret_key = 'dev'
 # ? 读取系统环境变量 SECRET_KEY 的值，如果没有读取到，则使用默认值 dev
