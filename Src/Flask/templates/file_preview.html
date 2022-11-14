@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/all.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/file_submitting.css') }}">
+    <script src="{{ url_for('static', filename='iconfont/iconfont.js') }}"></script>
+    <link rel="stylesheet" href="http://at.alicdn.com/t/c/font_3751655_o66m8aeymun.css"/>
+</head>
+<div id="collection" style="display: none">{{ collection }}</div>
+<div class="container">
+    <div class="header">
+        <div class="collectionInformation">
+            <h3>
+                <svg class="icon" aria-hidden="true">
+                    <use xlink:href="#icon-A5"></use>
+                </svg>
+                收集标题：
+            </h3>
+            <!-- 字符串 -->
+            <div id="collectionTitle">{{ collection.collectionTitle }}</div>
+        </div>
+        <div class="collectionInformation">
+            <h3>
+                <svg class="icon" aria-hidden="true">
+                    <use xlink:href="#icon-A7"></use>
+                </svg>
+                收集者：
+            </h3>
+            <!-- 字符串 -->
+            <div id="collector">{{ collection.collector }}</div>
+        </div>
+        <div class="collectionInformation">
+            <h3>
+                <svg class="icon" aria-hidden="true">
+                    <use xlink:href="#icon-A8"></use>
+                </svg>
+                截止时间：
+            </h3>
+            <!-- 字符串 -->
+            <div id="deadline">{{ collection.deadline }}</div>
+        </div>
+        <div class="collectionInformation">
+            <h3 style="align-self:flex-start">
+                <svg class="icon" aria-hidden="true">
+                    <use xlink:href="#icon-A"></use>
+                </svg>
+                详情：
+            </h3>
+            <!-- 字符串 -->
+            <div id="description">{{ collection.description }}</div>
+        </div>
+    </div>
+    <div class="main">
+        <form id="myform" method="post" name="Form" enctype="multipart/form-data">
+            <ul id="question_list">
+            </ul>
+        </form>
+    </div>
+</div>
+<div class="alert">
+    <h1></h1>
+    <div id="timeOutClose"></div>
+</div>
+<div id="blur"></div>
+<script src="{{ url_for('static', filename='js/file_preview.js') }}"></script>
+<script language="javascript" type="text/javascript">
+    //禁用Enter键表单自动提交
+    document.onkeydown = function (event) {
+        var target, code, tag;
+        if (!event) {
+            event = window.event; //针对ie浏览器
+            target = event.srcElement;
+            code = event.keyCode;
+            if (code == 13) {
+                tag = target.tagName;
+                if (tag == "textarea") {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        } else {
+            target = event.target; //针对遵循w3c标准的浏览器，如Firefox
+            code = event.keyCode;
+            if (code == 13) {
+                tag = target.tagName;
+                if (tag == "INPUT") {
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+        }
+    };
+</script>
+</body>
+</html>

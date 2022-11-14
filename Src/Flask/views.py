@@ -88,10 +88,15 @@ def personal_homepage():
     )
 
 
+@app.route('/file_preview')
+def test():
+    return render_template("file_preview")
+
+
 # 用于测试数据库接口函数
 @app.route('/test')
 def test():
-    get_submission_dict(2,2)
+    get_submission_dict(2, 2)
     return redirect(url_for('index'))
 
 
@@ -106,7 +111,8 @@ def file_submitting(collection_message):
         tmp_file = request.files
         a = list(submission.items(multi=True))
         # file_upload(collection_id, a, tmp_file)
-        save_submission(a, collection_id, file_upload(collection_id, a, tmp_file))
+        save_submission(a, collection_id, file_upload(
+            collection_id, a, tmp_file))
         return redirect(url_for('index'))
     else:
         question_dict = get_question_dict(collection_id)
@@ -160,7 +166,8 @@ def mycollection():
     # else:
     update_status(current_user.id)  # 更新当前用户所有收集的 status 字段
 
-    collection_list = Collection_info.query.filter_by(creator_id=current_user.id).all()
+    collection_list = Collection_info.query.filter_by(
+        creator_id=current_user.id).all()
     parameter_dict_list = []
     for collection in collection_list:
         # ? 对时间进行格式化处理
@@ -205,11 +212,14 @@ def collection_details(collection_id):
                                          Collection_info.query.filter_by(
                                              creator_id=current_user.id
                                          ).first().namelist_path)
-            namelist = pd.read_csv(namelist_path + "/应交名单.csv", encoding='utf-8')
+            namelist = pd.read_csv(
+                namelist_path + "/应交名单.csv", encoding='utf-8')
             # * 删除被点击的名字
-            namelist = namelist[~namelist['姓名'].isin([namelist_data['hidden-input']])]
+            namelist = namelist[~namelist['姓名'].isin(
+                [namelist_data['hidden-input']])]
             # namelist = namelist[~(namelist['姓名'].str == namelist_data['hidden-input'])]
-            namelist.to_csv(namelist_path + "/应交名单.csv", encoding='utf-8', index=False)  # * 保存为 csv 文件
+            namelist.to_csv(namelist_path + "/应交名单.csv",
+                            encoding='utf-8', index=False)  # * 保存为 csv 文件
             return redirect(url_for('collection_details', collection_id=collection_id))
         name_list = list(set(namelist_data['name_data'].split()))
         namelist_csv = pd.DataFrame(columns=["姓名"], data=name_list)
@@ -222,22 +232,26 @@ def collection_details(collection_id):
         # os.mkdir(namelist_path)
         print(namelist_path)
         if os.path.exists(namelist_path + "/应交名单.csv"):
-            tmp_csv = pd.read_csv(namelist_path + '/应交名单.csv', encoding='utf-8')
+            tmp_csv = pd.read_csv(
+                namelist_path + '/应交名单.csv', encoding='utf-8')
             for name in name_list:
                 if name in tmp_csv['姓名'].values:
                     name_list.remove(name)
             pd.DataFrame(data=name_list).to_csv(namelist_path + "/应交名单.csv", mode='a', header=False,
                                                 encoding='utf-8')
         else:
-            namelist_csv.to_csv(namelist_path + "/应交名单.csv", encoding='utf-8')  # * 保存为 csv 文件
+            namelist_csv.to_csv(namelist_path + "/应交名单.csv",
+                                encoding='utf-8')  # * 保存为 csv 文件
         return redirect(url_for('collection_details', collection_id=collection_id))
 
     collection_id = id_str_to_int(collection_id)  # * 转换为实际的收集 id
     parameter_dict_list = []
-    submission_list = submission_record(collection_id=collection_id)  # * 获取对应 id 的收集信息
+    submission_list = submission_record(
+        collection_id=collection_id)  # * 获取对应 id 的收集信息
     print(submission_list)
     # TODO 数据库提供方法
-    who_has_submitted_list = [submission[0] for submission in submission_list]  # * 已提交列表
+    who_has_submitted_list = [submission[0]
+                              for submission in submission_list]  # * 已提交列表
     # namelist_path = './FileStorage/' + \
     #                 Collection_info.query.filter_by(creator_id=current_user.id).first().namelist_path
     namelist_path = os.path.join(APP_ROOT, 'FileStorage',
@@ -248,10 +262,12 @@ def collection_details(collection_id):
                                              encoding='utf-8')['姓名'].tolist()
         print(who_should_submit_list)
     # * 已提交名单生成逻辑：在应交名单中且提交了文件
-    submitted_list = list(set(who_has_submitted_list) & set(who_should_submit_list))
+    submitted_list = list(set(who_has_submitted_list) &
+                          set(who_should_submit_list))
     print("已提交名单: ", submitted_list)
     # * 未提交名单生成逻辑：在应交名单中但未提交文件
-    not_submitted_list = list(set(who_should_submit_list) - set(who_has_submitted_list))
+    not_submitted_list = list(
+        set(who_should_submit_list) - set(who_has_submitted_list))
     print("未提交名单: ", not_submitted_list)
     for idx, submission in enumerate(submission_list):
         # * 创建一个字典类型，用于传参
@@ -274,7 +290,8 @@ def collection_details(collection_id):
         json_length=len(parameter_dict_list),
         submission_count=count_submission(collection_id=collection_id),
         filenum_count=count_filenum(collection_id=collection_id),
-        ddl_countdown=Collection_info.query.get(collection_id).end_date.strftime('%Y-%m-%d %H:%M:%S'),
+        ddl_countdown=Collection_info.query.get(
+            collection_id).end_date.strftime('%Y-%m-%d %H:%M:%S'),
         submitted_list=submitted_list,
         not_submitted_list=not_submitted_list
     )
