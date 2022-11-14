@@ -183,28 +183,23 @@ function addmember(submitter_order_idx, submitter_name, submit_time, file_submit
 
 function getCollectionId() {
     let url = document.location.toString();
-    console.log(url)
     var arrUrl = url.split("//");
     var start = arrUrl[1].lastIndexOf("/");
-    var relUrl = arrUrl[1].substring(start);//stop省略，截取从start开始到结尾的所有字符
+    var relUrl = arrUrl[1].substring(start+1);//stop省略，截取从start开始到结尾的所有字符
     if (relUrl.indexOf("?") != -1) {
         relUrl = relUrl.split("?")[0];
     }
     return relUrl;
 }
 
-//获取excel表格,向后端发送"excel$"+id
+
+let downloadFile = document.querySelector("#downloadFile");
+let downloadExcel = document.querySelector("#downloadExcel");
+
 function getExcel() {
-    let str = getCollectionId().substring(1);
-    document.getElementById("hidden-input").value = "excel$" + str;
-    document.getElementById("hidden").submit();
+    downloadExcel.href = "/download?collectionId="+ getCollectionId() + "&fileType=excel";
 }
 
-//下载所有文件,向后端发送"download$"+id
 function getfile() {
-    let str = getCollectionId().substring(1);
-    document.getElementById("hidden-input").value = "download$" + str;
-    document.getElementById("hidden").submit();
+    downloadFile.href = "/download?collectionId="+ getCollectionId() + "&fileType=zip";
 }
-
-console.log(getCollectionId());

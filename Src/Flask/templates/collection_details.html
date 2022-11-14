@@ -42,8 +42,8 @@
                 <li>提交记录</li>
             </ul>
             <div id="watchCollection">
-                <div onclick="getExcel()">查看汇总</div>
-                <div onclick="getfile()">下载文件</div>
+                <a id="downloadExcel" onclick="getExcel()" download>查看汇总</a>
+                <a id="downloadFile" onclick="getfile()" download>下载文件</a>
             </div>
         </div>
         <!-- tab栏 -->
@@ -109,8 +109,8 @@
         ptimer = setTimeout(starttime, 1000); // 添加计时器
         if (getData_signal == 1) { // 每次加载页面只触发一次 getData 函数
             getData();
-            console.log(submitted_list);
-            console.log(not_submitted_list);
+            // console.log(submitted_list);
+            // console.log(not_submitted_list);
             faddname(submitted_list, not_submitted_list); // * 已提交，未提交
             getData_signal--;
         }
