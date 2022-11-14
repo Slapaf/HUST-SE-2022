@@ -74,7 +74,8 @@
         var Uname = username.value;
         var Ukey1 = input1.value;
         var Ukey2 = input2.value;
-        if (Uname.match(/^[\u4E00-\u9FA5a-zA-Z0-9_]{1,12}$/) && Ukey1.match(/^[a-zA-Z0-9]{6,16}$/) && Ukey1 === Ukey2) {
+        let Ukey3 = input3.value;
+        if (Uname.match(/^[\u4E00-\u9FA5a-zA-Z0-9_]{1,12}$/) && Ukey1.match(/^[a-zA-Z0-9]{6,16}$/) && Ukey1 === Ukey2 && Ukey3 != '') {
             window.location.href = 'login.html';
             return true;
         }
