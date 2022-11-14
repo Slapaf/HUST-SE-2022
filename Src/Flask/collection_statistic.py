@@ -77,10 +77,23 @@ def dir2zip(zip_source_dir: str, zip_destination_dir: str, zip_file_name: str):
     #     parent_dir, cur_dir = os.path.split(zip_source_dir)
     #     zf.write(zip_source_dir, arcname=zip_file_name)
     #     print("压缩成功！.zip 文件位于 {} 目录下".format(zip_destination_dir))
-    f_zip = zipfile.ZipFile(os.path.join(zip_destination_dir, zip_file_name + '.zip'), "w", zipfile.ZIP_DEFLATED)
-    for path, dir_names, file_names in os.walk(zip_source_dir):
-        fpath = path.replace(zip_source_dir, '')
-        for file_name in file_names:
-            f_zip.write(os.path.join(path, file_name), os.path.join(fpath, file_name))
-    f_zip.close()
-    print("压缩成功! .zip 文件位于 {} 目录下。".format(zip_destination_dir))
+    zf = zipfile.ZipFile(os.path.join(zip_destination_dir, zip_file_name + '.zip'), 'a')
+    file_dirs = os.listdir(zip_source_dir)
+    for file_dir in file_dirs:
+        parent_path = os.path.join(zip_source_dir, file_dir)
+        for file in os.listdir(parent_path):
+            # * 文件已经压缩过，不进行压缩（这一项需要修改）
+            if any([file in sub_dir for sub_dir in zf.namelist()]):
+                continue
+            zf.write(
+                os.path.join(zip_source_dir, file_dir, file),
+                os.path.join(
+                    parent_path.replace(zip_source_dir, ''),  # * 这一项可以设置具体的子文件夹名
+                    file
+                )
+            )
+    zf.close()
+
+    print("压缩成功! .zip 文件位于 {} 目录下，压缩包名为 {}。".format(
+        zip_destination_dir,
+        zip_file_name + '.zip'))

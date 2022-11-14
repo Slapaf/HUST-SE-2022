@@ -219,10 +219,11 @@ def collection_details(collection_id):
                 # print("收集文件路径: ", tmp_path)
                 zip_file_name = Collection_info.query.get(col_id).collection_title
                 # print("收集标题: ", zip_file_name)
-                # print("源路径: ", os.path.join(APP_FILE, tmp_path))
-                # print("目标路径: ", os.path.join(APP_FILE, current_user.userpath))
-                dir2zip(os.path.join(APP_FILE, tmp_path), os.path.join(APP_FILE, current_user.userpath),
-                        zip_file_name)
+                source_dir = os.path.join(APP_FILE, tmp_path)
+                destination_dir = os.path.join(APP_FILE, current_user.userpath)
+                print("源路径: ", source_dir)
+                print("目标路径: ", destination_dir)
+                dir2zip(source_dir, destination_dir, zip_file_name)
             elif opcode == 'excel':  # * 返回统计信息 Excel
                 pass
         # ! 调试
