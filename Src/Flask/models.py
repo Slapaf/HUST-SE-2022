@@ -1,4 +1,8 @@
-import random, string, datetime, re, yagmail
+import random
+import string
+import datetime
+import re
+import yagmail
 from init import db
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -34,7 +38,8 @@ class User(db.Model, UserMixin):
             password: 密码（明文）
 
         """
-        self.password_hash = generate_password_hash(password)  # 根据用户输入的密码生成密码散列值
+        self.password_hash = generate_password_hash(
+            password)  # 根据用户输入的密码生成密码散列值
 
     def validate_password(self, password: str) -> bool:
         """验证密码
@@ -52,7 +57,8 @@ class User(db.Model, UserMixin):
 
         # 路径的前若干位为用户名和 user 标识，后面用随机字符串补齐，总长度 20 位。
         self.userpath = self.username + 'user' + ''.join(
-            random.sample(string.ascii_letters + string.digits, 20 - len(self.username) - len('user'))
+            random.sample(string.ascii_letters + string.digits,
+                          20 - len(self.username) - len('user'))
         )
 
     def set_email(self, email: str) -> None:
@@ -77,7 +83,7 @@ class User(db.Model, UserMixin):
             host=host
         )
 
-    def send_email(self, to_email: str or list, email_title: str, email_message: str) -> bool:
+    def send_email(self, to_email: str | list, email_title: str, email_message: str) -> bool:
         """发送邮件，可以单发也可以群发，取决于传入参数 to_email 的类型
 
         Args:
@@ -134,12 +140,15 @@ class Collection_info(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)  # 主键
     creator = db.Column(db.String(30), nullable=False)  # 创建人员名称
-    creator_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete="CASCADE"), nullable=False)  # 创建人员ID
+    creator_id = db.Column(db.Integer, db.ForeignKey(
+        'user.id', ondelete="CASCADE"), nullable=False)  # 创建人员ID
     collection_title = db.Column(db.String(50), nullable=False)  # 收集名称
     description = db.Column(db.Text, nullable=False)  # 收集描述
-    start_date = db.Column(db.DateTime, nullable=False, default=datetime.datetime.now())  # 开始时间
+    start_date = db.Column(db.DateTime, nullable=False,
+                           default=datetime.datetime.now())  # 开始时间
     end_date = db.Column(db.DateTime, nullable=False)  # 收集结束时间
-    status = db.Column(db.Enum(RELEASE, SAVED, FINISHED, OVERDUE), nullable=False)  # 当前状态
+    status = db.Column(db.Enum(RELEASE, SAVED, FINISHED,
+                       OVERDUE), nullable=False)  # 当前状态
     namelist_path = db.Column(db.String(50))  # 应交名单路径
 
     # def collection_valid(self) -> bool:
@@ -178,11 +187,13 @@ class Question_info(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)  # 主键
     collection_id = db.Column(db.Integer,
-                              db.ForeignKey('collection_info.id', ondelete="CASCADE"),
+                              db.ForeignKey('collection_info.id',
+                                            ondelete="CASCADE"),
                               nullable=False)  # 关联收集id
     qno = db.Column(db.Integer, nullable=False)  # 题目序号
     question_type = db.Column(
-        db.Enum(FILE_UPLOAD, SINGLE_CHOICE, MULTI_CHOICE, NAME, SNO, SINGLE_QUESTIONNAIRE, MULTI_QUESTIONNAIRE),
+        db.Enum(FILE_UPLOAD, SINGLE_CHOICE, MULTI_CHOICE, NAME,
+                SNO, SINGLE_QUESTIONNAIRE, MULTI_QUESTIONNAIRE),
         nullable=False)  # 题目类型
     question_title = db.Column(db.String(50), nullable=False)  # 问题标题
     question_description = db.Column(db.Text)  # 问题描述
@@ -204,7 +215,8 @@ class Answer_info(db.Model):
     """
     id = db.Column(db.Integer, primary_key=True)  # 主键
     question_id = db.Column(db.Integer,
-                            db.ForeignKey('question_info.id', ondelete="CASCADE"),
+                            db.ForeignKey('question_info.id',
+                                          ondelete="CASCADE"),
                             nullable=False)  # 关联题目id
     collection_id = db.Column(db.Integer, nullable=False)  # 收集id
     qno = db.Column(db.Integer, nullable=False)  # 题目序号
@@ -217,7 +229,7 @@ class Option_info(db.Model):
     记录问卷题的每一个选项内容。
 
     Attributes:
-        id：主键
+        id: 主键
         question_id: 题目id（外键：关联question_info.id）（不可为空）
         collection_id: 收集id（不可为空）
         qno: 题目序号（不可为空）
@@ -225,7 +237,8 @@ class Option_info(db.Model):
         option_content: 选项内容（不可为空）
     """
     id = db.Column(db.Integer, primary_key=True)  # 主键
-    question_id = db.Column(db.Integer, db.ForeignKey('question_info.id', ondelete="CASCADE"), nullable=False)  # 关联题目id
+    question_id = db.Column(db.Integer, db.ForeignKey(
+        'question_info.id', ondelete="CASCADE"), nullable=False)  # 关联题目id
     collection_id = db.Column(db.Integer, nullable=False)  # 收集id
     qno = db.Column(db.Integer, nullable=False)  # 题目序号
     option_sn = db.Column(db.Integer, nullable=False)  # 选项序号
@@ -246,11 +259,13 @@ class Submission_info(db.Model):
     """
     id = db.Column(db.Integer, primary_key=True)  # 主键
     collection_id = db.Column(db.Integer,
-                              db.ForeignKey('collection_info.id', ondelete="CASCADE"),
+                              db.ForeignKey('collection_info.id',
+                                            ondelete="CASCADE"),
                               nullable=False)  # 关联收集id
     collection_title = db.Column(db.String(50), nullable=False)  # 收集标题
     submitter_name = db.Column(db.String(30), nullable=False)  # 提交者名称
-    submit_time = db.Column(db.DateTime, nullable=False, default=datetime.datetime.now())  # 提交时间
+    submit_time = db.Column(db.DateTime, nullable=False,
+                            default=datetime.datetime.now())  # 提交时间
 
 
 class Submit_Content_info(db.Model):
@@ -268,10 +283,12 @@ class Submit_Content_info(db.Model):
     """
     id = db.Column(db.Integer, primary_key=True)  # 主键
     submission_id = db.Column(db.Integer,
-                              db.ForeignKey('submission_info.id', ondelete="CASCADE"),
+                              db.ForeignKey('submission_info.id',
+                                            ondelete="CASCADE"),
                               nullable=False)  # 关联提交记录id
     question_id = db.Column(db.Integer,
-                            db.ForeignKey('question_info.id', ondelete="CASCADE"),
+                            db.ForeignKey('question_info.id',
+                                          ondelete="CASCADE"),
                             nullable=False)  # 题目id
     collection_id = db.Column(db.Integer, nullable=False)  # 收集id
     qno = db.Column(db.Integer, nullable=False)  # 问题序号
