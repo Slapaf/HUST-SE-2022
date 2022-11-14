@@ -1,5 +1,8 @@
+from pathlib import Path
+
 from flask import Flask, Response
 import os
+import zipfile
 import mimetypes
 import pandas as pd
 from openpyxl import load_workbook
@@ -58,3 +61,26 @@ def generate_excel(due_list: list,
     # 保存表格
     wb.save("demo.xlsx")
     wb.close()
+
+
+def dir2zip(zip_source_dir: str, zip_destination_dir: str, zip_file_name: str):
+    """将指定文件夹压缩为 zip 压缩文件
+
+    Args:
+        zip_source_dir (str): 源文件夹，待压缩的文件夹
+        zip_destination_dir (str): 目标文件夹，压缩文件存放的位置
+        zip_file_name (str): 压缩文件名
+    """
+    # print("压缩函数测试")
+    # with zipfile.ZipFile(zip_destination_dir + '.zip', mode='w',
+    #                      compression=zipfile.ZIP_DEFLATED) as zf:
+    #     parent_dir, cur_dir = os.path.split(zip_source_dir)
+    #     zf.write(zip_source_dir, arcname=zip_file_name)
+    #     print("压缩成功！.zip 文件位于 {} 目录下".format(zip_destination_dir))
+    f_zip = zipfile.ZipFile(os.path.join(zip_destination_dir, zip_file_name + '.zip'), "w", zipfile.ZIP_DEFLATED)
+    for path, dir_names, file_names in os.walk(zip_source_dir):
+        fpath = path.replace(zip_source_dir, '')
+        for file_name in file_names:
+            f_zip.write(os.path.join(path, file_name), os.path.join(fpath, file_name))
+    f_zip.close()
+    print("压缩成功! .zip 文件位于 {} 目录下。".format(zip_destination_dir))

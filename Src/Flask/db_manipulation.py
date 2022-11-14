@@ -284,9 +284,15 @@ def add_FC(question_list: list, user_id: int) -> int:
     # ! 生成文件存储路径，最后一位固定为收集 id
     # ! 生成位置为：FileStorage / userpath / filepath
     # * 总长度为 20 + 5 + 4 = 29 位
-    file_path = current_user.userpath + '/file' + ''.join(
-        random.sample(string.ascii_letters + string.digits, 4 - len(str(collection_id)))
-    ) + str(collection_id)
+    # file_path = current_user.userpath + '/file' + ''.join(
+    #     random.sample(string.ascii_letters + string.digits, 4 - len(str(collection_id)))
+    # ) + str(collection_id)
+    file_path = os.path.join(
+        current_user.userpath,
+        'file' + ''.join(
+            random.sample(string.ascii_letters + string.digits, 4 - len(str(collection_id)))
+        ) + str(collection_id)
+    )
 
     # ! 生成应交名单路径，与文件存储路径相同
     # ! 应交名单以 .csv 格式存放在 filepath 下
@@ -417,9 +423,10 @@ def add_FC(question_list: list, user_id: int) -> int:
                 question_title=question_multidict[question_key],
                 question_description=question_multidict[f'detail{seq}'],
                 rename_rule=rename_rule,  # * 命名规则用 - 分隔，数字代表题目序号
-                file_path=file_path + "/" + id_int_to_str(
-                    file_counter
-                )  # ! 创建一个以 file_counter 命名的子目录
+                # file_path=file_path + "/" + id_int_to_str(
+                #     file_counter
+                # )  # ! 创建一个以 file_counter 命名的子目录
+                file_path=os.path.join(file_path, id_int_to_str(file_counter))  # ! 创建一个以 file_counter 命名的子目录
             )
             db.session.add(question)
             db.session.commit()

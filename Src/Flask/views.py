@@ -1,11 +1,13 @@
 import json
 import os.path
+import sys
 
 import pandas as pd
 from flask import render_template, request, url_for, redirect, flash
 from flask_login import login_user, login_required, logout_user, current_user
-from init import app, db, APP_ROOT
+from init import app, db, APP_ROOT, APP_FILE
 from db_manipulation import *
+from collection_statistic import *
 
 # ! 分享页面的链接（上线前用域名地址替换）
 SUBMITTING_PAGE = "127.0.0.1:5000/file_submitting"
@@ -227,6 +229,28 @@ def mycollection():
 @login_required
 def collection_details(collection_id):
     if request.method == 'POST':
+        tmp_form = request.form
+        print(tmp_form)
+        print(tmp_form.to_dict())
+        if 'hidden-input' in tmp_form.keys():
+            opcode, col_id = tmp_form['hidden-input'].split('$')
+            print("opcode: ", opcode)
+            print("col_id: ", col_id)
+            if opcode == 'download':  # * 下载所有文件
+                tmp_path = Collection_info.query.get(col_id).namelist_path
+                # if sys.platform.startswith('win'):
+                #                 #     tmp_path = tmp_path.replace("/", "\\")
+                # print("收集文件路径: ", tmp_path)
+                zip_file_name = Collection_info.query.get(col_id).collection_title
+                # print("收集标题: ", zip_file_name)
+                # print("源路径: ", os.path.join(APP_FILE, tmp_path))
+                # print("目标路径: ", os.path.join(APP_FILE, current_user.userpath))
+                dir2zip(os.path.join(APP_FILE, tmp_path), os.path.join(APP_FILE, current_user.userpath),
+                        zip_file_name)
+            elif opcode == 'excel':  # * 返回统计信息 Excel
+                pass
+        # ! 调试
+        return redirect(url_for('collection_details', collection_id=collection_id))
         namelist_data = request.form.to_dict()  # * 获取应交名单数据
         print("前端数据: ", namelist_data)
         if 'hidden-input' in namelist_data.keys():
@@ -251,7 +275,6 @@ def collection_details(collection_id):
                                      Collection_info.query.filter_by(creator_id=current_user.id).first().namelist_path)
         # print(namelist_path)
         # os.mkdir(namelist_path)
-        print(namelist_path)
         if os.path.exists(namelist_path + "/应交名单.csv"):
             tmp_csv = pd.read_csv(namelist_path + '/应交名单.csv', encoding='utf-8')
             for name in name_list:

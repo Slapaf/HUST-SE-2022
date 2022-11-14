@@ -8,6 +8,9 @@ app = Flask(__name__)
 
 # ! 设置应用根目录
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
+# ! 设置文件存储根目录
+APP_FILE = os.path.join(APP_ROOT, 'FileStorage')
+# ! 设置错误信息根目录
 LOG_ROOT = os.path.join(APP_ROOT, 'LOGS')
 
 # app.config['SECRET_KEY'] = 'dev'  # 等同于 app.secret_key = 'dev'
