@@ -201,7 +201,7 @@ function getExcel() {
 }
 
 //下载所有文件,向后端发送"download$"+id
-function getExcel() {
+function getfile() {
     let str = getCollectionId().substring(1);
     document.getElementById("hidden-input").value = "download$" + str;
     document.getElementById("hidden").submit();
