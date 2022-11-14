@@ -7,10 +7,11 @@
     <title>Document</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/all.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/file_submitting.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/file_preview.css') }}">
     <script src="{{ url_for('static', filename='iconfont/iconfont.js') }}"></script>
-    <link rel="stylesheet" href="http://at.alicdn.com/t/c/font_3751655_o66m8aeymun.css"/>
+    <link rel="stylesheet" href="http://at.alicdn.com/t/c/font_3751655_751heus60au.css"/>
 </head>
-<div id="collection" style="display: none">{{ collection }}</div>
+<div id="collection" style="display: none"></div>
 <div class="container">
     <div class="header">
         <div class="collectionInformation">
@@ -21,7 +22,7 @@
                 收集标题：
             </h3>
             <!-- 字符串 -->
-            <div id="collectionTitle">{{ collection.collectionTitle }}</div>
+            <div id="collectionTitle"></div>
         </div>
         <div class="collectionInformation">
             <h3>
@@ -31,7 +32,7 @@
                 收集者：
             </h3>
             <!-- 字符串 -->
-            <div id="collector">{{ collection.collector }}</div>
+            <div id="collector"></div>
         </div>
         <div class="collectionInformation">
             <h3>
@@ -41,7 +42,7 @@
                 截止时间：
             </h3>
             <!-- 字符串 -->
-            <div id="deadline">{{ collection.deadline }}</div>
+            <div id="deadline"></div>
         </div>
         <div class="collectionInformation">
             <h3 style="align-self:flex-start">
@@ -51,7 +52,7 @@
                 详情：
             </h3>
             <!-- 字符串 -->
-            <div id="description">{{ collection.description }}</div>
+            <div id="description"></div>
         </div>
     </div>
     <div class="main">
