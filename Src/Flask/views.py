@@ -400,12 +400,14 @@ def generate_collection():
         else:
             a = list(question_list.items(multi=True))
             print('创建收集：', a)  # ! 调试用
-            t = add_FC(a, current_user.id)
+            collection_id = add_FC(a, current_user.id)
             # question = get_question_MultiDict(t)
             # print(question)
             flash("Successfully create a collection!")
+        # return redirect(url_for('index'))
+        share_link = "127.0.0.1:5000/file_submitting/submit" + id_int_to_str(collection_id)
+        return render_template('create_link.html', share_link=share_link)
 
-        return redirect(url_for('index'))
     return render_template('file_collecting.html')
 
 
