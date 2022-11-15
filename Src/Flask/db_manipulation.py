@@ -220,6 +220,65 @@
         
         Returns: 
         - file: 经过重命名后的文件数据，以便调用save_submission函数时使用
+    
+    15、get_submission_dict(collection_id: int, submission_id: int) -> dict
+        Function: 获取id为collection_id的收集、提交记录id为submission_id的用户提交内容信息
+
+        Args:
+            collection_id: 收集id
+            submission_id: 提交记录id
+
+        Returns:
+            一个字典，包含该提交记录中用户的提交内容。
+            例如：
+            {'1_collectionTitle': '核酸检测',
+             '2_collector': '张三',
+             '3_deadline': '2022-11-15 15:23:09',
+             '4_description': '',
+             '5_question_name1': '姓名',
+             '6_detail1': '',
+             '7_submit_name1': '王广凯',
+             '8_question_sno2': '学号',
+             '9_detail2': '',
+             '10_submit_sno2': 'U202012345',
+             '11_question_file3': '文件',
+             '12_detail3': '',
+             '13_submit_file3': '系统设计.md',
+             '14_question_radio4': '单选题',
+             '15_detail4': '',
+             '16_checked_radio4': 'A',
+             '17_submit_radio4': 'B',
+             '18_question_multipleChoice5': '多选题',
+             '19_detail5': '',
+             '20_checked_mulans5': 'C',
+             '21_checked_mulans5': 'D',
+             '22_submit_mulans5': 'A',
+             '23_submit_mulans5': 'B',
+             '24_question_qnaire6': '问卷题目',
+             '25_detail6': '是否已做核酸',
+             '26_qn_option6': '是',
+             '27_qn_option6': '否',
+             '28_submit_qnaire6': '2'}
+
+    
+    16、collection_data_statistics(collection_id: int) -> (dict, dict):
+        Function: 对收集中的选择题、问卷题的答题情况进行数据统计
+
+        Args:
+        - collection_id: 收集id
+    
+        Returns: choice_statistics, qnaire_statistics
+        - choice_statistics: 选择题答题情况数据统计。若收集中无选择题，则返回None；否则返回一个字典，格式如下:
+        { 题目标题: (答案, 正确率, {选项: [选择此选项的人员名单]}) }
+        例如：
+        {'单选题': ('A', 0.2, {'A': ['张庙松'], 'B': ['王梓熙', '王广凯'], 'C': ['张隽翊'], 'D': ['计胜翔']}),
+         '多选题': ('A-B-C-D', 0.2, {'A': ['王梓熙', '计胜翔', '张庙松'], 'B': ['王梓熙', '王广凯', '张庙松'],'C': ['王广凯', '张隽翊', '张庙松'], 'D': ['张隽翊', '计胜翔', '张庙松']})}
+
+        - qnaire_statistics: 问卷题答题情况数据统计。若收集中无问卷题，则返回None；否则返回一个字典，格式如下:
+        { 题目标题: {选项: [选择此选项的人员名单]} }
+        例如：
+        {'你是否喜欢吃屎？': {'喜欢': ['王梓熙', '王广凯', '张隽翊', '张庙松'], '不喜欢': ['计胜翔']}}
+
 
 '''''
 
@@ -1336,11 +1395,12 @@ def collection_data_statistics(collection_id: int) -> (dict, dict):
         collection_id: 收集id
 
     Returns:
-        choice_statistics: 选择题答题情况数据统计。格式如下:
+        choice_statistics: 选择题答题情况数据统计。若收集中无选择题，则返回None；否则格式如下:
+{'单选题': ('A', 0.2, {'A': ['张庙松'], 'B': ['王梓熙', '王广凯'], 'C': ['张隽翊'], 'D': ['计胜翔']}),
+ '多选题': ('A-B-C-D', 0.2, {'A': ['王梓熙', '计胜翔', '张庙松'], 'B': ['王梓熙', '王广凯', '张庙松'],'C': ['王广凯', '张隽翊', '张庙松'], 'D': ['张隽翊', '计胜翔', '张庙松']})}
 
-
-        qnaire_statistics: 问卷题答题情况数据统计。格式如下:
-
+        qnaire_statistics: 问卷题答题情况数据统计。若收集中无问卷题，则返回None；否则格式如下:
+        {'你是否喜欢吃屎？': {'喜欢': ['王梓熙', '王广凯', '张隽翊', '张庙松'], '不喜欢': ['计胜翔']}}
     """
     choice_qtype = [Question_info.SINGLE_CHOICE, Question_info.MULTI_CHOICE]
     qnaire_qtype = [Question_info.SINGLE_QUESTIONNAIRE, Question_info.MULTI_QUESTIONNAIRE]
@@ -1364,33 +1424,37 @@ def collection_data_statistics(collection_id: int) -> (dict, dict):
             accuracy = result_list.count(answer) / len(result_list)  # 计算此题正确率
 
             # 将submission_id根据选择的选项进行分类
-            A_id_list = list(filter(lambda x: 'A' in x[1], submit_content_list))
-            B_id_list = list(filter(lambda x: 'B' in x[1], submit_content_list))
-            C_id_list = list(filter(lambda x: 'C' in x[1], submit_content_list))
-            D_id_list = list(filter(lambda x: 'D' in x[1], submit_content_list))
+            A_list = list(filter(lambda x: 'A' in x[1], submit_content_list))
+            A_id_list = list(map(itemgetter(0), A_list))
+            B_list = list(filter(lambda x: 'B' in x[1], submit_content_list))
+            B_id_list = list(map(itemgetter(0), B_list))
+            C_list = list(filter(lambda x: 'C' in x[1], submit_content_list))
+            C_id_list = list(map(itemgetter(0), C_list))
+            D_list = list(filter(lambda x: 'D' in x[1], submit_content_list))
+            D_id_list = list(map(itemgetter(0), D_list))
             detail = {}
             name_list = Submission_info.query.filter(Submission_info.id.in_(A_id_list)). \
-                with_entities(Submit_Content_info.submitter_name). \
+                with_entities(Submission_info.submitter_name). \
                 all()
             name_list = list(map(itemgetter(0), name_list))
             detail['A'] = name_list
             name_list = Submission_info.query.filter(Submission_info.id.in_(B_id_list)). \
-                with_entities(Submit_Content_info.submitter_name). \
+                with_entities(Submission_info.submitter_name). \
                 all()
             name_list = list(map(itemgetter(0), name_list))
             detail['B'] = name_list
             name_list = Submission_info.query.filter(Submission_info.id.in_(C_id_list)). \
-                with_entities(Submit_Content_info.submitter_name). \
+                with_entities(Submission_info.submitter_name). \
                 all()
             name_list = list(map(itemgetter(0), name_list))
             detail['C'] = name_list
             name_list = Submission_info.query.filter(Submission_info.id.in_(D_id_list)). \
-                with_entities(Submit_Content_info.submitter_name). \
+                with_entities(Submission_info.submitter_name). \
                 all()
             name_list = list(map(itemgetter(0), name_list))
             detail['D'] = name_list
 
-            choice_statistics[title] = (accuracy, detail)
+            choice_statistics[title] = (answer, accuracy, detail)
 
     # 查找问卷题
     qnaire_qlist = Question_info.query.filter(Question_info.collection_id == collection_id,
@@ -1410,9 +1474,10 @@ def collection_data_statistics(collection_id: int) -> (dict, dict):
                 all()
             detail = {}
             for sn, content in option_list:
-                submission_id_list = list(filter(lambda x: str(sn) in x[1], submit_content_list))
+                submission_list = list(filter(lambda x: str(sn + 1) in x[1], submit_content_list))
+                submission_id_list = list(map(itemgetter(0), submission_list))
                 name_list = Submission_info.query.filter(Submission_info.id.in_(submission_id_list)). \
-                    with_entities(Submit_Content_info.submitter_name). \
+                    with_entities(Submission_info.submitter_name). \
                     all()
                 name_list = list(map(itemgetter(0), name_list))
                 detail[content] = name_list
