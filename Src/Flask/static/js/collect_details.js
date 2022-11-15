@@ -127,6 +127,7 @@ function addmember(submitter_order_idx, submitter_name, submit_time, file_submit
     let memberdate = document.createElement("div");
     let membernumber = document.createElement("div");
     let membercondition = document.createElement("div");
+    let memberpreview = document.createElement("a");
     // ! 11/08 添加 idx
     let memberid = document.createElement("div");
     // ! 11/08
@@ -139,6 +140,7 @@ function addmember(submitter_order_idx, submitter_name, submit_time, file_submit
     listmember.appendChild(memberdate);
     listmember.appendChild(membernumber);
     listmember.appendChild(membercondition);
+    listmember.appendChild(memberpreview);
     //给节点赋值
     // membername.title = "王广凯";
     membername.title = submitter_name;
@@ -146,7 +148,8 @@ function addmember(submitter_order_idx, submitter_name, submit_time, file_submit
     memberdate.title = submit_time;
     // membernumber.title = "211";
     membernumber.title = file_submitted_count;
-    membercondition.title = "查看";
+    membercondition.title = "查看文件";
+    memberpreview.title = "查看";
     // ! 11/08 memberid
     memberid.title = id_str_transfer(submitter_order_idx);
     // ! 11/08
@@ -155,11 +158,13 @@ function addmember(submitter_order_idx, submitter_name, submit_time, file_submit
     memberdate.appendChild(document.createTextNode(memberdate.title));
     membernumber.appendChild(document.createTextNode(membernumber.title));
     membercondition.appendChild(document.createTextNode(membercondition.title));
+    memberpreview.appendChild(document.createTextNode(memberpreview.title));
     listmember.className = "list_member";
     membername.className = "member_name";
     memberdate.className = "member_date";
     membernumber.className = "member_number";
     membercondition.className = "member_condition";
+    memberpreview.className = "member_preview";
     // ! 11/08
     memberid.style.display = "none";
     // ! 11/08

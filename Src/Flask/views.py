@@ -1,7 +1,6 @@
 import json
 import os.path
 import sys
-
 import pandas as pd
 from flask import render_template, request, url_for, redirect, flash
 from flask_login import login_user, login_required, logout_user, current_user
@@ -96,9 +95,10 @@ def file_preview():
 
 
 # 用于测试数据库接口函数
-@app.route('/test')
-def test():
-    get_submission_dict(2, 2)
+@app.route('/test/<int:collection_id>')
+def test(collection_id):
+    # get_submission_dict(2, 2)
+    collection_data_statistics(collection_id)
     return redirect(url_for('index'))
 
 
