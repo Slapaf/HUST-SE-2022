@@ -161,10 +161,10 @@
         - collection_id：int类型，表示收集id
         
         Returns: 
-        一个元组列表，元组按Submission.id排序，每个元组格式为（姓名：string，提交时间:datetime，文件数量:int，文件详情:list）。
+        一个元组列表，元组按Submission.id排序，每个元组格式为（提交记录id: int, 姓名: string, 提交时间: datetime, 文件数量: int, 文件详情: list）
         例如：
-        [('计胜翔', datetime.datetime(2022, 11, 5, 20, 25, 32, 142115), 2, ['jsx1.pdf', 'jsx2.doc']), 
-        ('张隽翊', datetime.datetime(2022, 11, 5, 20, 25, 32, 142115), 1, ['zjy1.pdf'])]
+        [(1, '计胜翔', datetime.datetime(2022, 11, 5, 20, 25, 32, 142115), 2, ['jsx1.pdf', 'jsx2.doc']),
+         (2, '张隽翊', datetime.datetime(2022, 11, 5, 20, 25, 32, 142115), 1, ['zjy1.pdf'])]
         
     11、stop_collection(collection_id: int, action_list)
         Function: 将id为collection_id的收集的状态修改为“截止”
@@ -915,8 +915,9 @@ def submission_record_v2(collection_id: int) -> list:
         collection_id: 收集id
 
     Returns:
-        一个元组列表，每个元组表示一条提交信息。
-        格式如下:
+        一个元组列表，每个元组表示一条提交信息，元组按Submission.id排序。
+        每个元组格式为（提交记录id: int, 姓名: string, 提交时间: datetime, 文件数量: int, 文件详情: list）
+        例如:
         [(1, '计胜翔', datetime.datetime(2022, 11, 5, 20, 25, 32, 142115), 2, ['jsx1.pdf', 'jsx2.doc']),
         (2, '张隽翊', datetime.datetime(2022, 11, 5, 20, 25, 32, 142115), 1, ['zjy1.pdf'])]
     """
@@ -1395,11 +1396,15 @@ def collection_data_statistics(collection_id: int) -> (dict, dict):
         collection_id: 收集id
 
     Returns:
-        choice_statistics: 选择题答题情况数据统计。若收集中无选择题，则返回None；否则格式如下:
+        choice_statistics: 选择题答题情况数据统计。若收集中无选择题，则返回None；否则返回一个字典，格式如下:
+        { 题目标题: (答案, 正确率, {选项: [选择此选项的人员名单]}) }
+        例如：
 {'单选题': ('A', 0.2, {'A': ['张庙松'], 'B': ['王梓熙', '王广凯'], 'C': ['张隽翊'], 'D': ['计胜翔']}),
  '多选题': ('A-B-C-D', 0.2, {'A': ['王梓熙', '计胜翔', '张庙松'], 'B': ['王梓熙', '王广凯', '张庙松'],'C': ['王广凯', '张隽翊', '张庙松'], 'D': ['张隽翊', '计胜翔', '张庙松']})}
 
-        qnaire_statistics: 问卷题答题情况数据统计。若收集中无问卷题，则返回None；否则格式如下:
+        qnaire_statistics: 问卷题答题情况数据统计。若收集中无问卷题，则返回None；否则返回一个字典，格式如下:
+        { 题目标题: {选项: [选择此选项的人员名单]} }
+        例如：
         {'你是否喜欢吃屎？': {'喜欢': ['王梓熙', '王广凯', '张隽翊', '张庙松'], '不喜欢': ['计胜翔']}}
     """
     choice_qtype = [Question_info.SINGLE_CHOICE, Question_info.MULTI_CHOICE]
