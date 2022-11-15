@@ -978,7 +978,7 @@ def submission_record_v2(collection_id: int) -> list:
 
     record = list(zip(id_list, name_list, time_list, file_num_list, file_list))
     # 对元组列表根据submit_time进行降序排序
-    record = list(reversed(sorted(record, key=lambda x: (x[1].timestamp(), x[0]))))
+    record = list(reversed(sorted(record, key=lambda x: (x[2].timestamp(), x[0]))))
     return record
 
 

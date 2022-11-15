@@ -173,7 +173,7 @@ function addQuestion_for_filePreview(chooseType, qnOptionText, if_checked) {
 }
 
 // TODO:按照这个格式传数据
-let tmp_json = {
+let sample_json = {
   "1_collectionTitle": "核酸检测",
   "2_collector": "张三",
   "3_deadline": "2022-11-15 15:23:09",
@@ -206,9 +206,9 @@ let tmp_json = {
   "30_submit_qnaire6": "2",
 };
 
-// let tmp_json = document.getElementById("collection").innerHTML;
-// tmp_json = eval("(" + tmp_json + ")"); // ! 有风险
-
+let tmp_json = document.getElementById("collection").innerHTML;
+tmp_json = eval("(" + tmp_json + ")"); // ! 有风险
+console.log(tmp_json);
 // console.log(typeof tmp_json);
 // console.log(tmp_json);
 // console.log(typeof jsonFromHtml);

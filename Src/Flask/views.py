@@ -89,11 +89,6 @@ def personal_homepage():
     )
 
 
-@app.route('/file_preview')
-def file_preview():
-    return render_template("file_preview.html")
-
-
 # 用于测试数据库接口函数
 @app.route('/test/<int:collection_id>')
 def test(collection_id):
@@ -269,15 +264,17 @@ def collection_details(collection_id):
         if 'hidden-input' in namelist_data.keys():
             # namelist_path = './FileStorage/' + \
             #                 Collection_info.query.filter_by(creator_id=current_user.id).first().namelist_path
+            # TODO 路径设置有问题，应该每个收集独立，此处的写法固定到了第一个有文件的收集
             namelist_path = os.path.join(APP_ROOT, 'FileStorage',
                                          Collection_info.query.filter_by(
                                              creator_id=current_user.id
                                          ).first().namelist_path)
+            print(namelist_path)
             namelist = pd.read_csv(
                 namelist_path + "/应交名单.csv", encoding='utf-8')
             # * 删除被点击的名字
-            namelist = namelist[~namelist['姓名'].isin(
-                [namelist_data['hidden-input']])]
+            delete_name = namelist_data['hidden-input']
+            namelist = namelist[~namelist['姓名'].isin([delete_name])]
             # namelist = namelist[~(namelist['姓名'].str == namelist_data['hidden-input'])]
             namelist.to_csv(namelist_path + "/应交名单.csv",
                             encoding='utf-8', index=False)  # * 保存为 csv 文件
@@ -289,6 +286,7 @@ def collection_details(collection_id):
         #     creator_id=current_user.id).first().namelist_path
         namelist_path = os.path.join(APP_ROOT, 'FileStorage',
                                      Collection_info.query.filter_by(creator_id=current_user.id).first().namelist_path)
+        print(namelist_path)
         # print(namelist_path)
         # os.mkdir(namelist_path)
         if os.path.exists(namelist_path + "/应交名单.csv"):
@@ -306,11 +304,16 @@ def collection_details(collection_id):
 
     collection_id = id_str_to_int(collection_id)  # * 转换为实际的收集 id
     parameter_dict_list = []
-    submission_list = submission_record(
-        collection_id=collection_id)  # * 获取对应 id 的收集信息
+    # submission_list = submission_record(
+    #     collection_id=collection_id)  # * 获取对应 id 的收集信息
+    submission_list = submission_record_v2(
+        collection_id=collection_id
+    )  # * 获取对应 id 的收集信息
     print(submission_list)
     # TODO 数据库提供方法
-    who_has_submitted_list = [submission[0]
+    # who_has_submitted_list = [submission[0]
+    #                           for submission in submission_list]  # * 已提交列表
+    who_has_submitted_list = [submission[1]
                               for submission in submission_list]  # * 已提交列表
     # namelist_path = './FileStorage/' + \
     #                 Collection_info.query.filter_by(creator_id=current_user.id).first().namelist_path
@@ -329,12 +332,14 @@ def collection_details(collection_id):
     not_submitted_list = list(
         set(who_should_submit_list) - set(who_has_submitted_list))
     print("未提交名单: ", not_submitted_list)
-    for idx, submission in enumerate(submission_list):
+    # for idx, submission in enumerate(submission_list):
+    for submission in submission_list:
         # * 创建一个字典类型，用于传参
-        submitter_name = submission[0]  # 提交者姓名
-        submit_time = submission[1]  # 提交时间
-        file_submitted_count = submission[2]  # 提交文件数量
-        file_submitted_list = submission[3]  # 提交文件列表
+        idx = submission[0]  # 提交 id
+        submitter_name = submission[1]  # 提交者姓名
+        submit_time = submission[2]  # 提交时间
+        file_submitted_count = submission[3]  # 提交文件数量
+        file_submitted_list = submission[4]  # 提交文件列表
         tmp_dict = {
             'submitter_order_idx': idx,  # ! 用于 js 定位数据，不是数据库 id
             'submitter_name': submitter_name,
@@ -534,3 +539,16 @@ def file_editing(collection_id):
     if question_dict is None:
         return render_template("404.html")
     return render_template('file_editing.html', collection=question_dict)
+
+
+@app.route('/file_preview')
+def file_preview():
+    tmp_data = request.args.to_dict()
+    print(tmp_data)
+    collection_id = id_str_to_int(tmp_data['collectionId'])
+    submission_id = id_str_to_int(tmp_data['submissionId'])
+    print("collection_id: {} submission_id: {}".format(collection_id, submission_id))
+    submission_dict = get_submission_dict(collection_id=collection_id, submission_id=submission_id)
+    print("submission_dict: {}".format(submission_dict))
+    print("预览")
+    return render_template('file_preview.html', collection=submission_dict)
