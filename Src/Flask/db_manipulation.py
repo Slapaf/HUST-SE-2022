@@ -269,16 +269,41 @@
     
         Returns: choice_statistics, qnaire_statistics
         - choice_statistics: 选择题答题情况数据统计。若收集中无选择题，则返回None；否则返回一个字典，格式如下:
-        { 题目标题: (答案, 正确率, {选项: [选择此选项的人员名单]}) }
-        例如：
-        {'单选题': ('A', 0.2, {'A': ['张庙松'], 'B': ['王梓熙', '王广凯'], 'C': ['张隽翊'], 'D': ['计胜翔']}),
-         '多选题': ('A-B-C-D', 0.2, {'A': ['王梓熙', '计胜翔', '张庙松'], 'B': ['王梓熙', '王广凯', '张庙松'],'C': ['王广凯', '张隽翊', '张庙松'], 'D': ['张隽翊', '计胜翔', '张庙松']})}
-
+                            choice_data = {'question_1': {
+                                                'questionName': '单选题',
+                                                'correctAnswer': 'A',
+                                                'accuracy': 0.25,
+                                                'A': ['王梓熙'],
+                                                'B': ['张隽翊'],
+                                                'C': ['王广凯'],
+                                                'D': ['计胜翔']
+                                            },
+                                           'question_2': {
+                                               'questionName': '多选题',
+                                               'correctAnswer': 'C-D',
+                                               'accuracy': 0.25,
+                                               'A': ['王梓熙', '计胜翔'],
+                                               'B': ['王梓熙', '张隽翊'],
+                                               'C': ['张隽翊', '王广凯'],
+                                               'D': ['王广凯', '计胜翔']
+                                           }
+                            }
         - qnaire_statistics: 问卷题答题情况数据统计。若收集中无问卷题，则返回None；否则返回一个字典，格式如下:
-        { 题目标题: {选项: [选择此选项的人员名单]} }
-        例如：
-        {'你是否喜欢吃屎？': {'喜欢': ['王梓熙', '王广凯', '张隽翊', '张庙松'], '不喜欢': ['计胜翔']}}
-
+                            qnaire_data = {'question_1': {
+                                                'questionName': '你喜欢吃屎吗？',
+                                                'optionNumber': 2,
+                                                'option_1': {
+                                                    'optionName': '喜欢',
+                                                    'peopleNumber': 3,
+                                                    'people': ['王梓熙', '张隽翊', '王广凯']
+                                                },
+                                                'option_2': {
+                                                    'optionName': '不喜欢',
+                                                    'peopleNumber': 1,
+                                                    'people': ['计胜翔']
+                                                }
+                                        }
+                            }
 
 '''''
 
@@ -1397,15 +1422,41 @@ def collection_data_statistics(collection_id: int) -> (dict, dict):
 
     Returns:
         choice_statistics: 选择题答题情况数据统计。若收集中无选择题，则返回None；否则返回一个字典，格式如下:
-        { 题目标题: (答案, 正确率, {选项: [选择此选项的人员名单]}) }
-        例如：
-{'单选题': ('A', 0.2, {'A': ['张庙松'], 'B': ['王梓熙', '王广凯'], 'C': ['张隽翊'], 'D': ['计胜翔']}),
- '多选题': ('A-B-C-D', 0.2, {'A': ['王梓熙', '计胜翔', '张庙松'], 'B': ['王梓熙', '王广凯', '张庙松'],'C': ['王广凯', '张隽翊', '张庙松'], 'D': ['张隽翊', '计胜翔', '张庙松']})}
-
+                            choice_data = {'question_1': {
+                                                'questionName': '单选题',
+                                                'correctAnswer': 'A',
+                                                'accuracy': 0.25,
+                                                'A': ['王梓熙'],
+                                                'B': ['张隽翊'],
+                                                'C': ['王广凯'],
+                                                'D': ['计胜翔']
+                                            },
+                                           'question_2': {
+                                               'questionName': '多选题',
+                                               'correctAnswer': 'C-D',
+                                               'accuracy': 0.25,
+                                               'A': ['王梓熙', '计胜翔'],
+                                               'B': ['王梓熙', '张隽翊'],
+                                               'C': ['张隽翊', '王广凯'],
+                                               'D': ['王广凯', '计胜翔']
+                                           }
+                            }
         qnaire_statistics: 问卷题答题情况数据统计。若收集中无问卷题，则返回None；否则返回一个字典，格式如下:
-        { 题目标题: {选项: [选择此选项的人员名单]} }
-        例如：
-        {'你是否喜欢吃屎？': {'喜欢': ['王梓熙', '王广凯', '张隽翊', '张庙松'], '不喜欢': ['计胜翔']}}
+                            qnaire_data = {'question_1': {
+                                                'questionName': '你喜欢吃屎吗？',
+                                                'optionNumber': 2,
+                                                'option_1': {
+                                                    'optionName': '喜欢',
+                                                    'peopleNumber': 3,
+                                                    'people': ['王梓熙', '张隽翊', '王广凯']
+                                                },
+                                                'option_2': {
+                                                    'optionName': '不喜欢',
+                                                    'peopleNumber': 1,
+                                                    'people': ['计胜翔']
+                                                }
+                                        }
+                            }
     """
     choice_qtype = [Question_info.SINGLE_CHOICE, Question_info.MULTI_CHOICE]
     qnaire_qtype = [Question_info.SINGLE_QUESTIONNAIRE, Question_info.MULTI_QUESTIONNAIRE]
@@ -1419,14 +1470,19 @@ def collection_data_statistics(collection_id: int) -> (dict, dict):
         choice_statistics = None
     else:
         choice_statistics = {}
+        seq = 0
         for id, title in choice_qlist:
+            seq += 1
+            detail = {}
+            detail['questionName'] = title
             answer = Answer_info.query.filter_by(question_id=id).first().answer_option
+            detail['correctAnswer'] = answer
             submit_content_list = Submit_Content_info.query.filter_by(question_id=id). \
                 with_entities(Submit_Content_info.submission_id, Submit_Content_info.result). \
                 all()
             id_list, result_list = zip(*submit_content_list)
             id_list, result_list = list(id_list), list(result_list)
-            accuracy = result_list.count(answer) / len(result_list)  # 计算此题正确率
+            detail['accuracy'] = result_list.count(answer) / len(result_list)  # 计算此题正确率
 
             # 将submission_id根据选择的选项进行分类
             A_list = list(filter(lambda x: 'A' in x[1], submit_content_list))
@@ -1437,7 +1493,6 @@ def collection_data_statistics(collection_id: int) -> (dict, dict):
             C_id_list = list(map(itemgetter(0), C_list))
             D_list = list(filter(lambda x: 'D' in x[1], submit_content_list))
             D_id_list = list(map(itemgetter(0), D_list))
-            detail = {}
             name_list = Submission_info.query.filter(Submission_info.id.in_(A_id_list)). \
                 with_entities(Submission_info.submitter_name). \
                 all()
@@ -1459,7 +1514,7 @@ def collection_data_statistics(collection_id: int) -> (dict, dict):
             name_list = list(map(itemgetter(0), name_list))
             detail['D'] = name_list
 
-            choice_statistics[title] = (answer, accuracy, detail)
+            choice_statistics[f'question_{seq}'] = detail
 
     # 查找问卷题
     qnaire_qlist = Question_info.query.filter(Question_info.collection_id == collection_id,
@@ -1470,24 +1525,32 @@ def collection_data_statistics(collection_id: int) -> (dict, dict):
         qnaire_statistics = None
     else:
         qnaire_statistics = {}
+        seq = 0
         for id, title in qnaire_qlist:
+            seq += 1
+            detail = {}
+            detail['questionName'] = title
             option_list = Option_info.query.filter_by(question_id=id). \
                 with_entities(Option_info.option_sn, Option_info.option_content). \
                 all()
+            detail['optionNumber'] = len(option_list)
             submit_content_list = Submit_Content_info.query.filter_by(question_id=id). \
                 with_entities(Submit_Content_info.submission_id, Submit_Content_info.result). \
                 all()
-            detail = {}
             for sn, content in option_list:
+                option = {}
+                option['optionName'] = content
                 submission_list = list(filter(lambda x: str(sn + 1) in x[1], submit_content_list))
                 submission_id_list = list(map(itemgetter(0), submission_list))
                 name_list = Submission_info.query.filter(Submission_info.id.in_(submission_id_list)). \
                     with_entities(Submission_info.submitter_name). \
                     all()
                 name_list = list(map(itemgetter(0), name_list))
-                detail[content] = name_list
+                option['peopleNumber'] = len(name_list)
+                option['people'] = name_list
+                detail[f'option_{sn + 1}'] = option
 
-            qnaire_statistics[title] = detail
+            qnaire_statistics[f'question_{seq}'] = detail
 
     print("选择题数据统计：", choice_statistics)
     print("问卷题数据统计：", qnaire_statistics)
