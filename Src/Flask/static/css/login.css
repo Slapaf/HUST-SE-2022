@@ -1,14 +1,6 @@
-/* 提示信息 */
-/* .alert {
-    position: relative;
-    padding: 7px;
-    margin: 7px 0;
-    border: 1px solid transparent;
-    color: #004085;
-    background-color: #cce5ff;
-    border-color: #b8daff;
-    border-radius: 5px;
-} */
+a {
+    text-decoration: none;
+}
 
 .alert {
     position: fixed;
@@ -106,7 +98,8 @@ a {
 }
 
 #goback {
-    width: 120px;
+    width: 110px;
+    height: 40px;
     font-size: 20px;
     position: absolute;
     left: 5vw;
@@ -115,6 +108,7 @@ a {
 .goback_link {
     background-color: rgba(255, 255, 255, 0.6);
     padding: 8px;
+    padding-top: 5px;
     border-radius: 8px;
     text-align: center;
     font-size: 16px;
