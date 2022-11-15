@@ -1,8 +1,11 @@
 l1 = [1, 2, 3, 4, 5]
 l2 = [11, 22, 33, 44, 55]
+l = list(filter(lambda x: x == 1, l1))
+print(l, l1)
 
-for v1, v2 in list(zip(l1, l2)):
-    print(v1, v2)
+# d = {'单选1':{'A':['jsx','zjy'],'B':['wgk','wzx']}
+#      '你喜欢跑步吗?':{'喜欢'}}
+
 [('question_name1', '姓名lala'),
  ('submit_name1', '计胜翔'),
  ('question_file2', '文件haha'),

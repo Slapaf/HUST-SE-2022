@@ -1327,3 +1327,98 @@ def get_submission_dict(collection_id: int, submission_id: int) -> dict:
 
     print(submission)
     return submission
+
+
+def collection_data_statistics(collection_id: int) -> (dict, dict):
+    """对收集中的选择题、问卷题的答题情况进行数据统计
+
+    Args:
+        collection_id: 收集id
+
+    Returns:
+        choice_statistics: 选择题答题情况数据统计。格式如下:
+
+
+        qnaire_statistics: 问卷题答题情况数据统计。格式如下:
+
+    """
+    choice_qtype = [Question_info.SINGLE_CHOICE, Question_info.MULTI_CHOICE]
+    qnaire_qtype = [Question_info.SINGLE_QUESTIONNAIRE, Question_info.MULTI_QUESTIONNAIRE]
+
+    # 查找选择题
+    choice_qlist = Question_info.query.filter(Question_info.collection_id == collection_id,
+                                              Question_info.question_type.in_(choice_qtype)). \
+        with_entities(Question_info.id, Question_info.question_title).all()
+    # 判断是否存在选择题
+    if len(choice_qlist) == 0:
+        choice_statistics = None
+    else:
+        choice_statistics = {}
+        for id, title in choice_qlist:
+            answer = Answer_info.query.filter_by(question_id=id).first().answer_option
+            submit_content_list = Submit_Content_info.query.filter_by(question_id=id). \
+                with_entities(Submit_Content_info.submission_id, Submit_Content_info.result). \
+                all()
+            id_list, result_list = zip(*submit_content_list)
+            id_list, result_list = list(id_list), list(result_list)
+            accuracy = result_list.count(answer) / len(result_list)  # 计算此题正确率
+
+            # 将submission_id根据选择的选项进行分类
+            A_id_list = list(filter(lambda x: 'A' in x[1], submit_content_list))
+            B_id_list = list(filter(lambda x: 'B' in x[1], submit_content_list))
+            C_id_list = list(filter(lambda x: 'C' in x[1], submit_content_list))
+            D_id_list = list(filter(lambda x: 'D' in x[1], submit_content_list))
+            detail = {}
+            name_list = Submission_info.query.filter(Submission_info.id.in_(A_id_list)). \
+                with_entities(Submit_Content_info.submitter_name). \
+                all()
+            name_list = list(map(itemgetter(0), name_list))
+            detail['A'] = name_list
+            name_list = Submission_info.query.filter(Submission_info.id.in_(B_id_list)). \
+                with_entities(Submit_Content_info.submitter_name). \
+                all()
+            name_list = list(map(itemgetter(0), name_list))
+            detail['B'] = name_list
+            name_list = Submission_info.query.filter(Submission_info.id.in_(C_id_list)). \
+                with_entities(Submit_Content_info.submitter_name). \
+                all()
+            name_list = list(map(itemgetter(0), name_list))
+            detail['C'] = name_list
+            name_list = Submission_info.query.filter(Submission_info.id.in_(D_id_list)). \
+                with_entities(Submit_Content_info.submitter_name). \
+                all()
+            name_list = list(map(itemgetter(0), name_list))
+            detail['D'] = name_list
+
+            choice_statistics[title] = (accuracy, detail)
+
+    # 查找问卷题
+    qnaire_qlist = Question_info.query.filter(Question_info.collection_id == collection_id,
+                                              Question_info.question_type.in_(qnaire_qtype)). \
+        with_entities(Question_info.id, Question_info.question_title).all()
+    # 判断是否存在问卷题
+    if len(qnaire_qlist) == 0:
+        qnaire_statistics = None
+    else:
+        qnaire_statistics = {}
+        for id, title in qnaire_qlist:
+            option_list = Option_info.query.filter_by(question_id=id). \
+                with_entities(Option_info.option_sn, Option_info.option_content). \
+                all()
+            submit_content_list = Submit_Content_info.query.filter_by(question_id=id). \
+                with_entities(Submit_Content_info.submission_id, Submit_Content_info.result). \
+                all()
+            detail = {}
+            for sn, content in option_list:
+                submission_id_list = list(filter(lambda x: str(sn) in x[1], submit_content_list))
+                name_list = Submission_info.query.filter(Submission_info.id.in_(submission_id_list)). \
+                    with_entities(Submit_Content_info.submitter_name). \
+                    all()
+                name_list = list(map(itemgetter(0), name_list))
+                detail[content] = name_list
+
+            qnaire_statistics[title] = detail
+
+    print("选择题数据统计：", choice_statistics)
+    print("问卷题数据统计：", qnaire_statistics)
+    return choice_statistics, qnaire_statistics
