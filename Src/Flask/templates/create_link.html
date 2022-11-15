@@ -9,29 +9,30 @@
 </head>
 
 <body>
-    <div class="box">
-        <h1 class="title">创建成功！</h1>
-        <div class="text">
-            <div>下面是您的文件收集链接</div>
-            <div>请复制并发给文件提交者</div>
-        </div>
-        <div class="main">
-            <div class="link_box">
-                <div class="link" id="link">https://baidu.com</div>
-            </div>
-            <button class="copy" onclick="mycopy()">复制</button>
-        </div>
-        <a href="{{ url_for('mycollection') }}" class="click">查看我的收集</a>
-        <!-- <div class="btn">
-            <button class="click" onclick="window.location.href = "mycollection.html">查看我的收集</button>
-        </div> -->
+<div class="box">
+    <h1 class="title">创建成功！</h1>
+    <div class="text">
+        <div>下面是您的文件收集链接</div>
+        <div>请复制并发给文件提交者</div>
     </div>
-    <textarea id="input"></textarea>
+    <div class="main">
+        <div class="link_box">
+            <div class="link" id="link">{{ share_link }}</div>
+        </div>
+        <button class="copy" onclick="mycopy()">复制</button>
+    </div>
+    <a href="{{ url_for('mycollection') }}" class="click">查看我的收集</a>
+    <!-- <div class="btn">
+        <button class="click" onclick="window.location.href = "mycollection.html">查看我的收集</button>
+    </div> -->
+</div>
+<textarea id="input"></textarea>
 </body>
 <script>
     const n = document.getElementById("link");
-    const copyBox = document.querySelector(".copy"); 
+    const copyBox = document.querySelector(".copy");
     n.title = document.getElementById("link").innerText;
+
     function mycopy() {
         var text = document.getElementById("link").innerText;
         var input = document.getElementById("input");
@@ -43,7 +44,13 @@
             copyBox.innerHTML = "复制";
         }, 1500);
     }
-    
-</script>
 
+</script>
+<script language="javascript">
+    //防止页面后退
+    history.pushState(null, null, document.URL);
+    window.addEventListener('popstate', function () {
+        history.pushState(null, null, document.URL);
+    });
+</script>
 </html>

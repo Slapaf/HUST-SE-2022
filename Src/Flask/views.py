@@ -115,7 +115,8 @@ def file_submitting(collection_message):
         # file_upload(collection_id, a, tmp_file)
         save_submission(a, collection_id, file_upload(
             collection_id, a, tmp_file))
-        return redirect(url_for('index'))
+        # return redirect(url_for('index'))
+        return redirect(url_for('submit_successfully'))
     else:
         question_dict = get_question_dict(collection_id)
         print(question_dict)
@@ -123,6 +124,11 @@ def file_submitting(collection_message):
             return render_template("404.html")
         return render_template("file_submitting.html",
                                collection=question_dict)
+
+
+@app.route('/submit_successfully')
+def submit_successfully():
+    return render_template('submit_successfully.html')
 
 
 @app.route('/mycollection', methods=['GET', 'POST'])
@@ -400,13 +406,21 @@ def generate_collection():
         else:
             a = list(question_list.items(multi=True))
             print('创建收集：', a)  # ! 调试用
-            t = add_FC(a, current_user.id)
+            collection_id = add_FC(a, current_user.id)
             # question = get_question_MultiDict(t)
             # print(question)
             flash("Successfully create a collection!")
+        # return redirect(url_for('index'))
+        share_link = "127.0.0.1:5000/file_submitting/submit" + id_int_to_str(collection_id)
+        # return render_template('create_link.html', share_link=share_link)
+        return redirect(url_for('create_link', share_id=id_int_to_str(collection_id)))
 
-        return redirect(url_for('index'))
     return render_template('file_collecting.html')
+
+
+@app.route('/create_link/<string:share_id>')
+def create_link(share_id):
+    return render_template('create_link.html', share_link="127.0.0.1:5000/file_submitting/submit" + share_id)
 
 
 # 主界面
