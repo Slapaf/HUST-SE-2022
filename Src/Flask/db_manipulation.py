@@ -1419,14 +1419,19 @@ def collection_data_statistics(collection_id: int) -> (dict, dict):
         choice_statistics = None
     else:
         choice_statistics = {}
+        seq = 0
         for id, title in choice_qlist:
+            seq += 1
+            detail = {}
+            detail['questionName'] = title
             answer = Answer_info.query.filter_by(question_id=id).first().answer_option
+            detail['correctAnswer'] = answer
             submit_content_list = Submit_Content_info.query.filter_by(question_id=id). \
                 with_entities(Submit_Content_info.submission_id, Submit_Content_info.result). \
                 all()
             id_list, result_list = zip(*submit_content_list)
             id_list, result_list = list(id_list), list(result_list)
-            accuracy = result_list.count(answer) / len(result_list)  # 计算此题正确率
+            detail['accuracy'] = result_list.count(answer) / len(result_list)  # 计算此题正确率
 
             # 将submission_id根据选择的选项进行分类
             A_list = list(filter(lambda x: 'A' in x[1], submit_content_list))
@@ -1459,7 +1464,7 @@ def collection_data_statistics(collection_id: int) -> (dict, dict):
             name_list = list(map(itemgetter(0), name_list))
             detail['D'] = name_list
 
-            choice_statistics[title] = (answer, accuracy, detail)
+            choice_statistics[f'question_{seq}'] = detail
 
     # 查找问卷题
     qnaire_qlist = Question_info.query.filter(Question_info.collection_id == collection_id,
@@ -1470,24 +1475,32 @@ def collection_data_statistics(collection_id: int) -> (dict, dict):
         qnaire_statistics = None
     else:
         qnaire_statistics = {}
+        seq = 0
         for id, title in qnaire_qlist:
+            seq += 1
+            detail = {}
+            detail['questionName'] = title
             option_list = Option_info.query.filter_by(question_id=id). \
                 with_entities(Option_info.option_sn, Option_info.option_content). \
                 all()
+            detail['optionNumber'] = len(option_list)
             submit_content_list = Submit_Content_info.query.filter_by(question_id=id). \
                 with_entities(Submit_Content_info.submission_id, Submit_Content_info.result). \
                 all()
-            detail = {}
             for sn, content in option_list:
+                option = {}
+                option['optionName'] = content
                 submission_list = list(filter(lambda x: str(sn + 1) in x[1], submit_content_list))
                 submission_id_list = list(map(itemgetter(0), submission_list))
                 name_list = Submission_info.query.filter(Submission_info.id.in_(submission_id_list)). \
                     with_entities(Submission_info.submitter_name). \
                     all()
                 name_list = list(map(itemgetter(0), name_list))
-                detail[content] = name_list
+                option['people'] = name_list
+                option['peopleNumber'] = len(name_list)
+                detail[f'option_{sn + 1}'] = option
 
-            qnaire_statistics[title] = detail
+            qnaire_statistics[f'question_{seq}'] = detail
 
     print("选择题数据统计：", choice_statistics)
     print("问卷题数据统计：", qnaire_statistics)
