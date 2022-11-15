@@ -40,6 +40,7 @@
             <ul>
                 <li class="current">应交名单</li>
                 <li>提交记录</li>
+                <li>统计图表</li>
             </ul>
             <div id="watchCollection">
                 <a id="downloadExcel" onclick="getExcel()" download>查看汇总</a>
@@ -68,6 +69,11 @@
                     <div class="list_body" id="list_body"></div>
                 </div>
             </div>
+            <div class="item">
+                <div class="part4" id="chartPanel">
+
+                </div>
+            </div>
         </div>
     </div>
     {# ? 向数据库提交应交名单数据 #}
@@ -92,7 +98,12 @@
     <div id="popLayer"></div>
 </div>
 {#<script src="js/collect_details.js"></script>#}
+<script src="https://cdn.amcharts.com/lib/5/index.js"></script>
+<script src="https://cdn.amcharts.com/lib/5/xy.js"></script>
+<script src="https://cdn.amcharts.com/lib/5/percent.js"></script>
+<script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
 <script src="{{ url_for('static', filename='js/collect_details.js') }}"></script>
+<script src="{{ url_for('static', filename='js/collect_detail_chart.js') }}"></script>
 <script>
     function getData() {
         let tmp_json = JSON.parse('{{ json_object | tojson }}');

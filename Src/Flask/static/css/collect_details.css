@@ -108,7 +108,7 @@ body {
 
 .item {
     display: none;
-    height: 560px;
+    min-height: 70vh;
     /* margin-left: 10px; */
     /* margin-right: 10px; */
     border-radius: 0px 12px 12px 12px;
@@ -120,7 +120,7 @@ body {
     flex-direction: column;
     width: 100%;
     height: 100%;
-    overflow: auto;
+    /* overflow: auto; */
 }
 
 .btn_add {
@@ -366,4 +366,18 @@ body {
     width: 100%;
     height: 100%;
     background: #85878980;
+}
+
+#chartPanel {
+    padding: 50px;
+}
+
+.pieChart {
+    width: 50%;
+    height: 300px;
+  }
+
+.columnChart {
+    width: 80%;
+    height: 400px;
 }
