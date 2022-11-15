@@ -115,7 +115,8 @@ def file_submitting(collection_message):
         # file_upload(collection_id, a, tmp_file)
         save_submission(a, collection_id, file_upload(
             collection_id, a, tmp_file))
-        return redirect(url_for('index'))
+        # return redirect(url_for('index'))
+        return redirect(url_for('submit_successfully'))
     else:
         question_dict = get_question_dict(collection_id)
         print(question_dict)
@@ -123,6 +124,11 @@ def file_submitting(collection_message):
             return render_template("404.html")
         return render_template("file_submitting.html",
                                collection=question_dict)
+
+
+@app.route('/submit_successfully')
+def submit_successfully():
+    return render_template('submit_successfully.html')
 
 
 @app.route('/mycollection', methods=['GET', 'POST'])
