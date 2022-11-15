@@ -46,54 +46,84 @@ def generate_excel(due_list: list,
     submit_status = [
         '已提交' if name in submitted_list else '未提交' for name in due_list
     ]
-    excel_path += excel_name + '.xlsx'
+    # excel_path += excel_name
+    excel_path = os.path.join(excel_path, excel_name)
     df = pd.DataFrame({'成员名单': due_list, '提交状态': submit_status})
     df.to_excel(excel_path, sheet_name='提交情况', index=False)
     # 设置样式
-    red_fill = PatternFill('solid', start_color='ff9198')
-    green_fill = PatternFill("solid", start_color='a1ddaa')
-    # 应用样式
-    wb = load_workbook(excel_path)
-    ws = wb.active
-    cells = ws.iter_rows(min_row=2, min_col=2)
-    for cell in cells:
-        cell[0].fill = green_fill if cell[0].value == '已提交' else red_fill
-    # 保存表格
-    wb.save("demo.xlsx")
-    wb.close()
+    # red_fill = PatternFill('solid', start_color='FF9198')
+    # green_fill = PatternFill("solid", start_color='A1DDAA')
+    # # 应用样式
+    # wb = load_workbook(excel_path)
+    # ws = wb.active
+    # cells = ws.iter_rows(min_row=2, min_col=2)
+    # for cell in cells:
+    #     cell[0].fill = green_fill if cell[0].value == '已提交' else red_fill
+    # # 保存表格
+    # wb.save(excel_name)
+    # wb.close()
 
 
-def dir2zip(zip_source_dir: str, zip_destination_dir: str, zip_file_name: str):
-    """将指定文件夹压缩为 zip 压缩文件
+def make_response(file_path: str, file_name: str) -> Response:
+    """生成返回文件的 HTTP 头部
 
     Args:
-        zip_source_dir (str): 源文件夹，待压缩的文件夹
-        zip_destination_dir (str): 目标文件夹，压缩文件存放的位置
-        zip_file_name (str): 压缩文件名
-    """
-    # print("压缩函数测试")
-    # with zipfile.ZipFile(zip_destination_dir + '.zip', mode='w',
-    #                      compression=zipfile.ZIP_DEFLATED) as zf:
-    #     parent_dir, cur_dir = os.path.split(zip_source_dir)
-    #     zf.write(zip_source_dir, arcname=zip_file_name)
-    #     print("压缩成功！.zip 文件位于 {} 目录下".format(zip_destination_dir))
-    zf = zipfile.ZipFile(os.path.join(zip_destination_dir, zip_file_name + '.zip'), 'a')
-    file_dirs = os.listdir(zip_source_dir)
-    for file_dir in file_dirs:
-        parent_path = os.path.join(zip_source_dir, file_dir)
-        for file in os.listdir(parent_path):
-            # * 文件已经压缩过，不进行压缩（这一项需要修改）
-            if any([file in sub_dir for sub_dir in zf.namelist()]):
-                continue
-            zf.write(
-                os.path.join(zip_source_dir, file_dir, file),
-                os.path.join(
-                    parent_path.replace(zip_source_dir, ''),  # * 这一项可以设置具体的子文件夹名
-                    file
-                )
-            )
-    zf.close()
+        file_path: 文件所在路径
+        file_name: 文件名
 
-    print("压缩成功! .zip 文件位于 {} 目录下，压缩包名为 {}。".format(
-        zip_destination_dir,
-        zip_file_name + '.zip'))
+    Returns:
+        请求
+    """
+    f = open(os.path.join(file_path, file_name), 'rb')
+    response = Response(f.readlines())
+    mime_type = mimetypes.guess_type(file_name)[0]
+    response.headers['Content-Type'] = mime_type
+    response.headers['Content-Disposition'] = 'attachment; filename={}'.format(
+        file_name.encode().decode('latin-1')
+    )
+    return response
+
+
+def generate_zip(to_zip: str, save_zip_name: str):
+    """压缩文件及文件夹
+
+    save_zip_name 带目录，若不带目录就是当前目录
+
+    Args:
+        to_zip (str): 待压缩的目录
+        save_zip_name (str): 压缩文件名
+    """
+    # * 1.先判断输出 save_zip_name 的上级是否存在(判断绝对目录)，否则创建目录
+    save_zip_dir = os.path.split(
+        os.path.abspath(save_zip_name))[0]  # save_zip_name的上级目录
+    print(save_zip_dir)
+    if not os.path.exists(save_zip_dir):
+        os.makedirs(save_zip_dir)
+        print('创建新目录 %s' % save_zip_dir)
+    f = zipfile.ZipFile(os.path.abspath(save_zip_name), 'w',
+                        zipfile.ZIP_DEFLATED)
+    # * 2.判断要被压缩的 to_zip 是否目录还是文件，是目录就遍历操作，是文件直接压缩
+    if not os.path.isdir(os.path.abspath(to_zip)):  # 如果不是目录,那就是文件
+        if os.path.exists(os.path.abspath(to_zip)):  # 判断文件是否存在
+            f.write(to_zip)
+            f.close()
+            print('%s 压缩为 %s' % (to_zip, save_zip_name))
+        else:
+            print('%s 文件不存在' % os.path.abspath(to_zip))
+    else:
+        if os.path.exists(os.path.abspath(to_zip)):  # 判断目录是否存在，遍历目录
+            zip_list = []
+            for cur_dir, sub_dirs, files in os.walk(to_zip):  # 遍历目录，加入列表
+                for fileItem in files:
+                    zip_list.append(os.path.join(cur_dir, fileItem))
+                for dirItem in sub_dirs:
+                    zip_list.append(os.path.join(cur_dir, dirItem))
+            # 读取列表压缩目录和文件
+            for i in zip_list:
+                # replace是减少压缩文件的一层目录，即压缩文件不包括to_zip这个目录
+                f.write(i, i.replace(to_zip, ''))
+                # print('%s压缩到%s'%(i,save_zip_name))
+            f.close()
+            print('%s 压缩为 %s' % (to_zip, save_zip_name))
+        else:
+            print('%s 文件夹不存在' % os.path.abspath(to_zip))

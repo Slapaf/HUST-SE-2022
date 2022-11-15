@@ -252,19 +252,24 @@ body {
     font-size: 15px;
 }
 
+.list_name,
 .list_date,
-.list_condition,
 .list_number,
+.list_condition,
+.list_preview,
+.member_name,
 .member_date,
 .member_condition,
-.member_number {
+.member_number,
+.member_preview {
     margin-left: 8px;
     margin-right: 8px;
-    width: 25%;
+    width: 20%;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
+
 
 .member_condition {
     color: rgb(0, 149, 255);
@@ -302,7 +307,7 @@ body {
     padding: 20px;
     width: 40%;
     left: 30%;
-    top: 30%;
+    top: 30vh;
     height: 40%;
     z-index: 11;
     background-color: rgba(236, 236, 236);
