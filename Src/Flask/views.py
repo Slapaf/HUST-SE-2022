@@ -406,9 +406,15 @@ def generate_collection():
             flash("Successfully create a collection!")
         # return redirect(url_for('index'))
         share_link = "127.0.0.1:5000/file_submitting/submit" + id_int_to_str(collection_id)
-        return render_template('create_link.html', share_link=share_link)
+        # return render_template('create_link.html', share_link=share_link)
+        return redirect(url_for('create_link', share_id=id_int_to_str(collection_id)))
 
     return render_template('file_collecting.html')
+
+
+@app.route('/create_link/<string:share_id>')
+def create_link(share_id):
+    return render_template('create_link.html', share_link="127.0.0.1:5000/file_submitting/submit" + share_id)
 
 
 # 主界面
