@@ -79,51 +79,39 @@ print(l, l1)
  '28_submit_qnaire6': '2'}
 
 # 选择题数据统计：
-{'单选题': ('A', 0.2, {'A': ['张庙松'], 'B': ['王梓熙', '王广凯'], 'C': ['张隽翊'], 'D': ['计胜翔']}),
- '多选题': ('A-B-C-D', 0.2, {'A': ['王梓熙', '计胜翔', '张庙松'], 'B': ['王梓熙', '王广凯', '张庙松'],
-                             'C': ['王广凯', '张隽翊', '张庙松'], 'D': ['张隽翊', '计胜翔', '张庙松']})}
-# 问卷题数据统计：
-{'你是否喜欢吃屎？': {'喜欢': ['王梓熙', '王广凯', '张隽翊', '张庙松'], '不喜欢': ['计胜翔']}}
-
-data_choice = {
-    'question_1' : {
-        'questionName' : "单选题1",
-        'correctAnswer' : 'A',
-        'accuracy' : 0.2,  #是数字不是字符串
-        'A' : ['张庙松','黄俊杰'],
-        'B' : ['王广凯','王梓熙'],
-        'C' : ['张隽翊'],
-        'D' : []
-    },
-    'question_2' : {
-        'questionName' : "多选题1",
-        'correctAnswer' : 'A B C D',
-        'accuracy' : 0.2,
-        'A' : ['张庙松','黄俊杰'],
-        'B' : ['王广凯','王梓熙'],
-        'C' : ['王广凯', '张隽翊', '张庙松'],
-        'D' : ['张隽翊', '计胜翔', '张庙松']
-    }
+choice_data = {'question_1': {
+                    'questionName': '单选题',
+                    'correctAnswer': 'A',
+                    'accuracy': 0.25,
+                    'A': ['王梓熙'],
+                    'B': ['张隽翊'],
+                    'C': ['王广凯'],
+                    'D': ['计胜翔']
+                },
+               'question_2': {
+                   'questionName': '多选题',
+                   'correctAnswer': 'C-D',
+                   'accuracy': 0.25,
+                   'A': ['王梓熙', '计胜翔'],
+                   'B': ['王梓熙', '张隽翊'],
+                   'C': ['张隽翊', '王广凯'],
+                   'D': ['王广凯', '计胜翔']
+               }
 }
 
-data_qnaire = {
-    'question_1' : {
-        'questionName' : '你喜欢吃饭吗？',
-        'optionNumber' : 3,
-        'option_1' : {
-            'optionName' : '喜欢',
-            'peopleNumber' : 3,
-            'people' : ['王广凯', '张隽翊', '王梓熙']
-        },
-        'option_2' : {
-            'optionName' : '不喜欢',
-            'peopleNumber' : 0,
-            'people' : []
-        },
-        'option_3' : {
-            'optionName' : '我喜欢吃屎',
-            'peopleNumber' : 1,
-            'people' : ['计胜翔']
-        }
-    }
+# 问卷题数据统计：
+qnaire_data = {'question_1': {
+                    'questionName': '你喜欢吃屎吗？',
+                    'optionNumber': 2,
+                    'option_1': {
+                        'optionName': '喜欢',
+                        'peopleNumber': 3,
+                        'people': ['王梓熙', '张隽翊', '王广凯']
+                    },
+                    'option_2': {
+                        'optionName': '不喜欢',
+                        'peopleNumber': 1,
+                        'people': ['计胜翔']
+                    }
+            }
 }
