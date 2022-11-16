@@ -34,11 +34,18 @@ function createPieChart(chartContainer, chartData) {
 }
 
 //创建柱状图
-function createColumnChart(chartTitle, chartData) {
+function createColumnChart(chartData) {
+  let newChartContainer = document.createElement("div");
+  newChartContainer.className = "chartContainer";
+  chartPanel.appendChild(newChartContainer);
+  let chartTitle = document.createElement("div");
+  chartTitle.className = "chartTitle";
+  chartTitle.innerHTML = "题目正确率";
+  newChartContainer.appendChild(chartTitle);
   let newChart = document.createElement("div");
   newChart.className = "columnChart";
   newChart.id = "chartdiv" + ++chartId;
-  chartPanel.appendChild(newChart);
+  newChartContainer.appendChild(newChart);
   var root = am5.Root.new(newChart.id);
   root.setThemes([am5themes_Animated.new(root)]);
   var chart = root.container.children.push(
@@ -116,14 +123,17 @@ function createNameList(chartContainer, op, nameList) {
     answerContainer.className = "answerContainer";
     answerContainer.innerHTML = "正确答案：" + nameList.correctAnswer;
     nameListContainer.appendChild(answerContainer);
-    let newdiv = document.createElement("div");
-    nameListContainer.appendChild(newdiv);
-    let listHeaders = document.createElement("ul");
-    listHeaders.className = "listHeaders";
-    newdiv.appendChild(listHeaders);
-    let listBodies = document.createElement("ul");
-    listBodies.className = "listBodies";
-    newdiv.appendChild(listBodies);
+  }
+  let newdiv = document.createElement("div");
+  newdiv.className = "listContainer";
+  nameListContainer.appendChild(newdiv);
+  let listHeaders = document.createElement("ul");
+  listHeaders.className = "listHeaders";
+  newdiv.appendChild(listHeaders);
+  let listBodies = document.createElement("ul");
+  listBodies.className = "listBodies";
+  newdiv.appendChild(listBodies);
+  if (op === "choice") {
     let ABCD = ["A", "B", "C", "D"];
     ABCD.forEach((e) => {
       let listTitle = document.createElement("li");
@@ -132,31 +142,58 @@ function createNameList(chartContainer, op, nameList) {
       listHeaders.appendChild(listTitle);
       let listContent = document.createElement("li");
       listContent.className = "listContent";
+      listContent.style.display = "none";
       listBodies.appendChild(listContent);
       nameList[e].forEach((name) => {
         listContent.innerHTML += name + " ";
       });
+      listTitle.onclick = () => {
+        let c1 = listHeaders.children;
+        let c2 = listBodies.children;
+        for (let i = 0; i < c1.length; i++) {
+          if (c1[i] == listTitle) {
+            c1[i].className = "currentTitle";
+            c2[i].style.display = "block";
+          }else {
+            c1[i].className = "listTitle";
+            c2[i].style.display = "none";
+          }       
+        }
+      };
     });
+    listHeaders.children[0].className = "currentTitle";
+    listBodies.children[0].style.display = "block";
   } else if (op === "qnaire") {
     let values = Object.values(nameList);
-    let listHeaders = document.createElement("ul");
-    listHeaders.className = "listHeaders";
-    nameListContainer.appendChild(listHeaders);
-    let listBodies = document.createElement("ul");
-    listBodies.className = "listBodies";
-    nameListContainer.appendChild(listBodies);
+    newdiv.appendChild(listBodies);
     values.forEach((e) => {
       let listTitle = document.createElement("li");
       listTitle.className = "listTitle";
       listTitle.innerHTML = '选择"' + e.optionName + '"选项名单';
       let listContent = document.createElement("li");
       listContent.className = "listContent";
+      listContent.style.display = "none";
       e.people.forEach((name) => {
         listContent.innerHTML += name + " ";
       });
       listHeaders.appendChild(listTitle);
       listBodies.appendChild(listContent);
+      listTitle.onclick = () => {
+        let c1 = listHeaders.children;
+        let c2 = listBodies.children;
+        for (let i = 0; i < c1.length; i++) {
+          if (c1[i] == listTitle) {
+            c1[i].className = "currentTitle";
+            c2[i].style.display = "block";
+          }else {
+            c1[i].className = "listTitle";
+            c2[i].style.display = "none";
+          }       
+        }
+      };
     });
+    listHeaders.children[0].className = "currentTitle";
+    listBodies.children[0].style.display = "block";
   }
   chartContainer.appendChild(nameListContainer);
 }
@@ -174,7 +211,7 @@ function processAccuracy(data_choice) {
     };
     chartData.push(optionData);
   });
-  createColumnChart("", chartData);
+  createColumnChart(chartData);
   values.forEach((e) => {
     processChoiceData(e);
   });

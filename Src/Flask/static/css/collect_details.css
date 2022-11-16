@@ -383,6 +383,7 @@ body {
 #downloadExcel:hover,
 #downloadFile:hover {
     cursor: pointer;
+    color: #4c9bf0;
 }
 
 #chartPanel {
@@ -395,6 +396,7 @@ body {
     background-color: #f7f9fb;
     width: 100%;
     margin: 20px 0;
+    padding: 10px;
     border-radius: 15px;
 }
 
@@ -405,6 +407,9 @@ body {
     font-size: 15px;
     color: #000;
 }
+
+
+
 .pieChart {
     width: 50%;
     height: 300px;
@@ -412,6 +417,57 @@ body {
   }
 
 .columnChart {
+    position: relative;
     width: 80%;
     height: 400px;
+    margin: auto;
+}
+
+.nameListContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 50%;
+    padding: 30px;
+    font-size: 14px;
+}
+
+.listContainer {
+    display: flex;
+    width: 100%;
+    border-radius: 8px;
+}
+
+.answerContainer {
+    margin: 10px;
+}
+
+.listHeaders {
+    width: fit-content;
+}
+
+.listBodies {
+    width: 60%;
+    background-color: #fff;
+    border-radius: 0 15px 15px 0;
+}
+
+.listTitle {
+    background-color: rgba(236, 236, 236, 0.792);
+    padding: 10px;
+    border-radius: 15px 0 0 15px;
+}
+
+.listTitle:hover {
+    cursor: pointer;
+}
+
+.currentTitle {
+    background-color: #fff;
+    padding: 10px;
+    border-radius: 15px 0 0 15px;
+}
+
+.listContent {
+    padding: 10px;
 }
