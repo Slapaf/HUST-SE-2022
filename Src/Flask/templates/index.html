@@ -48,9 +48,9 @@
         <h1 id="productName">嘟嘟可收件箱</h1>
         <h1 id="EnglishName">Dodoco Inbox</h1>
         <div class="underProductName">
-            <h2>您的生活好帮手嘿嘿嘿嘿嘿嘿</h2>
-            <h2>啦啦啦啦啦啦啦啦啦啦</h2>
-            <h2>你好你好你好你好你好你好</h2>
+            <h2>文件收集、题目收集、问卷收集</h2>
+            <h2></h2>
+            <h2></h2>
             <div class="createCollection">
                 <a href="{{ url_for('file_collecting') }}">创建收集</a>
             </div>
@@ -111,8 +111,11 @@
       </div>
       <img src="{{ url_for('static', filename='images/collectiondetailcard_1.png') }}" alt="" id="collectiondetailcard">
     </section>
-    <section class="panel five" style="background-color: rgb(207, 104, 221);z-index:13">
-      FOUR
+    <section class="panel five" style="z-index: 13;">
+      <img src="{{ url_for('static', filename='images/left-top.png') }}" alt="" class="yuanshen" id="left-top">
+      <img src="{{ url_for('static', filename='images/left-bottom.png') }}" alt="" class="yuanshen" id="left-bottom">
+      <img src="{{ url_for('static', filename='images/right-top.png') }}" alt="" class="yuanshen" id="right-top">
+      <img src="{{ url_for('static', filename='images/right-bottom.png') }}" alt="" class="yuanshen" id="right-bottom">
     </section>
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.3/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.3/ScrollTrigger.min.js"></script> -->

@@ -5,7 +5,7 @@ let choiceData = {};
 let qnaireData = {};
 
 //创建饼状图
-function createPieChart(chartContainer,chartData) {
+function createPieChart(chartContainer, chartData) {
   let newChart = document.createElement("div");
   newChart.className = "pieChart";
   newChart.id = "chartdiv" + ++chartId;
@@ -116,39 +116,47 @@ function createNameList(chartContainer, op, nameList) {
     answerContainer.className = "answerContainer";
     answerContainer.innerHTML = "正确答案：" + nameList.correctAnswer;
     nameListContainer.appendChild(answerContainer);
+    let newdiv = document.createElement("div");
+    nameListContainer.appendChild(newdiv);
+    let listHeaders = document.createElement("ul");
+    listHeaders.className = "listHeaders";
+    newdiv.appendChild(listHeaders);
+    let listBodies = document.createElement("ul");
+    listBodies.className = "listBodies";
+    newdiv.appendChild(listBodies);
     let ABCD = ["A", "B", "C", "D"];
     ABCD.forEach((e) => {
-      let listHeader = document.createElement("ul");
-      listHeader.className = "listHeader";
-      let listBody = document.createElement("li");
-      listBody.className = "listBody";
-      listHeader.innerHTML = "选择" + e + "选项名单";
+      let listTitle = document.createElement("li");
+      listTitle.className = "listTitle";
+      listTitle.innerHTML = "选择" + e + "选项名单";
+      listHeaders.appendChild(listTitle);
+      let listContent = document.createElement("li");
+      listContent.className = "listContent";
+      listBodies.appendChild(listContent);
       nameList[e].forEach((name) => {
-        listBody.innerHTML += name + " ";
+        listContent.innerHTML += name + " ";
       });
-      listHeader.appendChild(listBody);
-      nameListContainer.appendChild(listHeader);
-      listHeader.onclick = () => {
-        listBody.classList.toggle("show");
-      };
     });
-  }else if(op === "qnaire"){
+  } else if (op === "qnaire") {
     let values = Object.values(nameList);
-    values.forEach(e => {
-      let listHeader = document.createElement("ul");
-      listHeader.className = "listHeader";
-      let listBody = document.createElement("li");
-      listBody.className = "listBody";
-      listHeader.innerHTML = "选择\"" + e.optionName + "\"选项名单";
+    let listHeaders = document.createElement("ul");
+    listHeaders.className = "listHeaders";
+    nameListContainer.appendChild(listHeaders);
+    let listBodies = document.createElement("ul");
+    listBodies.className = "listBodies";
+    nameListContainer.appendChild(listBodies);
+    values.forEach((e) => {
+      let listTitle = document.createElement("li");
+      listTitle.className = "listTitle";
+      listTitle.innerHTML = '选择"' + e.optionName + '"选项名单';
+      let listContent = document.createElement("li");
+      listContent.className = "listContent";
       e.people.forEach((name) => {
-        listBody.innerHTML += name + " ";
+        listContent.innerHTML += name + " ";
       });
-      listHeader.appendChild(listBody);
-      nameListContainer.appendChild(listHeader);
-      listHeader.onclick = () => {
-        listBody.classList.toggle("show");
-      };
-    })
+      listHeaders.appendChild(listTitle);
+      listBodies.appendChild(listContent);
+    });
   }
   chartContainer.appendChild(nameListContainer);
 }
@@ -196,11 +204,11 @@ function processChoiceData(question) {
   chartTitle.className = "chartTitle";
   chartTitle.innerHTML = question.questionName;
   newChartContainer.appendChild(chartTitle);
-  createPieChart(newChartContainer,chartData);
+  createPieChart(newChartContainer, chartData);
   delete question.questionName;
   delete question.accuracy;
   nameList = question;
-  createNameList(newChartContainer,"choice",nameList);
+  createNameList(newChartContainer, "choice", nameList);
 }
 
 function processQnaireData(question) {
@@ -218,78 +226,22 @@ function processQnaireData(question) {
   let newChartContainer = document.createElement("div");
   newChartContainer.className = "chartContainer";
   chartPanel.appendChild(newChartContainer);
-  createPieChart(newChartContainer,chartData);
+  let chartTitle = document.createElement("div");
+  chartTitle.className = "chartTitle";
+  chartTitle.innerHTML = question.questionName;
+  newChartContainer.appendChild(chartTitle);
+  createPieChart(newChartContainer, chartData);
   delete question.questionName;
   delete question.optionNumber;
   nameList = question;
-  createNameList(newChartContainer,"qnaire",nameList);
+  createNameList(newChartContainer, "qnaire", nameList);
 }
-
-let data_choice = {
-  question_1: {
-    questionName: "单选题1",
-    correctAnswer: "A",
-    accuracy: 0.2,
-    A: ["张庙松", "黄俊杰"],
-    B: ["王广凯", "王梓熙"],
-    C: ["张隽翊"],
-    D: [],
-  },
-  question_2: {
-    questionName: "多选题1",
-    correctAnswer: "A B C D",
-    accuracy: 0.8,
-    A: ["张庙松", "黄俊杰"],
-    B: ["王广凯", "王梓熙"],
-    C: ["王广凯", "张隽翊", "张庙松"],
-    D: ["张隽翊", "计胜翔", "张庙松"],
-  },
-};
-
-let a = {
-  questionName: "单选题1",
-  correctAnswer: "A",
-  accuracy: 0.2,
-  A: ["张庙松", "黄俊杰"],
-  B: ["王广凯", "王梓熙"],
-  C: ["张隽翊"],
-  D: [],
-};
-
-let b = {
-  questionName: "你喜欢吃饭吗？",
-  optionNumber: 3,
-  option_1: {
-    optionName: "喜欢",
-    peopleNumber: 3,
-    people: ["王广凯", "张隽翊", "王梓熙"],
-  },
-  option_2: {
-    optionName: "不喜欢",
-    peopleNumber: 0,
-    people: [],
-  },
-  option_3: {
-    optionName: "我喜欢吃屎",
-    peopleNumber: 1,
-    people: ["计胜翔"],
-  },
-};
-
-let c = {
-  correctAnswer: "A",
-  A: ["张庙松", "黄俊杰"],
-  B: ["王广凯", "王梓熙"],
-  C: ["张隽翊"],
-  D: [],
-};
 
 function sendRequest() {
   // XMLHttpRequest对象用于在后台与服务器交换数据
   var xhr = new XMLHttpRequest();
-  let url = "/statistics?collectionId="+ getCollectionId();
-  console.log(url);
-  xhr.open("GET",url, false);
+  let url = "/statistics?collectionId=" + getCollectionId();
+  xhr.open("GET", url, false);
   xhr.onreadystatechange = function () {
     // readyState == 4说明请求已完成
     if (xhr.readyState == 4) {
@@ -302,7 +254,7 @@ function sendRequest() {
             processAccuracy(choiceData);
           }
           if (qnaireData) {
-            let values = Object.values(data_qnaire);
+            let values = Object.values(qnaireData);
             values.forEach((e) => {
               processQnaireData(e);
             });
@@ -324,5 +276,3 @@ function getCollectionId() {
   }
   return relUrl;
 }
-
-

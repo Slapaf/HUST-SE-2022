@@ -184,7 +184,7 @@ function addmember(
       let jsx = document.createElement("div");
       jsx.id = "return";
       wgk.appendChild(jsx);
-      addfile(file_submitted_list);
+      addfile(file_submitted_list); 
     };
   } else {
     membercondition.className = "member_condition1";

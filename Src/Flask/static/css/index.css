@@ -82,10 +82,11 @@ nav .right {
 .main {
     position: absolute;
     top: 23vh;
-    right: 18vw;
+    right: 20vw;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
+    align-items: center;
 }
 
 #productName {
@@ -114,8 +115,8 @@ nav .right {
 
 #round_right {
     position: absolute;
-    top: -300px;
-    right: -300px;
+    top: -35vh;
+    right: -35vh;
     z-index: -1;
 }
 
@@ -127,9 +128,9 @@ nav .right {
 }
 
 #svg1 {
-    width: 45vw;
+    width: 700px;
     position: absolute;
-    top: 20px;
+    top: 10px;
     left: 50px;
     z-index: -1;
    
@@ -245,3 +246,42 @@ html, body {
     font-size: 16px;
     margin-top: 5px;
 }
+
+.yuanshen {
+    width: 40vh;
+    transition: 0.5s;
+}
+
+.yuanshen:hover {
+    scale: 1.1;
+    transition: 0.5s;
+}
+
+.five {
+    background-color: #f7f9fb;
+    overflow: hidden;
+}
+#left-top {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+#left-bottom {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+
+#right-top {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+#right-bottom {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+}
+
