@@ -681,11 +681,12 @@ def delete_collection(collection_id: int) -> None:
     Option_info.query.filter_by(collection_id=collection_id).delete()
     Answer_info.query.filter_by(collection_id=collection_id).delete()
 
-    # 删除该收集中所有文件上传题的文件存储路径下的文件
-    question = Question_info.query. \
-        filter_by(collection_id=collection_id, question_type=Question_info.FILE_UPLOAD).first()
+    # 删除该收集的存储路径
+    # question = Question_info.query. \
+    #     filter_by(collection_id=collection_id, question_type=Question_info.FILE_UPLOAD).first()
     # file_path = Path('./FileStorage/' + question.file_path).parent
-    file_path = Path(os.path.join(APP_ROOT, 'FileStorage', question.file_path)).parent
+    file_path = Collection_info.query.get(collection_id).collection_path
+    file_path = Path(os.path.join(APP_ROOT, 'FileStorage', file_path))
     shutil.rmtree(file_path)
 
     Question_info.query.filter_by(collection_id=collection_id).delete()
@@ -1467,8 +1468,12 @@ def collection_data_statistics(collection_id: int) -> (dict, dict):
     choice_qlist = Question_info.query.filter(Question_info.collection_id == collection_id,
                                               Question_info.question_type.in_(choice_qtype)). \
         with_entities(Question_info.id, Question_info.question_title).all()
+
+    # 查看是否由提交
+    submission = Submission_info.query.filter_by(collection_id=collection_id).all()
+
     # 判断是否存在选择题
-    if len(choice_qlist) == 0:
+    if len(choice_qlist) == 0 or len(submission) == 0:
         choice_statistics = None
     else:
         choice_statistics = {}
@@ -1522,8 +1527,9 @@ def collection_data_statistics(collection_id: int) -> (dict, dict):
     qnaire_qlist = Question_info.query.filter(Question_info.collection_id == collection_id,
                                               Question_info.question_type.in_(qnaire_qtype)). \
         with_entities(Question_info.id, Question_info.question_title).all()
+
     # 判断是否存在问卷题
-    if len(qnaire_qlist) == 0:
+    if len(qnaire_qlist) == 0 or len(submission) == 0:
         qnaire_statistics = None
     else:
         qnaire_statistics = {}
