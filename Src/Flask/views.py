@@ -46,6 +46,11 @@ def id_str_to_int(id_str: str):
 @app.route('/personal_homepage', methods=['GET', 'POST'])
 @login_required
 def personal_homepage():
+    """个人主页
+
+    Returns:
+        Response: personal_homepage, 携带参数 r_code
+    """
     if request.method == 'POST':
         tmp_data = request.form.to_dict()
         '''
@@ -100,6 +105,14 @@ def test(collection_id):
 # @app.route('/file_submitting/<int:collection_id>', methods=['GET', 'POST'])
 @app.route('/file_submitting/<string:collection_message>', methods=['GET', 'POST'])
 def file_submitting(collection_message):
+    """问卷提交
+
+    Args:
+        collection_message (str): 收集信息字符串，包含收集 id
+
+    Returns:
+        Response: 提交成功，重定向到 submit_successfully; 提交失败，转到 file_submitting
+    """
     collection_id = id_str_to_int(collection_message[-1])  # ! 从收集信息字符串中提取收集 id
     # print(collection_id)
     # print(type(collection_id))
@@ -123,6 +136,11 @@ def file_submitting(collection_message):
 
 @app.route('/submit_successfully')
 def submit_successfully():
+    """问卷提交成功
+
+    Returns:
+        Response: submit_successfully 提交成功
+    """
     return render_template('submit_successfully.html')
 
 
@@ -204,11 +222,11 @@ def mycollection():
 
 @app.route('/download')
 @login_required
-def send_statistic_file():
+def send_statistic_file() -> Response:
     """返回请求的文件，用于查看汇总和下载文件
 
     Returns:
-        请求的文件
+        Response: 请求的文件。请求参数为 zip，返回压缩包；请求参数为 excel，返回提交情况。
     """
     tmp_data = request.args.to_dict()
     print(tmp_data)
@@ -257,7 +275,15 @@ def send_statistic_file():
 
 @app.route('/collection_details/<string:collection_id>', methods=['GET', 'POST'])
 @login_required
-def collection_details(collection_id):
+def collection_details(collection_id) -> Response:
+    """收集详情页面
+
+    Args:
+        collection_id (str): 收集 id
+
+    Returns:
+        Response: collection_details 收集详情页面
+    """
     if request.method == 'POST':
         namelist_data = request.form.to_dict()  # * 获取应交名单数据
         print("前端数据: ", namelist_data)
@@ -362,7 +388,12 @@ def collection_details(collection_id):
 # 文件收集界面
 @app.route('/file_collecting')
 @login_required
-def file_collecting():
+def file_collecting() -> Response:
+    """文件收集界面
+
+    Returns:
+        Response: file_collecting 文件收集页面
+    """
     return render_template('file_collecting.html')
 
 
@@ -373,7 +404,6 @@ def copy_collection(collection_id):
 
     Args:
         collection_id (str): 待复制的收集 id
-
     """
     if request.method == 'POST':
         question_list = request.form
@@ -396,9 +426,13 @@ def copy_collection(collection_id):
 
 @app.route('/file_collecting', methods=['GET', 'POST'])
 @login_required
-def generate_collection():
-    """
-    生成一个收集对象
+def generate_collection() -> Response:
+    """生成一个收集对象
+
+    Returns:
+        Response: 
+            若为 POST 请求，创建成功，重定向到 create_link 页面；创建失败，转到 index 页面
+            若为 GET 请求，转到 file_collecting 页面
     """
     if request.method == 'POST':  # 点击了提交按钮
         question_list = request.form  # 获取题目信息列表
@@ -421,7 +455,15 @@ def generate_collection():
 
 
 @app.route('/create_link/<string:share_id>')
-def create_link(share_id):
+def create_link(share_id) -> Response:
+    """生成收集链接
+
+    Args:
+        share_id (str): 分享 id
+
+    Returns:
+        Response: create_link 页面，生成收集链接
+    """
     return render_template('create_link.html', share_link="127.0.0.1:5000/file_submitting/submit" + share_id)
 
 
@@ -429,13 +471,25 @@ def create_link(share_id):
 @app.route('/')
 @app.route('/index')
 # @app.route('/index', methods=['GET', 'POST'])
-def index():
+def index() -> Response:
+    """收件箱主页
+
+    Returns:
+        Response: index 主页
+    """
     return render_template('index.html')
 
 
 # 登录界面
 @app.route('/login', methods=['GET', 'POST'])
-def login():
+def login() -> Response:
+    """登录页面
+
+    Returns:
+        Response:
+            若为 POST 请求，登录成功重定向回 index 主页，登录失败重定向回 login 页面
+            若为 GET 请求，转到 login 页面
+    """
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
@@ -463,7 +517,12 @@ def login():
 
 # 退出登录
 @app.route('/logout', methods=['GET', 'POST'])
-def logout():
+def logout() -> Response:
+    """退出登录
+
+    Returns:
+        Response: index.html 主页
+    """
     logout_user()  # 登出用户
     flash('Goodbye!')
     return redirect(url_for('index'))  # 重定向回首页
@@ -471,7 +530,14 @@ def logout():
 
 # 注册界面
 @app.route('/register', methods=['GET', 'POST'])
-def register():
+def register() -> Response:
+    """注册页面
+
+    Returns:
+        Response:
+            若为 POST 请求，注册成功重定向回 login 页面，注册失败重定向回 register 页面
+            若为 GET 请求，转到 register 页面
+    """
     if request.method == 'POST':
         username = request.form['username']
         psw = request.form['psw']
@@ -516,7 +582,17 @@ def register():
 
 
 @app.route('/file_editing/<string:collection_id>', methods=['GET', 'POST'])
-def file_editing(collection_id):
+def file_editing(collection_id) -> Response:
+    """收集编辑界面
+
+    Args:
+        collection_id (str): 收集 id
+
+    Returns:
+        Response:
+            若为 POST 请求，编辑成功重定向回 index 主页，编辑失败转 index 主页
+            若为 GET 请求，查询到收集转 file_editing 页面，未查询到转 404 页面
+    """
     if request.method == 'POST':
         question_list = request.form
         value_type_check(question_list)
@@ -540,6 +616,11 @@ def file_editing(collection_id):
 
 @app.route('/file_preview')
 def file_preview():
+    """问卷预览
+
+    Returns:
+        Response: _description_
+    """
     tmp_data = request.args.to_dict()
     print(tmp_data)
     collection_id = id_str_to_int(tmp_data['collectionId'])
