@@ -264,8 +264,8 @@ def collection_details(collection_id):
         if 'hidden-input' in namelist_data.keys():
             # namelist_path = './FileStorage/' + \
             #                 Collection_info.query.filter_by(creator_id=current_user.id).first().namelist_path
-            namelist_path = os.path.join(APP_ROOT, 'FileStorage',
-                                         Collection_info.query.get(int(collection_id)).collection_path)
+            namelist_path = os.path.join(APP_FILE,
+                                         Collection_info.query.get(id_str_to_int(collection_id)).collection_path)
             print("应交名单路径：", namelist_path)
             namelist = pd.read_csv(
                 namelist_path + "/应交名单.csv", encoding='utf-8')
@@ -281,8 +281,8 @@ def collection_details(collection_id):
         # print(namelist_csv)
         # namelist_path = './FileStorage/' + Collection_info.query.filter_by(
         #     creator_id=current_user.id).first().namelist_path
-        namelist_path = os.path.join(APP_ROOT, 'FileStorage',
-                                     Collection_info.query.filter_by(creator_id=current_user.id).first().namelist_path)
+        namelist_path = os.path.join(APP_FILE,
+                                     Collection_info.query.get(id_str_to_int(collection_id)).collection_path)
         print(namelist_path)
         # print(namelist_path)
         # os.mkdir(namelist_path)
@@ -314,7 +314,7 @@ def collection_details(collection_id):
                               for submission in submission_list]  # * 已提交列表
     # namelist_path = './FileStorage/' + \
     #                 Collection_info.query.filter_by(creator_id=current_user.id).first().namelist_path
-    namelist_path = os.path.join(APP_ROOT, 'FileStorage',
+    namelist_path = os.path.join(APP_FILE,
                                  Collection_info.query.get(collection_id).collection_path)
     who_should_submit_list = []
     if os.path.exists(namelist_path + "/应交名单.csv"):
@@ -502,7 +502,7 @@ def register():
         db.session.commit()  # 提交数据库会话
         flash('Successfully Registered!')
         # path = './FileStorage/' + user.userpath
-        path = os.path.join(APP_ROOT, 'FileStorage', user.userpath)
+        path = os.path.join(APP_FILE, user.userpath)
         print(path)
         # ! 异常处理
         try:

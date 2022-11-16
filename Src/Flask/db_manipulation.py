@@ -311,7 +311,7 @@ import string, random, os, shutil, re, werkzeug
 from copy import deepcopy
 from flask_login import current_user
 from models import User, Collection_info, Question_info, Answer_info, Submit_Content_info, Option_info, Submission_info
-from init import db, APP_ROOT
+from init import db, APP_ROOT, APP_FILE
 from datetime import datetime
 from werkzeug.datastructures import MultiDict
 from operator import itemgetter
@@ -384,6 +384,7 @@ def add_FC(question_list: list, user_id: int) -> int:
     #     random.sample(string.ascii_letters + string.digits, 4 - len(str(collection_id)))
     # ) + str(collection_id)
     file_path = os.path.join(
+        APP_FILE,
         current_user.userpath,
         'file' + ''.join(
             random.sample(string.ascii_letters + string.digits, 4 - len(str(collection_id)))
