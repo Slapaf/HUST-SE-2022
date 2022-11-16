@@ -8,6 +8,7 @@ nav: # 文档结构
   - 主页: index.md
   - 指南:
       - 开发:
+          - DEV: developer/dev-pro.md
           - WEB: developer/web.md
           - FLASK: developer/flask.md
           - DB: developer/database.md
@@ -63,6 +64,9 @@ plugins:
 markdown_extensions:
   - admonition
   - attr_list
+  - codehilite:
+      guess_lang: true
+      use_pygments: true
   - toc:
       permalink: "#"
   - pymdownx.highlight:
