@@ -405,7 +405,7 @@ function createSingleChoice(topicName, detailText, checkedChoiceAmount, checkedC
     newli.ondragstart = onDragStart;
     newli.ondragover = onDragOver;
     newli.ondrop = onDrop;
-};
+}
 
 //添加单选题/多选题
 function addChoice_for_fileEditing(op, checkedChoiceAmount, checkedChoice) {
@@ -684,7 +684,7 @@ function createQuestionnaire(topicName, detailText, qnOptionArr, multi) {
     newli.ondragstart = onDragStart;
     newli.ondragover = onDragOver;
     newli.ondrop = onDrop;
-};
+}
 
 //添加一个问卷选项(添加按钮触发)
 function addQuestion(check_status) {
@@ -935,7 +935,7 @@ function processFormData() {
 function createQuestion() {
     if (formDataLen === 0) {
         collectionTitle.value = "文件收集";
-        collector.value = "张三";
+        // collector.value = "";
         op_name.onclick();
         op_sno.onclick();
         op_file.onclick();

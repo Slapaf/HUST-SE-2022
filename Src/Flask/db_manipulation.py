@@ -318,20 +318,20 @@ from operator import itemgetter
 from pathlib import Path
 
 
-def id_int_to_str(id_int: int):
-    """
-    将 int 类型的 id 号转换为 str 类型
-
-    Args:
-        id_int(int): int 类型的 id 号
-
-    Return:
-        id_str(str): str 类型的 id 号
-    """
-    if 0 <= id_int <= 9:
-        return str(id_int)
-    id_int -= 10
-    return chr(id_int + 97)
+# def id_int_to_str(id_int: int):
+#     """
+#     将 int 类型的 id 号转换为 str 类型
+#
+#     Args:
+#         id_int(int): int 类型的 id 号
+#
+#     Return:
+#         id_str(str): str 类型的 id 号
+#     """
+#     if 0 <= id_int <= 9:
+#         return str(id_int)
+#     id_int -= 10
+#     return chr(id_int + 97)
 
 
 def add_FC(question_list: list, user_id: int) -> int:
@@ -379,7 +379,7 @@ def add_FC(question_list: list, user_id: int) -> int:
 
     # ! 生成文件存储路径，最后一位固定为收集 id
     # ! 生成位置为：FileStorage / userpath / filepath
-    # * 总长度为 20 + 5 + 4 = 29 位
+    # * 总长度为 20 + 5 + 10 = 35 位
     # file_path = current_user.userpath + '/file' + ''.join(
     #     random.sample(string.ascii_letters + string.digits, 4 - len(str(collection_id)))
     # ) + str(collection_id)
@@ -387,7 +387,7 @@ def add_FC(question_list: list, user_id: int) -> int:
         APP_FILE,
         current_user.userpath,
         'file' + ''.join(
-            random.sample(string.ascii_letters + string.digits, 4 - len(str(collection_id)))
+            random.sample(string.ascii_letters + string.digits, 10 - len(str(collection_id)))
         ) + str(collection_id)
     )
     os.makedirs(file_path)  # 创建该收集的文件存储目录
@@ -427,7 +427,6 @@ def add_FC(question_list: list, user_id: int) -> int:
                                      question_description=question_multidict[f'detail{seq}'])
             db.session.add(question)
             db.session.commit()
-
 
         # ? 若为单选题
         elif "radio" in question_key:
@@ -524,12 +523,19 @@ def add_FC(question_list: list, user_id: int) -> int:
                 # file_path=file_path + "/" + id_int_to_str(
                 #     file_counter
                 # )  # ! 创建一个以 file_counter 命名的子目录
-                file_path=os.path.join(file_path, id_int_to_str(file_counter))  # ! 创建一个以 file_counter 命名的子目录
+                # ! 创建一个以 file_counter 命名的子目录
+                # file_path=os.path.join(
+                #     file_path,
+                #     id_int_to_str(file_counter)
+                # )
+                file_path=os.path.join(
+                    file_path,
+                    str(file_counter)
+                )
             )
             db.session.add(question)
             db.session.commit()
-            # path = './FileStorage/' + question.file_path
-            path = os.path.join(APP_ROOT, 'FileStorage', question.file_path)
+            path = os.path.join(APP_FILE, question.file_path)
             print("第", seq, "题的文件存储路径：", path)  # ! 调试
             try:
                 os.makedirs(path)  # 创建该题的文件存储目录
@@ -564,9 +570,9 @@ def count_submission(collection_id: int = None) -> int:
         collection_id: 收集id
 
     Returns:
-        若collection_id不为None， 则返回该问卷的提交数量，是一个整数;
-        # 若collection_id为None，user_id不为None，则返回该用户创建的每一个问卷的提交数量，是一个字典，键为问卷id，值为该问卷的提交数量;
-        # 若2个参数都为None，则返回None。
+        若 collection_id 不为 None， 则返回该问卷的提交数量，是一个整数；
+        若 collection_id 为 None，user_id 不为 None，则返回该用户创建的每一个问卷的提交数量，是一个字典，键为问卷 id，值为该问卷的提交数量；
+        若 2 个参数都为 None，则返回 None。
     """
 
     # 先看是否给了参数collection_id
@@ -575,7 +581,8 @@ def count_submission(collection_id: int = None) -> int:
 
     # # 若没给参数collection_id，但给了参数user_id
     # if user_id is not None:
-    #     collection_id_list = Collection_info.query.filter_by(creator_id=user_id).with_entities(Collection_info.id).all()
+    #     collection_id_list = Collection_info.query.filter_by(
+    #     creator_id=user_id).with_entities(Collection_info.id).all()
     #     collection_id_list = list(map(itemgetter(0), collection_id_list))
     #     submission_dict = {}
     #     for collection_id in collection_id_list:
@@ -626,7 +633,7 @@ def count_filenum(collection_id: int = None) -> int:
         # 遍历该收集中所有文件上传题，统计已收文件总数
         for q_id in question_id_list:
             # path = './FileStorage/' + Question_info.query.filter_by(id=q_id).first().file_path
-            path = os.path.join(APP_ROOT, 'FileStorage', Question_info.query.filter_by(id=q_id).first().file_path)
+            path = os.path.join(APP_FILE, Question_info.query.filter_by(id=q_id).first().file_path)
             files = os.listdir(path)
             file_num += len(files)
         return file_num
@@ -686,7 +693,7 @@ def delete_collection(collection_id: int) -> None:
     #     filter_by(collection_id=collection_id, question_type=Question_info.FILE_UPLOAD).first()
     # file_path = Path('./FileStorage/' + question.file_path).parent
     file_path = Collection_info.query.get(collection_id).collection_path
-    file_path = Path(os.path.join(APP_ROOT, 'FileStorage', file_path))
+    file_path = Path(os.path.join(APP_FILE, file_path))
     shutil.rmtree(file_path)
 
     Question_info.query.filter_by(collection_id=collection_id).delete()
@@ -825,7 +832,7 @@ def modify_password(user_id: int, original_pswd: str, new_pswd: str) -> int:
         new_pswd: 新密码
 
     Returns:
-        若为-1，则用户id不存在；若为0，则原密码错误；若为1，则修改成功。
+        若为 -1，则用户 id 不存在；若为 0，则原密码错误；若为 1，则修改成功。
 
     """
     user = User.query.filter_by(id=user_id).first()  # 在数据库中查询用户
@@ -1120,9 +1127,8 @@ def modify_collection(collection_id: int, question_list: list) -> None:
 
     # 前端传来的deadLine为string类型，在此转化为datetime类型
     deadline = question_multidict['deadline']
-    # ! 解决 00 秒的问题
     if len(deadline) < 19:
-        deadline += ':00'
+        deadline += ':00'  # ! 解决 00 秒的问题
     deadline = deadline.replace("T", " ")
     question_multidict['deadline'] = datetime.strptime(deadline, '%Y-%m-%d %H:%M:%S')
 
@@ -1242,7 +1248,7 @@ def file_upload(collection_id: int,
 
         # 确定文件存储路径
         # path = './FileStorage/' + question.file_path
-        path = os.path.join(APP_ROOT, 'FileStorage', question.file_path)
+        path = os.path.join(APP_FILE, question.file_path)
 
         # 重命名文件
         rename_rule = question.rename_rule
