@@ -216,7 +216,7 @@ def send_statistic_file():
     file_type = tmp_data['fileType']
     if file_type == 'zip':  # * 用户请求所有收集文件
         print("collection_id: ", collection_id)
-        tmp_path = Collection_info.query.get(collection_id).namelist_path
+        tmp_path = Collection_info.query.get(collection_id).collection_path
         # if sys.platform.startswith('win'):
         #                 #     tmp_path = tmp_path.replace("/", "\\")
         # print("收集文件路径: ", tmp_path)
@@ -235,7 +235,7 @@ def send_statistic_file():
     else:  # * 用户请求汇总表格
         namelist_path = os.path.join(
             APP_FILE,
-            Collection_info.query.filter_by(creator_id=current_user.id).first().namelist_path
+            Collection_info.query.get(collection_id).collection_path
         )
         # * Excel 以收集标题命名
         excel_name = Collection_info.query.get(collection_id).collection_title + '.xlsx'
