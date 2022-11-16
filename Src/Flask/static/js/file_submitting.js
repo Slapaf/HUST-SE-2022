@@ -301,10 +301,7 @@ function check() {
 
 //表单提交前触发检查和编号程序
 myform.onsubmit = () => {
-    if (checkDeadline()&&check())
-        return true;
-    else
-        return false;
+    return checkDeadline() && check();
 }
 
 //弹窗倒计时

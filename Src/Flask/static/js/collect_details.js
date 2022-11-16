@@ -6,19 +6,19 @@ var lis = tab_list.querySelectorAll("li");
 var items = document.querySelectorAll(".item");
 const x = document.getElementById("list_body");
 
-function idx_str_to_int(idx_str) {
-  if (idx_str >= "0" && idx_str <= "9") {
-    return parseInt(idx_str);
-  }
-  return parseInt(idx_str) - 10 + "a".charCodeAt();
-}
-
-function id_str_transfer(id_str) {
-  if (id_str >= "0" && id_str <= "9") {
-    return id_str;
-  }
-  return String.fromCharCode(parseInt(id_str) - 10 + "a".charCodeAt());
-}
+// function idx_str_to_int(idx_str) {
+//   if (idx_str >= "0" && idx_str <= "9") {
+//     return parseInt(idx_str);
+//   }
+//   return parseInt(idx_str) - 10 + "a".charCodeAt();
+// }
+//
+// function id_str_transfer(id_str) {
+//   if (id_str >= "0" && id_str <= "9") {
+//     return id_str;
+//   }
+//   return String.fromCharCode(parseInt(id_str) - 10 + "a".charCodeAt());
+// }
 
 // TODO 获取提交信息更新页面，从 mycollection 页面进入
 // function getData() {
@@ -119,7 +119,6 @@ function addfile(file_submitted_list) {
   }
 }
 
-//TODO 待添加参数
 function addmember(
   submitter_order_idx,
   submitter_name,
@@ -157,7 +156,8 @@ function addmember(
   membercondition.title = "查看文件";
   memberpreview.title = "查看";
   // ! 11/08 memberid
-  memberid.title = id_str_transfer(submitter_order_idx);
+  // memberid.title = id_str_transfer(submitter_order_idx);
+  memberid.title = encryption(submitter_order_idx);
   // ! 11/08
   membername.appendChild(document.createTextNode(membername.title));
   // ! 11/08
@@ -184,7 +184,7 @@ function addmember(
       let jsx = document.createElement("div");
       jsx.id = "return";
       wgk.appendChild(jsx);
-      addfile(file_submitted_list); 
+      addfile(file_submitted_list);
     };
   } else {
     membercondition.className = "member_condition1";
@@ -223,4 +223,22 @@ function getExcel() {
 function getfile() {
   downloadFile.href =
     "/download?collectionId=" + getCollectionId() + "&fileType=zip";
+}
+
+/*
+ * 加密函数
+ * @param message: 待加密的信息
+ * @return: 加密后的信息
+ */
+function encryption(message) {
+    return window.btoa(encodeURIComponent(message));
+}
+
+/*
+ * 解密函数
+ * @param message: 待解密的信息
+ * @return: 解密后的信息
+ */
+function decryption(message) {
+    return decodeURIComponent(window.atob(message));
 }

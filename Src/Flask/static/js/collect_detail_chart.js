@@ -274,5 +274,24 @@ function getCollectionId() {
   if (relUrl.indexOf("?") != -1) {
     relUrl = relUrl.split("?")[0];
   }
+  console.log(relUrl);
   return relUrl;
+}
+
+/*
+ * 加密函数
+ * @param message: 待加密的信息
+ * @return: 加密后的信息
+ */
+function encryption(message) {
+    return window.btoa(encodeURIComponent(message));
+}
+
+/*
+ * 解密函数
+ * @param message: 待解密的信息
+ * @return: 解密后的信息
+ */
+function decryption(message) {
+    return decodeURIComponent(window.atob(message));
 }

@@ -90,19 +90,6 @@ function checkKey_3() {
     }
 }
 
-function checkKey_4() {
-    let k = document.getElementById("tip5");
-    let U5 = input5.value;
-    if (U5.match(/^[0-9_]{11}/) || U5 === "未设置" || U5 === "") {
-        k.innerHTML = "";
-    } else {
-        k.innerHTML = "请输入正确的11位手机号或不填此栏！";
-        k.style.display = "block";
-        countdown = 1;
-        timeOutClose(k);
-    }
-}
-
 function checkAll1() {
     let U1 = input1.value;
     let U2 = input2.value;

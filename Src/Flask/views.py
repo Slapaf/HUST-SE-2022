@@ -1,14 +1,11 @@
 import json
 import os.path
-import sys
-import pandas as pd
 from flask import render_template, request, url_for, redirect, flash
 from flask_login import login_user, login_required, logout_user, current_user
 from werkzeug import Response
-
-from init import app, db, APP_ROOT, APP_FILE
 from db_manipulation import *
 from collection_statistic import *
+from EaD import *
 
 # ! 分享页面的链接（上线前用域名地址替换）
 SUBMITTING_PAGE = "127.0.0.1:5000/file_submitting"
@@ -30,19 +27,19 @@ def value_type_check(sth_to_be_check):
     print("Type:\n", type(sth_to_be_check))
 
 
-def id_str_to_int(id_str: str):
-    """
-    将 str 类型的 id 号转换为 int 类型
-
-    Args:
-        id_str(str): str 类型的 id 号
-
-    Returns:
-        id_int(int): int 类型的 id 号
-    """
-    if id_str.isalpha():
-        return ord(id_str) - ord('a') + 10
-    return int(id_str)
+# def id_str_to_int(id_str: str):
+#     """
+#     将 str 类型的 id 号转换为 int 类型
+#
+#     Args:
+#         id_str(str): str 类型的 id 号
+#
+#     Returns:
+#         id_int(int): int 类型的 id 号
+#     """
+#     if id_str.isalpha():
+#         return ord(id_str) - ord('a') + 10
+#     return int(id_str)
 
 
 @app.route('/personal_homepage', methods=['GET', 'POST'])
@@ -51,7 +48,7 @@ def personal_homepage():
     """个人主页
 
     Returns:
-        Response: personal_homepage, 携带参数 r_code
+        personal_homepage, 携带参数 r_code
     """
     if request.method == 'POST':
         tmp_data = request.form.to_dict()
@@ -115,7 +112,9 @@ def file_submitting(collection_message):
     Returns:
         Response: 提交成功，重定向到 submit_successfully; 提交失败，转到 file_submitting
     """
-    collection_id = id_str_to_int(collection_message[-1])  # ! 从收集信息字符串中提取收集 id
+    # ! 从收集信息字符串中提取收集 id
+    # collection_id = id_str_to_int(collection_message[-1])
+    collection_id = int(decryption(collection_message.split('submit')[1]))
     # print(collection_id)
     # print(type(collection_id))
     if request.method == 'POST':
@@ -137,11 +136,11 @@ def file_submitting(collection_message):
 
 
 @app.route('/submit_successfully')
-def submit_successfully():
+def submit_successfully() -> str:
     """问卷提交成功
 
     Returns:
-        Response: submit_successfully 提交成功
+        submit_successfully 提交成功
     """
     return render_template('submit_successfully.html')
 
@@ -149,40 +148,36 @@ def submit_successfully():
 @app.route('/mycollection', methods=['GET', 'POST'])
 @login_required
 def mycollection():
-    """
-        用户进入 collection_details.html 页面时，遍历数据库中的所有收集，返回两个列表（命名随意）：collection_on 和 collection_end
-        collection_on 存放正在进行的收集（比较 end_date 和用户进入页面时的系统时间），collection_end 存放已经截止的收集；
+    """收集总览页面
+
+    Returns:
+
     """
     # * 如果检测到对收集的操作
     if request.method == 'POST':
         user_action = request.form['hidden-input']  # 获取用户操作的相关信息
-        # print(user_action)
         user_action_list = user_action.split('$')
-        # print(user_action_list)
         collection_id = user_action_list[1]  # 待操作的收集 id
         # * 根据第一个参数确定操作类型
         if user_action_list[0] == 'share':  # ? 分享，已完成
             submitting_page = 'file_submitting' + '/submit' + collection_id
-            # return render_template('file_submitting.html')  # ! Debug
             print(submitting_page)  # ! 调试
             print("分享")
         elif user_action_list[0] == 'collect-details':  # 统计
-            # TODO doing...
             print("统计")
         elif user_action_list[0] == 'edit':  # 编辑
-            # TODO doing...
             print("编辑")
-            # return render_template("file_editing.html", collection=question_dict)
-            # return redirect(url_for('file_editing', collection_id=collection_id))
         elif user_action_list[0] == 'restart':  # 重启
             print("重启")
         elif user_action_list[0] == 'copy':  # 复制
             print("复制")
         elif user_action_list[0] == 'stop':  # ? 停止，已完成
-            stop_collection(id_str_to_int(collection_id), user_action_list)
+            # stop_collection(id_str_to_int(collection_id), user_action_list)
+            stop_collection(int(decryption(collection_id)), user_action_list)
             print("停止")
         elif user_action_list[0] == 'del':  # ? 删除，已完成
-            delete_collection(id_str_to_int(collection_id))
+            # delete_collection(id_str_to_int(collection_id))
+            delete_collection(int(decryption(collection_id)))
             print("删除")
         # return redirect(url_for('mycollection'))
 
@@ -193,14 +188,6 @@ def mycollection():
         creator_id=current_user.id).all()
     parameter_dict_list = []
     for collection in collection_list:
-        # ? 对时间进行格式化处理
-        # tmp_time: datetime.timedelta = deadline_countdown(collection.id)
-        # ? 获取已收集文件数
-        # file_count = 0
-        # question_list = Question_info.query.filter_by(collection_id=collection.id).all()
-        # for question in question_list:
-        #     if question.file_path is not None:  # * 有文件路径，说明此题为文件收集题
-        #         file_count += count_filenum(collection.id, question.qno)
         # * 创建一个字典类型，用于传参，可删除
         tmp_dict = {
             'username': current_user.username,
@@ -211,7 +198,6 @@ def mycollection():
             'deadline': collection.end_date.strftime('%Y-%m-%d %H:%M:%S')
         }
         parameter_dict_list.append(tmp_dict)
-        # print(tmp_dict)
 
     return render_template(
         'mycollection.html',
@@ -232,14 +218,12 @@ def send_statistic_file() -> Response:
     """
     tmp_data = request.args.to_dict()
     print(tmp_data)
-    collection_id = id_str_to_int(tmp_data['collectionId'])
+    # collection_id = id_str_to_int(tmp_data['collectionId'])
+    collection_id = int(decryption(tmp_data['collectionId']))
     file_type = tmp_data['fileType']
     if file_type == 'zip':  # * 用户请求所有收集文件
         print("collection_id: ", collection_id)
         tmp_path = Collection_info.query.get(collection_id).collection_path
-        # if sys.platform.startswith('win'):
-        #                 #     tmp_path = tmp_path.replace("/", "\\")
-        # print("收集文件路径: ", tmp_path)
         # * zip 压缩文件以收集标题命名
         zip_file_name = Collection_info.query.get(collection_id).collection_title + '.zip'
         # print("收集标题: ", zip_file_name)
@@ -277,14 +261,14 @@ def send_statistic_file() -> Response:
 
 @app.route('/collection_details/<string:collection_id>', methods=['GET', 'POST'])
 @login_required
-def collection_details(collection_id):
+def collection_details(collection_id: str):
     """收集详情页面
 
     Args:
         collection_id (str): 收集 id
 
     Returns:
-        Response: collection_details 收集详情页面
+        collection_details 收集详情页面
     """
     if request.method == 'POST':
         namelist_data = request.form.to_dict()  # * 获取应交名单数据
@@ -292,11 +276,18 @@ def collection_details(collection_id):
         if 'hidden-input' in namelist_data.keys():
             # namelist_path = './FileStorage/' + \
             #                 Collection_info.query.filter_by(creator_id=current_user.id).first().namelist_path
-            namelist_path = os.path.join(APP_FILE,
-                                         Collection_info.query.get(id_str_to_int(collection_id)).collection_path)
+            # namelist_path = os.path.join(
+            #     APP_FILE,
+            #     Collection_info.query.get(
+            #         id_str_to_int(collection_id)
+            #     ).collection_path
+            # )
+            namelist_path = os.path.join(
+                APP_FILE,
+                Collection_info.query.get(int(decryption(collection_id))).collection_path
+            )
             print("应交名单路径：", namelist_path)
-            namelist = pd.read_csv(
-                namelist_path + "/应交名单.csv", encoding='utf-8')
+            namelist = pd.read_csv(namelist_path + "/应交名单.csv", encoding='utf-8')
             # * 删除被点击的名字
             delete_name = namelist_data['hidden-input']
             namelist = namelist[~namelist['姓名'].isin([delete_name])]
@@ -309,11 +300,15 @@ def collection_details(collection_id):
         # print(namelist_csv)
         # namelist_path = './FileStorage/' + Collection_info.query.filter_by(
         #     creator_id=current_user.id).first().namelist_path
-        namelist_path = os.path.join(APP_FILE,
-                                     Collection_info.query.get(id_str_to_int(collection_id)).collection_path)
+        # namelist_path = os.path.join(
+        #     APP_FILE,
+        #     Collection_info.query.get(id_str_to_int(collection_id)).collection_path
+        # )
+        namelist_path = os.path.join(
+            APP_FILE,
+            Collection_info.query.get(int(decryption(collection_id))).collection_path
+        )
         print(namelist_path)
-        # print(namelist_path)
-        # os.mkdir(namelist_path)
         if os.path.exists(namelist_path + "/应交名单.csv"):
             tmp_csv = pd.read_csv(
                 namelist_path + '/应交名单.csv', encoding='utf-8')
@@ -327,23 +322,18 @@ def collection_details(collection_id):
                                 encoding='utf-8')  # * 保存为 csv 文件
         return redirect(url_for('collection_details', collection_id=collection_id))
 
-    collection_id = id_str_to_int(collection_id)  # * 转换为实际的收集 id
+    # collection_id = id_str_to_int(collection_id)  # * 转换为实际的收集 id
+    collection_id = int(decryption(collection_id))  # * 转换为实际的收集 id
     parameter_dict_list = []
     # submission_list = submission_record(
     #     collection_id=collection_id)  # * 获取对应 id 的收集信息
-    submission_list = submission_record_v2(
-        collection_id=collection_id
-    )  # * 获取对应 id 的收集信息
+    submission_list = submission_record_v2(collection_id=collection_id)  # * 获取对应 id 的收集信息
     print(submission_list)
-    # TODO 数据库提供方法
-    # who_has_submitted_list = [submission[0]
-    #                           for submission in submission_list]  # * 已提交列表
-    who_has_submitted_list = [submission[1]
-                              for submission in submission_list]  # * 已提交列表
-    # namelist_path = './FileStorage/' + \
-    #                 Collection_info.query.filter_by(creator_id=current_user.id).first().namelist_path
-    namelist_path = os.path.join(APP_FILE,
-                                 Collection_info.query.get(collection_id).collection_path)
+    who_has_submitted_list = [submission[1] for submission in submission_list]  # * 已提交列表
+    namelist_path = os.path.join(
+        APP_FILE,
+        Collection_info.query.get(collection_id).collection_path
+    )
     who_should_submit_list = []
     if os.path.exists(namelist_path + "/应交名单.csv"):
         who_should_submit_list = pd.read_csv(namelist_path + "/应交名单.csv",
@@ -352,10 +342,11 @@ def collection_details(collection_id):
     # * 已提交名单生成逻辑：在应交名单中且提交了文件
     submitted_list = list(set(who_has_submitted_list) &
                           set(who_should_submit_list))
+    submitted_list.sort()
     print("已提交名单: ", submitted_list)
     # * 未提交名单生成逻辑：在应交名单中但未提交文件
-    not_submitted_list = list(
-        set(who_should_submit_list) - set(who_has_submitted_list))
+    not_submitted_list = list(set(who_should_submit_list) - set(who_has_submitted_list))
+    not_submitted_list.sort()
     print("未提交名单: ", not_submitted_list)
     # for idx, submission in enumerate(submission_list):
     for submission in submission_list:
@@ -394,14 +385,14 @@ def file_collecting() -> str:
     """文件收集界面
 
     Returns:
-        str: file_collecting 文件收集页面
+        file_collecting 文件收集页面
     """
     return render_template('file_collecting.html')
 
 
 @app.route('/file_collecting/<string:collection_id>', methods=['GET', 'POST'])
 @login_required
-def copy_collection(collection_id):
+def copy_collection(collection_id: str):
     """复制收集
 
     Args:
@@ -418,7 +409,8 @@ def copy_collection(collection_id):
         flash("复制收集成功！")
         print("复制收集成功！")
         return redirect(url_for('index'))
-    collection_id = id_str_to_int(collection_id)
+    # collection_id = id_str_to_int(collection_id)
+    collection_id = int(decryption(collection_id))
     question_dict = get_question_dict(collection_id)
     print(question_dict)
     if question_dict is None:
@@ -433,8 +425,8 @@ def generate_collection():
 
     Returns:
         Response: 
-            若为 POST 请求，创建成功，重定向到 create_link 页面；创建失败，转到 index 页面
-            若为 GET 请求，转到 file_collecting 页面
+            若为 POST 请求，创建成功，重定向到 create_link 页面；创建失败，转到 index 页面。
+            若为 GET 请求，转到 file_collecting 页面。
     """
     if request.method == 'POST':  # 点击了提交按钮
         question_list = request.form  # 获取题目信息列表
@@ -448,16 +440,16 @@ def generate_collection():
             # question = get_question_MultiDict(t)
             # print(question)
             flash("Successfully create a collection!")
-        # return redirect(url_for('index'))
-        share_link = "127.0.0.1:5000/file_submitting/submit" + id_int_to_str(collection_id)
-        # return render_template('create_link.html', share_link=share_link)
-        return redirect(url_for('create_link', share_id=id_int_to_str(collection_id)))
+        # share_link = "127.0.0.1:5000/file_submitting/submit" + id_int_to_str(collection_id)
+        share_link = "127.0.0.1:5000/file_submitting/submit" + encryption(str(collection_id))
+        # return redirect(url_for('create_link', share_id=id_int_to_str(collection_id)))
+        return redirect(url_for('create_link', share_id=encryption(str(collection_id))))
 
     return render_template('file_collecting.html')
 
 
 @app.route('/create_link/<string:share_id>')
-def create_link(share_id) -> Response:
+def create_link(share_id) -> str:
     """生成收集链接
 
     Args:
@@ -466,31 +458,32 @@ def create_link(share_id) -> Response:
     Returns:
         Response: create_link 页面，生成收集链接
     """
-    return render_template('create_link.html', share_link="127.0.0.1:5000/file_submitting/submit" + share_id)
+    return render_template(
+        'create_link.html',
+        share_link="127.0.0.1:5000/file_submitting/submit" + encryption(share_id)
+    )
 
 
 # 主界面
 @app.route('/')
 @app.route('/index')
-# @app.route('/index', methods=['GET', 'POST'])
-def index() -> Response:
+def index() -> str:
     """收件箱主页
 
     Returns:
-        Response: index 主页
+        index 主页
     """
     return render_template('index.html')
 
 
 # 登录界面
 @app.route('/login', methods=['GET', 'POST'])
-def login() -> Response:
+def login():
     """登录页面
 
     Returns:
-        Response:
-            若为 POST 请求，登录成功重定向回 index 主页，登录失败重定向回 login 页面
-            若为 GET 请求，转到 login 页面
+        若为 POST 请求，登录成功重定向回 index 主页，登录失败重定向回 login 页面；
+        若为 GET 请求，转到 login 页面
     """
     if request.method == 'POST':
         username = request.form['username']
@@ -523,7 +516,7 @@ def logout() -> Response:
     """退出登录
 
     Returns:
-        Response: index.html 主页
+        index.html 主页
     """
     logout_user()  # 登出用户
     flash('Goodbye!')
@@ -532,13 +525,12 @@ def logout() -> Response:
 
 # 注册界面
 @app.route('/register', methods=['GET', 'POST'])
-def register() -> Response:
+def register():
     """注册页面
 
     Returns:
-        Response:
-            若为 POST 请求，注册成功重定向回 login 页面，注册失败重定向回 register 页面
-            若为 GET 请求，转到 register 页面
+        若为 POST 请求，注册成功重定向回 login 页面，注册失败重定向回 register 页面
+        若为 GET 请求，转到 register 页面
     """
     if request.method == 'POST':
         username = request.form['username']
@@ -569,7 +561,6 @@ def register() -> Response:
         db.session.add(user)
         db.session.commit()  # 提交数据库会话
         flash('Successfully Registered!')
-        # path = './FileStorage/' + user.userpath
         path = os.path.join(APP_FILE, user.userpath)
         print(path)
         # ! 异常处理
@@ -584,7 +575,7 @@ def register() -> Response:
 
 
 @app.route('/file_editing/<string:collection_id>', methods=['GET', 'POST'])
-def file_editing(collection_id) -> Response:
+def file_editing(collection_id):
     """收集编辑界面
 
     Args:
@@ -592,12 +583,11 @@ def file_editing(collection_id) -> Response:
 
     Returns:
         Response:
-            若为 POST 请求，编辑成功重定向回 index 主页，编辑失败转 index 主页
+            若为 POST 请求，编辑成功重定向回 index 主页，编辑失败转 index 主页；
             若为 GET 请求，查询到收集转 file_editing 页面，未查询到转 404 页面
     """
     if request.method == 'POST':
         question_list = request.form
-        value_type_check(question_list)
         if not question_list:
             flash("提交编辑失败！")
             print("提交编辑失败！")
@@ -605,10 +595,12 @@ def file_editing(collection_id) -> Response:
         else:
             a = list(question_list.items(multi=True))
             print("编辑后的内容：", a)  # ! 调试用
-            modify_collection(id_str_to_int(collection_id), a)
+            # modify_collection(id_str_to_int(collection_id), a)
+            modify_collection(int(decryption(collection_id)), a)
             print("提交编辑成功！")
             return redirect(url_for('mycollection'))  # 编辑完成，返回主页
-    collection_id = id_str_to_int(collection_id)
+    # collection_id = id_str_to_int(collection_id)
+    collection_id = int(decryption(collection_id))
     question_dict = get_question_dict(collection_id)
     print(question_dict)
     if question_dict is None:
@@ -621,12 +613,19 @@ def file_preview():
     """问卷预览
 
     Returns:
-        Response: _description_
+        file_preview 预览页面
     """
     tmp_data = request.args.to_dict()
     print(tmp_data)
-    collection_id = id_str_to_int(tmp_data['collectionId'])
-    submission_id = id_str_to_int(tmp_data['submissionId'])
+    # collection_id = id_str_to_int(tmp_data['collectionId'])
+    print(tmp_data['collectionId'])
+    collection_id = int(decryption(tmp_data['collectionId']))
+    print(collection_id)
+    # submission_id = id_str_to_int(tmp_data['submissionId'])
+    print(tmp_data['submissionId'])
+    print(decryption(tmp_data['submissionId']))
+    submission_id = int(decryption(tmp_data['submissionId']))
+    print(submission_id)
     print("collection_id: {} submission_id: {}".format(collection_id, submission_id))
     submission_dict = get_submission_dict(collection_id=collection_id, submission_id=submission_id)
     print("submission_dict: {}".format(submission_dict))
@@ -635,13 +634,19 @@ def file_preview():
 
 
 @app.route('/statistics')
-def statistics():
+def statistics() -> str:
+    """统计信息生成
+
+    Returns:
+        json 格式的统计信息
+    """
     tmp_data = request.args.to_dict()
     print("统计参数: ", tmp_data)
     if 'collectionId' not in tmp_data.keys():
         print("统计参数错误")
         redirect(url_for('404'))
-    collection_id = id_str_to_int(tmp_data['collectionId'])
+    # collection_id = id_str_to_int(tmp_data['collectionId'])
+    collection_id = int(decryption(tmp_data['collectionId']))
     choice_statistics, qnaire_statistics = collection_data_statistics(collection_id)
     print("choice_statistics: ", choice_statistics)
     print("qnaire_statistics: ", qnaire_statistics)

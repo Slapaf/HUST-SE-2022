@@ -135,7 +135,7 @@ function createName(topicName, detailText) {
     // newli.ondragstart = onDragStart;
     // newli.ondragover = onDragOver;
     // newli.ondrop = onDrop;
-};
+}
 
 //学号
 function createSno(topicName, detailText) {
@@ -191,7 +191,7 @@ function createSno(topicName, detailText) {
     // newli.ondragstart = onDragStart;
     // newli.ondragover = onDragOver;
     // newli.ondrop = onDrop;
-};
+}
 
 //文件
 function createFile(topicName, detailText) {
@@ -248,7 +248,7 @@ function createFile(topicName, detailText) {
     // newli.ondragstart = onDragStart;
     // newli.ondragover = onDragOver;
     // newli.ondrop = onDrop;
-};
+}
 
 //当增加一个“文件”题目时，调用此函数
 function updateCheckbox(selectBox) {
@@ -383,7 +383,7 @@ function createSingleChoice(topicName, detailText, checkedChoiceAmount, checkedC
     // newli.ondragstart = onDragStart;
     // newli.ondragover = onDragOver;
     // newli.ondrop = onDrop;
-};
+}
 
 //添加单选题/多选题
 function addChoice_for_fileEditing(op, checkedChoiceAmount, checkedChoice) {
@@ -451,7 +451,7 @@ function createMultipleChoice(topicName, detailText, checkedChoiceAmount, checke
     // newli.ondragstart = onDragStart;
     // newli.ondragover = onDragOver;
     // newli.ondrop = onDrop;
-};
+}
 
 // function onDragStart(e) {
 //     // 获取当前拖拽元素
@@ -654,7 +654,7 @@ function createQuestionnaire(topicName, detailText, qnOptionArr, multi) {
     // newli.ondragstart = onDragStart;
     // newli.ondragover = onDragOver;
     // newli.ondrop = onDrop;
-};
+}
 
 //添加一个问卷选项(添加按钮触发)
 function addQuestion(check_status) {
