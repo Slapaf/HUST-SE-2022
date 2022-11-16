@@ -109,7 +109,7 @@
         let tmp_json = JSON.parse('{{ json_object | tojson }}');
         let json_length = JSON.parse('{{ json_length }}');
         for (let i = 0; i < json_length; i++) {
-            addmember(tmp_json[i].submitter_order_idx, tmp_json[i].submitter_name,
+            addmember(tmp_json[i].submitter_id, tmp_json[i].submitter_name,
                 tmp_json[i].submit_time, tmp_json[i].file_submitted_count, tmp_json[i].file_submitted_list);
         }
     }

@@ -4,6 +4,8 @@ import sys
 import pandas as pd
 from flask import render_template, request, url_for, redirect, flash
 from flask_login import login_user, login_required, logout_user, current_user
+from werkzeug import Response
+
 from init import app, db, APP_ROOT, APP_FILE
 from db_manipulation import *
 from collection_statistic import *
@@ -275,7 +277,7 @@ def send_statistic_file() -> Response:
 
 @app.route('/collection_details/<string:collection_id>', methods=['GET', 'POST'])
 @login_required
-def collection_details(collection_id) -> Response:
+def collection_details(collection_id) -> Response | str:
     """收集详情页面
 
     Args:
@@ -364,7 +366,7 @@ def collection_details(collection_id) -> Response:
         file_submitted_count = submission[3]  # 提交文件数量
         file_submitted_list = submission[4]  # 提交文件列表
         tmp_dict = {
-            'submitter_order_idx': idx,  # ! 用于 js 定位数据，不是数据库 id
+            'submitter_id': idx,  # ! 已经修正为提交 id
             'submitter_name': submitter_name,
             'submit_time': submit_time.strftime('%Y-%m-%d %H:%M:%S'),
             'file_submitted_count': file_submitted_count,
@@ -388,18 +390,18 @@ def collection_details(collection_id) -> Response:
 # 文件收集界面
 @app.route('/file_collecting')
 @login_required
-def file_collecting() -> Response:
+def file_collecting() -> str:
     """文件收集界面
 
     Returns:
-        Response: file_collecting 文件收集页面
+        str: file_collecting 文件收集页面
     """
     return render_template('file_collecting.html')
 
 
 @app.route('/file_collecting/<string:collection_id>', methods=['GET', 'POST'])
 @login_required
-def copy_collection(collection_id):
+def copy_collection(collection_id) -> Response | str:
     """复制收集
 
     Args:
@@ -426,7 +428,7 @@ def copy_collection(collection_id):
 
 @app.route('/file_collecting', methods=['GET', 'POST'])
 @login_required
-def generate_collection() -> Response:
+def generate_collection() -> Response | str:
     """生成一个收集对象
 
     Returns:
@@ -630,3 +632,24 @@ def file_preview():
     print("submission_dict: {}".format(submission_dict))
     print("预览")
     return render_template('file_preview.html', collection=submission_dict)
+
+
+@app.route('/statistics')
+def statistics():
+    tmp_data = request.args.to_dict()
+    print("统计参数: ", tmp_data)
+    if 'collectionId' not in tmp_data.keys():
+        print("统计参数错误")
+        redirect(url_for('404'))
+    collection_id = id_str_to_int(tmp_data['collectionId'])
+    choice_statistics, qnaire_statistics = collection_data_statistics(collection_id)
+    print("choice_statistics: ", choice_statistics)
+    print("qnaire_statistics: ", qnaire_statistics)
+    new_dict = {
+        "data_choice": choice_statistics,
+        "data_qnaire": qnaire_statistics
+    }
+    print("new_dict: ", new_dict)
+    json_message = json.dumps(new_dict, indent=2,
+                              sort_keys=True, ensure_ascii=False)
+    return json_message
