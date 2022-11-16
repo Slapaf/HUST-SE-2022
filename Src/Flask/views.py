@@ -264,12 +264,9 @@ def collection_details(collection_id):
         if 'hidden-input' in namelist_data.keys():
             # namelist_path = './FileStorage/' + \
             #                 Collection_info.query.filter_by(creator_id=current_user.id).first().namelist_path
-            # TODO 路径设置有问题，应该每个收集独立，此处的写法固定到了第一个有文件的收集
             namelist_path = os.path.join(APP_ROOT, 'FileStorage',
-                                         Collection_info.query.filter_by(
-                                             creator_id=current_user.id
-                                         ).first().namelist_path)
-            print(namelist_path)
+                                         Collection_info.query.get(int(collection_id)).collection_path)
+            print("应交名单路径：", namelist_path)
             namelist = pd.read_csv(
                 namelist_path + "/应交名单.csv", encoding='utf-8')
             # * 删除被点击的名字
@@ -318,7 +315,7 @@ def collection_details(collection_id):
     # namelist_path = './FileStorage/' + \
     #                 Collection_info.query.filter_by(creator_id=current_user.id).first().namelist_path
     namelist_path = os.path.join(APP_ROOT, 'FileStorage',
-                                 Collection_info.query.filter_by(creator_id=current_user.id).first().namelist_path)
+                                 Collection_info.query.get(collection_id).collection_path)
     who_should_submit_list = []
     if os.path.exists(namelist_path + "/应交名单.csv"):
         who_should_submit_list = pd.read_csv(namelist_path + "/应交名单.csv",

@@ -149,7 +149,7 @@ class Collection_info(db.Model):
     end_date = db.Column(db.DateTime, nullable=False)  # 收集结束时间
     status = db.Column(db.Enum(RELEASE, SAVED, FINISHED,
                                OVERDUE), nullable=False)  # 当前状态
-    namelist_path = db.Column(db.String(50))  # 应交名单路径
+    collection_path = db.Column(db.String(50))  # 应交名单路径
 
     # def collection_valid(self) -> bool:
     #     """判断收集是否截止

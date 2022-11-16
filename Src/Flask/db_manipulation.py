@@ -389,13 +389,14 @@ def add_FC(question_list: list, user_id: int) -> int:
             random.sample(string.ascii_letters + string.digits, 4 - len(str(collection_id)))
         ) + str(collection_id)
     )
+    os.makedirs(file_path)  # 创建该收集的文件存储目录
 
     # ! 生成应交名单路径，与文件存储路径相同
     # ! 应交名单以 .csv 格式存放在 filepath 下
     # ! 生成位置为：FileStorage / userpath / filepath / xxx.csv
-    # * 更新 Collection_info 的 namelist_path 属性
+    # * 更新 Collection_info 的 collection_path 属性
     collection = Collection_info.query.filter_by(id=collection_id)
-    collection.update({'namelist_path': file_path})
+    collection.update({'collection_path': file_path})
     db.session.commit()
 
     key_list = list(question_multidict.keys())
@@ -528,7 +529,7 @@ def add_FC(question_list: list, user_id: int) -> int:
             db.session.commit()
             # path = './FileStorage/' + question.file_path
             path = os.path.join(APP_ROOT, 'FileStorage', question.file_path)
-            print(path)  # ! 调试
+            print("第", seq, "题的文件存储路径：", path)  # ! 调试
             try:
                 os.makedirs(path)  # 创建该题的文件存储目录
             except OSError:
