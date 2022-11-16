@@ -5,6 +5,7 @@ body {
 }
 
 .container {
+    min-height: 100vh;
     width: 50%;
     background-color: white;
 }

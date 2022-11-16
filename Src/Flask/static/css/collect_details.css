@@ -372,6 +372,12 @@ body {
     padding: 50px;
 }
 
+.chartContainer {
+    display: flex;
+    background-color: #f7f9fb;
+    width: 100%;
+    margin: 20px 0;
+}
 .pieChart {
     width: 50%;
     height: 300px;
@@ -380,4 +386,26 @@ body {
 .columnChart {
     width: 80%;
     height: 400px;
+}
+
+.nameListContainer {
+    width: 50%;
+    font-size: 13px;
+}
+
+.listHeader {
+    background-color: #fff;
+}
+
+.listBody {
+    height: 0px;
+    background-color: rgb(231, 136, 136);
+    transition: 0.3s;
+    overflow: hidden;
+}
+
+.listBody.show {
+    display: block;
+    height: 100px;
+    transition: 0.3s;
 }
