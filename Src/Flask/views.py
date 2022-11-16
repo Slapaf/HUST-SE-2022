@@ -277,7 +277,7 @@ def send_statistic_file() -> Response:
 
 @app.route('/collection_details/<string:collection_id>', methods=['GET', 'POST'])
 @login_required
-def collection_details(collection_id) -> Response | str:
+def collection_details(collection_id):
     """收集详情页面
 
     Args:
@@ -401,7 +401,7 @@ def file_collecting() -> str:
 
 @app.route('/file_collecting/<string:collection_id>', methods=['GET', 'POST'])
 @login_required
-def copy_collection(collection_id) -> Response | str:
+def copy_collection(collection_id):
     """复制收集
 
     Args:
@@ -428,7 +428,7 @@ def copy_collection(collection_id) -> Response | str:
 
 @app.route('/file_collecting', methods=['GET', 'POST'])
 @login_required
-def generate_collection() -> Response | str:
+def generate_collection():
     """生成一个收集对象
 
     Returns:

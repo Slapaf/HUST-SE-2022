@@ -368,19 +368,37 @@ body {
     background: #85878980;
 }
 
+#downloadExcel,
+#downloadFile {
+    height: 36px;
+    padding: 5px 10px;
+    margin-left: 10px;
+    background-color: #fff;
+    font-size: 16px;
+}
 #chartPanel {
     padding: 50px;
 }
 
 .chartContainer {
     display: flex;
+    position: relative;
     background-color: #f7f9fb;
     width: 100%;
     margin: 20px 0;
 }
+
+.chartTitle {
+    position: absolute;
+    top: 10px;
+    left: 20px;
+    font-size: 15px;
+    color: #000;
+}
 .pieChart {
     width: 50%;
     height: 300px;
+    margin-top: 30px;
   }
 
 .columnChart {
@@ -389,23 +407,32 @@ body {
 }
 
 .nameListContainer {
+    padding: 30px;
     width: 50%;
     font-size: 13px;
 }
 
+.answerContainer {
+    margin: 10px;
+}
+
 .listHeader {
+    width: 200px;
+    padding: 10px;
     background-color: #fff;
+    text-align: center;
 }
 
 .listBody {
     height: 0px;
     background-color: rgb(231, 136, 136);
-    transition: 0.3s;
+    transition: 0.5s;
     overflow: hidden;
 }
 
 .listBody.show {
     display: block;
-    height: 100px;
-    transition: 0.3s;
-}
+    height: 50px;
+    /* min-height: 20px; */
+    transition: 0.5s;
+    overflow: auto;}

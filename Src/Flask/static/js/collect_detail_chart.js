@@ -5,7 +5,7 @@ let choiceData = {};
 let qnaireData = {};
 
 //创建饼状图
-function createPieChart(chartContainer, chartTitle, chartData) {
+function createPieChart(chartContainer,chartData) {
   let newChart = document.createElement("div");
   newChart.className = "pieChart";
   newChart.id = "chartdiv" + ++chartId;
@@ -14,14 +14,11 @@ function createPieChart(chartContainer, chartTitle, chartData) {
   root.setThemes([am5themes_Animated.new(root)]);
   var chart = root.container.children.push(
     am5percent.PieChart.new(root, {
-      title: chartTitle,
       endAngle: 270,
     })
   );
-
   var series = chart.series.push(
     am5percent.PieSeries.new(root, {
-      titleField: chartTitle,
       valueField: "value",
       categoryField: "category",
       endAngle: 270,
@@ -195,7 +192,11 @@ function processChoiceData(question) {
   let newChartContainer = document.createElement("div");
   newChartContainer.className = "chartContainer";
   chartPanel.appendChild(newChartContainer);
-  createPieChart(newChartContainer, question.questionName, chartData);
+  let chartTitle = document.createElement("div");
+  chartTitle.className = "chartTitle";
+  chartTitle.innerHTML = question.questionName;
+  newChartContainer.appendChild(chartTitle);
+  createPieChart(newChartContainer,chartData);
   delete question.questionName;
   delete question.accuracy;
   nameList = question;
@@ -217,7 +218,7 @@ function processQnaireData(question) {
   let newChartContainer = document.createElement("div");
   newChartContainer.className = "chartContainer";
   chartPanel.appendChild(newChartContainer);
-  createPieChart(newChartContainer, question.questionName, chartData);
+  createPieChart(newChartContainer,chartData);
   delete question.questionName;
   delete question.optionNumber;
   nameList = question;
@@ -286,7 +287,9 @@ let c = {
 function sendRequest() {
   // XMLHttpRequest对象用于在后台与服务器交换数据
   var xhr = new XMLHttpRequest();
-  xhr.open("GET", "/test", false);
+  let url = "/statistics?collectionId="+ getCollectionId();
+  console.log(url);
+  xhr.open("GET",url, false);
   xhr.onreadystatechange = function () {
     // readyState == 4说明请求已完成
     if (xhr.readyState == 4) {
@@ -311,5 +314,15 @@ function sendRequest() {
   xhr.send();
 }
 
-processAccuracy(data_choice);
-processQnaireData(b);
+function getCollectionId() {
+  let url = document.location.toString();
+  var arrUrl = url.split("//");
+  var start = arrUrl[1].lastIndexOf("/");
+  var relUrl = arrUrl[1].substring(start + 1); //stop省略，截取从start开始到结尾的所有字符
+  if (relUrl.indexOf("?") != -1) {
+    relUrl = relUrl.split("?")[0];
+  }
+  return relUrl;
+}
+
+

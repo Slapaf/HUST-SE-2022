@@ -121,10 +121,12 @@
         ptimer = setTimeout(starttime, 1000); // 添加计时器
         if (getData_signal == 1) { // 每次加载页面只触发一次 getData 函数
             getData();
+            sendRequest();
             // console.log(submitted_list);
             // console.log(not_submitted_list);
             faddname(submitted_list, not_submitted_list); // * 已提交，未提交
             getData_signal--;
+            
         }
     }
 
