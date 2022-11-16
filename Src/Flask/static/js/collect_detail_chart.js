@@ -5,11 +5,11 @@ let choiceData = {};
 let qnaireData = {};
 
 //创建饼状图
-function createPieChart(chartTitle, chartData) {
+function createPieChart(chartContainer, chartTitle, chartData) {
   let newChart = document.createElement("div");
   newChart.className = "pieChart";
   newChart.id = "chartdiv" + ++chartId;
-  chartPanel.appendChild(newChart);
+  chartContainer.appendChild(newChart);
   let root = am5.Root.new(newChart.id);
   root.setThemes([am5themes_Animated.new(root)]);
   var chart = root.container.children.push(
@@ -37,14 +37,13 @@ function createPieChart(chartTitle, chartData) {
 }
 
 //创建柱状图
-function createColumnChart(chartTitle,chartData) {
+function createColumnChart(chartTitle, chartData) {
   let newChart = document.createElement("div");
   newChart.className = "columnChart";
   newChart.id = "chartdiv" + ++chartId;
   chartPanel.appendChild(newChart);
   var root = am5.Root.new(newChart.id);
   root.setThemes([am5themes_Animated.new(root)]);
-
   var chart = root.container.children.push(
     am5xy.XYChart.new(root, {
       panX: true,
@@ -91,7 +90,7 @@ function createColumnChart(chartTitle,chartData) {
       sequencedInterpolation: true,
       categoryXField: "question",
       tooltip: am5.Tooltip.new(root, {
-        labelText: "正确率：" + "{valueY}"
+        labelText: "正确率：" + "{valueY}",
       }),
     })
   );
@@ -112,28 +111,74 @@ function createColumnChart(chartTitle,chartData) {
   chart.appear(1000, 100);
 }
 
+function createNameList(chartContainer, op, nameList) {
+  let nameListContainer = document.createElement("div");
+  nameListContainer.className = "nameListContainer";
+  if (op === "choice") {
+    let answerContainer = document.createElement("div");
+    answerContainer.className = "answerContainer";
+    answerContainer.innerHTML = "正确答案：" + nameList.correctAnswer;
+    nameListContainer.appendChild(answerContainer);
+    let ABCD = ["A", "B", "C", "D"];
+    ABCD.forEach((e) => {
+      let listHeader = document.createElement("ul");
+      listHeader.className = "listHeader";
+      let listBody = document.createElement("li");
+      listBody.className = "listBody";
+      listHeader.innerHTML = "选择" + e + "选项名单";
+      nameList[e].forEach((name) => {
+        listBody.innerHTML += name + " ";
+      });
+      listHeader.appendChild(listBody);
+      nameListContainer.appendChild(listHeader);
+      listHeader.onclick = () => {
+        listBody.classList.toggle("show");
+      };
+    });
+  }else if(op === "qnaire"){
+    let values = Object.values(nameList);
+    values.forEach(e => {
+      let listHeader = document.createElement("ul");
+      listHeader.className = "listHeader";
+      let listBody = document.createElement("li");
+      listBody.className = "listBody";
+      listHeader.innerHTML = "选择\"" + e.optionName + "\"选项名单";
+      e.people.forEach((name) => {
+        listBody.innerHTML += name + " ";
+      });
+      listHeader.appendChild(listBody);
+      nameListContainer.appendChild(listHeader);
+      listHeader.onclick = () => {
+        listBody.classList.toggle("show");
+      };
+    })
+  }
+  chartContainer.appendChild(nameListContainer);
+}
+
 //处理正确率，并建立“题目-正确率”柱状图
 //在这里调用processChoiceData()
 function processAccuracy(data_choice) {
   let values = Object.values(data_choice);
   let chartData = [];
   let optionData = {};
-  values.forEach(e=>{
+  values.forEach((e) => {
     optionData = {
-        question: e.questionName,
-        accuracy: e.accuracy
-    }
+      question: e.questionName,
+      accuracy: e.accuracy,
+    };
     chartData.push(optionData);
-  })
-  createColumnChart("",chartData);
-  values.forEach(e=>{
+  });
+  createColumnChart("", chartData);
+  values.forEach((e) => {
     processChoiceData(e);
-  })
+  });
 }
 
 //处理选择题数据，并建立“选项-选择人数”饼状图
 function processChoiceData(question) {
   let chartData = [];
+  let nameList = {};
   let optionData = {};
   let optionIndex = "";
   let peopleNumber = 0;
@@ -147,14 +192,21 @@ function processChoiceData(question) {
     };
     chartData.push(optionData);
   });
-  createPieChart(question.questionName, chartData);
+  let newChartContainer = document.createElement("div");
+  newChartContainer.className = "chartContainer";
+  chartPanel.appendChild(newChartContainer);
+  createPieChart(newChartContainer, question.questionName, chartData);
+  delete question.questionName;
+  delete question.accuracy;
+  nameList = question;
+  createNameList(newChartContainer,"choice",nameList);
 }
 
 function processQnaireData(question) {
   let chartData = [];
+  let nameList = {};
   let optionData = {};
   for (let i = 0; i < question["optionNumber"]; i++) {
-    console.log("aaa");
     let option = question["option_" + (i + 1)];
     optionData = {
       category: option.optionName,
@@ -162,7 +214,14 @@ function processQnaireData(question) {
     };
     chartData.push(optionData);
   }
-  createPieChart(question.questionName, chartData);
+  let newChartContainer = document.createElement("div");
+  newChartContainer.className = "chartContainer";
+  chartPanel.appendChild(newChartContainer);
+  createPieChart(newChartContainer, question.questionName, chartData);
+  delete question.questionName;
+  delete question.optionNumber;
+  nameList = question;
+  createNameList(newChartContainer,"qnaire",nameList);
 }
 
 let data_choice = {
@@ -216,6 +275,14 @@ let b = {
   },
 };
 
+let c = {
+  correctAnswer: "A",
+  A: ["张庙松", "黄俊杰"],
+  B: ["王广凯", "王梓熙"],
+  C: ["张隽翊"],
+  D: [],
+};
+
 function sendRequest() {
   // XMLHttpRequest对象用于在后台与服务器交换数据
   var xhr = new XMLHttpRequest();
@@ -225,15 +292,19 @@ function sendRequest() {
     if (xhr.readyState == 4) {
       if (xhr.status == 200 || xhr.status == 304) {
         responseData = JSON.parse(xhr.responseText);
-        if(responseData) {
-            choiceData = responseData.data_choice;
-            qnaireData = responseData.data_qnaire;
-            if(choiceData) {
-                processAccuracy(choiceData);
-
-            }
+        if (responseData) {
+          choiceData = responseData.data_choice;
+          qnaireData = responseData.data_qnaire;
+          if (choiceData) {
+            processAccuracy(choiceData);
+          }
+          if (qnaireData) {
+            let values = Object.values(data_qnaire);
+            values.forEach((e) => {
+              processQnaireData(e);
+            });
+          }
         }
-        
       }
     }
   };
@@ -241,3 +312,4 @@ function sendRequest() {
 }
 
 processAccuracy(data_choice);
+processQnaireData(b);
