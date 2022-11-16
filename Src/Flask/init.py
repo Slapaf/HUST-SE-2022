@@ -11,7 +11,7 @@ APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 # ! 设置文件存储根目录
 APP_FILE = os.path.join(APP_ROOT, 'FileStorage')
 # ! 设置错误信息根目录
-LOG_ROOT = os.path.join(APP_ROOT, 'LOGS')
+APP_LOG = os.path.join(APP_ROOT, 'LOGS')
 
 # app.config['SECRET_KEY'] = 'dev'  # 等同于 app.secret_key = 'dev'
 # ? 读取系统环境变量 SECRET_KEY 的值，如果没有读取到，则使用默认值 dev

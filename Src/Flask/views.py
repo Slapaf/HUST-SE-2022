@@ -216,7 +216,7 @@ def send_statistic_file():
     file_type = tmp_data['fileType']
     if file_type == 'zip':  # * 用户请求所有收集文件
         print("collection_id: ", collection_id)
-        tmp_path = Collection_info.query.get(collection_id).namelist_path
+        tmp_path = Collection_info.query.get(collection_id).collection_path
         # if sys.platform.startswith('win'):
         #                 #     tmp_path = tmp_path.replace("/", "\\")
         # print("收集文件路径: ", tmp_path)
@@ -235,7 +235,7 @@ def send_statistic_file():
     else:  # * 用户请求汇总表格
         namelist_path = os.path.join(
             APP_FILE,
-            Collection_info.query.filter_by(creator_id=current_user.id).first().namelist_path
+            Collection_info.query.get(collection_id).collection_path
         )
         # * Excel 以收集标题命名
         excel_name = Collection_info.query.get(collection_id).collection_title + '.xlsx'
@@ -264,12 +264,9 @@ def collection_details(collection_id):
         if 'hidden-input' in namelist_data.keys():
             # namelist_path = './FileStorage/' + \
             #                 Collection_info.query.filter_by(creator_id=current_user.id).first().namelist_path
-            # TODO 路径设置有问题，应该每个收集独立，此处的写法固定到了第一个有文件的收集
-            namelist_path = os.path.join(APP_ROOT, 'FileStorage',
-                                         Collection_info.query.filter_by(
-                                             creator_id=current_user.id
-                                         ).first().namelist_path)
-            print(namelist_path)
+            namelist_path = os.path.join(APP_FILE,
+                                         Collection_info.query.get(id_str_to_int(collection_id)).collection_path)
+            print("应交名单路径：", namelist_path)
             namelist = pd.read_csv(
                 namelist_path + "/应交名单.csv", encoding='utf-8')
             # * 删除被点击的名字
@@ -284,8 +281,8 @@ def collection_details(collection_id):
         # print(namelist_csv)
         # namelist_path = './FileStorage/' + Collection_info.query.filter_by(
         #     creator_id=current_user.id).first().namelist_path
-        namelist_path = os.path.join(APP_ROOT, 'FileStorage',
-                                     Collection_info.query.filter_by(creator_id=current_user.id).first().namelist_path)
+        namelist_path = os.path.join(APP_FILE,
+                                     Collection_info.query.get(id_str_to_int(collection_id)).collection_path)
         print(namelist_path)
         # print(namelist_path)
         # os.mkdir(namelist_path)
@@ -317,8 +314,8 @@ def collection_details(collection_id):
                               for submission in submission_list]  # * 已提交列表
     # namelist_path = './FileStorage/' + \
     #                 Collection_info.query.filter_by(creator_id=current_user.id).first().namelist_path
-    namelist_path = os.path.join(APP_ROOT, 'FileStorage',
-                                 Collection_info.query.filter_by(creator_id=current_user.id).first().namelist_path)
+    namelist_path = os.path.join(APP_FILE,
+                                 Collection_info.query.get(collection_id).collection_path)
     who_should_submit_list = []
     if os.path.exists(namelist_path + "/应交名单.csv"):
         who_should_submit_list = pd.read_csv(namelist_path + "/应交名单.csv",
@@ -505,7 +502,7 @@ def register():
         db.session.commit()  # 提交数据库会话
         flash('Successfully Registered!')
         # path = './FileStorage/' + user.userpath
-        path = os.path.join(APP_ROOT, 'FileStorage', user.userpath)
+        path = os.path.join(APP_FILE, user.userpath)
         print(path)
         # ! 异常处理
         try:
