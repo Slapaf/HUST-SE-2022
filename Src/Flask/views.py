@@ -34,7 +34,7 @@ def personal_homepage():
     """个人主页
 
     Returns:
-        personal_homepage, 携带参数 r_code。
+        (Response | str): 重定向或转到 personal_homepage, 携带参数 r_code。
     """
     if request.method == 'POST':
         tmp_data = request.form.to_dict()
@@ -134,10 +134,8 @@ def submit_successfully() -> str:
 @app.route('/mycollection', methods=['GET', 'POST'])
 @login_required
 def mycollection():
-    """收集总览页面
-
-    Returns:
-
+    """
+    收集总览页面
     """
     # * 如果检测到对收集的操作
     if request.method == 'POST':
@@ -200,7 +198,7 @@ def send_statistic_file() -> Response:
     """返回请求的文件，用于查看汇总和下载文件
 
     Returns:
-        Response: 请求的文件。请求参数为 zip，返回压缩包；请求参数为 excel，返回提交情况。
+        (Response): 请求的文件。请求参数为 zip，返回压缩包；请求参数为 excel，返回提交情况。
     """
     tmp_data = request.args.to_dict()
     print(tmp_data)
@@ -254,7 +252,7 @@ def collection_details(collection_id: str):
         collection_id (str): 收集 id
 
     Returns:
-        collection_details 收集详情页面
+        (Response | str): collection_details 收集详情页面。
     """
     if request.method == 'POST':
         namelist_data = request.form.to_dict()  # * 获取应交名单数据
@@ -410,9 +408,8 @@ def generate_collection():
     """生成一个收集对象
 
     Returns:
-        Response: 
-            若为 POST 请求，创建成功，重定向到 create_link 页面；创建失败，转到 index 页面。
-            若为 GET 请求，转到 file_collecting 页面。
+        (Response | str): 若为 POST 请求，创建成功，重定向到 create_link 页面；创建失败，转到 index 页面。
+        (Response): 若为 GET 请求，转到 file_collecting 页面。
     """
     if request.method == 'POST':  # 点击了提交按钮
         question_list = request.form  # 获取题目信息列表
@@ -469,8 +466,8 @@ def login():
     """登录页面
 
     Returns:
-        若为 POST 请求，登录成功重定向回 index 主页，登录失败重定向回 login 页面；
-        若为 GET 请求，转到 login 页面
+        (Response): 若为 POST 请求，登录成功重定向回 index 主页，登录失败重定向回 login 页面。
+        (str): 若为 GET 请求，转到 login 页面。
     """
     if request.method == 'POST':
         username = request.form['username']
@@ -503,7 +500,7 @@ def logout() -> Response:
     """退出登录
 
     Returns:
-        index.html 主页
+        转到 index.html 主页。
     """
     logout_user()  # 登出用户
     flash('Goodbye!')
@@ -516,8 +513,8 @@ def register():
     """注册页面
 
     Returns:
-        若为 POST 请求，注册成功重定向回 login 页面，注册失败重定向回 register 页面
-        若为 GET 请求，转到 register 页面
+        (Response): 若为 POST 请求，注册成功重定向回 login 页面，注册失败重定向回 register 页面。
+        (str): 若为 GET 请求，转到 register 页面。
     """
     if request.method == 'POST':
         username = request.form['username']
@@ -570,9 +567,8 @@ def file_editing(collection_id):
         collection_id (str): 收集 id
 
     Returns:
-        Response:
-            若为 POST 请求，编辑成功重定向回 index 主页，编辑失败转 index 主页；
-            若为 GET 请求，查询到收集转 file_editing 页面，未查询到转 404 页面
+        (Response | str): 若为 POST 请求，编辑成功重定向回 index 主页，编辑失败转 index 主页。
+        (str): 若为 GET 请求，查询到收集转 file_editing 页面，未查询到转 404 页面。
     """
     if request.method == 'POST':
         question_list = request.form
@@ -627,7 +623,7 @@ def statistics() -> str:
     """统计信息生成
 
     Returns:
-        json 格式的统计信息
+        (str): json 格式的统计信息
     """
     tmp_data = request.args.to_dict()
     print("统计参数: ", tmp_data)
