@@ -324,8 +324,8 @@ def add_FC(question_list: list, user_id: int) -> int:
         question_list: 题目信息列表
         user_id: 用户id
 
-    Return:
-        collection_id: 收集id
+    Returns:
+        collection_id (int): 收集id
     """
     # ! 文件类型可能有多个，设置一个计数器记录是第几个文件
     file_counter = 0  # * 文件计数器
@@ -568,7 +568,7 @@ def count_filenum(collection_id: int = None) -> int:
     Args:
         collection_id: 收集id
 
-    Return:
+    Returns:
         若collection_id不为None，则返回该问卷的已收文件数，是一个整数；否则返回None。
     """
 
@@ -597,8 +597,8 @@ def deadline_countdown(collection_id: int):
     Args:
         collection_id: 收集id
 
-    Return:
-        Datetime对象，表示截止倒计时。
+    Returns:
+        (Datetime): 截止倒计时。
     """
     current_time = datetime.now()  # 获取当前时间
     deadline = Collection_info.query.get(collection_id).end_date  # 查询问卷截止时间
@@ -634,30 +634,31 @@ def get_question_dict(collection_id: int) -> dict:
         collection_id: 收集id
 
     Returns:
-        一个字典，包含该收集的相关信息（收集标题、收集描述、创建者、截止时间、题目等等）。
-        格式如下：
-        [('collectionTitle', 'ceshi'),
-         ('collector', '凯'),
-         ('deadline', '2022-11-18T22:31:49'),
-         ('description', ''),
-         ('question_name1', '姓名'),
-         ('detail1', ''),
-         ('question_sno2', '学号'),
-         ('detail2', ''),
-         ('question_file3', '文件'),
-         ('detail3', ''),
-         ('question_radio4', '单选题'),
-         ('detail4', ''),
-         ('checked_radio4', 'A'),
-         ('question_multipleChoice5', '多选题'),
-         ('detail5', ''),
-         ('checked_mulans5', 'B'),
-         ('checked_mulans5', 'C'),
-         ('question_qnaire6', '问卷题目'),
-         ('detail6', ''),
-         ('qn_option6', 'asdf'),
-         ('qn_option6', 'adff'),
-         ('choose_type6', 'single')]
+        (dict):
+            一个字典，包含该收集的相关信息（收集标题、收集描述、创建者、截止时间、题目等等）。
+            格式如下：
+            [('collectionTitle', 'ceshi'),
+            ('collector', '凯'),
+            ('deadline', '2022-11-18T22:31:49'),
+            ('description', ''),
+            ('question_name1', '姓名'),
+            ('detail1', ''),
+            ('question_sno2', '学号'),
+            ('detail2', ''),
+            ('question_file3', '文件'),
+            ('detail3', ''),
+            ('question_radio4', '单选题'),
+            ('detail4', ''),
+            ('checked_radio4', 'A'),
+            ('question_multipleChoice5', '多选题'),
+            ('detail5', ''),
+            ('checked_mulans5', 'B'),
+            ('checked_mulans5', 'C'),
+            ('question_qnaire6', '问卷题目'),
+            ('detail6', ''),
+            ('qn_option6', 'asdf'),
+            ('qn_option6', 'adff'),
+            ('choose_type6', 'single')]
     """
     seq = 0
     question = {}
@@ -812,10 +813,12 @@ def submission_record(collection_id: int) -> list:
         collection_id: 收集id
 
     Returns:
-        一个元组列表，每个元组表示一条提交信息。
-        For example:
-        [('计胜翔', datetime.datetime(2022, 11, 5, 20, 25, 32, 142115), 2, ['jsx1.pdf', 'jsx2.doc']),
-        ('张隽翊', datetime.datetime(2022, 11, 5, 20, 25, 32, 142115), 1, ['zjy1.pdf'])]
+        (list):
+            一个元组列表，每个元组表示一条提交信息。
+            
+            For example:
+            [('计胜翔', datetime.datetime(2022, 11, 5, 20, 25, 32, 142115), 2, ['jsx1.pdf', 'jsx2.doc']),
+            ('张隽翊', datetime.datetime(2022, 11, 5, 20, 25, 32, 142115), 1, ['zjy1.pdf'])]
     """
     # 获取提交名单列表
     name_list = Submission_info.query. \
@@ -877,11 +880,13 @@ def submission_record_v2(collection_id: int) -> list:
         collection_id: 收集id
 
     Returns:
-        一个元组列表，每个元组表示一条提交信息，元组按Submission.id排序。
-        每个元组格式为（提交记录id: int, 姓名: string, 提交时间: datetime, 文件数量: int, 文件详情: list）
-        例如:
-        [(1, '计胜翔', datetime.datetime(2022, 11, 5, 20, 25, 32, 142115), 2, ['jsx1.pdf', 'jsx2.doc']),
-        (2, '张隽翊', datetime.datetime(2022, 11, 5, 20, 25, 32, 142115), 1, ['zjy1.pdf'])]
+        (list):
+            一个元组列表，每个元组表示一条提交信息，元组按Submission.id排序。
+            每个元组格式为（提交记录id: int, 姓名: string, 提交时间: datetime, 文件数量: int, 文件详情: list）
+            
+            例如:
+            [(1, '计胜翔', datetime.datetime(2022, 11, 5, 20, 25, 32, 142115), 2, ['jsx1.pdf', 'jsx2.doc']),
+            (2, '张隽翊', datetime.datetime(2022, 11, 5, 20, 25, 32, 142115), 1, ['zjy1.pdf'])]
     """
     # 获取提交记录id
     id_list = Submission_info.query. \
@@ -944,12 +949,12 @@ def submission_record_v2(collection_id: int) -> list:
     return record
 
 
-def stop_collection(collection_id: int, action_list) -> None:
+def stop_collection(collection_id: int, action_list: list) -> None:
     """停止收集
 
     Args:
         collection_id: 收集id
-        action_list:
+        action_list: 操作码列表
     """
     collection = Collection_info.query.filter_by(id=collection_id)
     collection.update({'status': Collection_info.FINISHED})  # 状态标记为已截止
@@ -1206,36 +1211,38 @@ def get_submission_dict(collection_id: int, submission_id: int) -> dict:
         submission_id: 提交记录id
 
     Returns:
-        一个字典，包含该提交记录中用户的提交内容。
-        格式如下：
-        {'1_collectionTitle': '核酸检测',
-         '2_collector': '张三',
-         '3_deadline': '2022-11-15 15:23:09',
-         '4_description': '',
-         '5_question_name1': '姓名',
-         '6_detail1': '',
-         '7_submit_name1': '王广凯',
-         '8_question_sno2': '学号',
-         '9_detail2': '',
-         '10_submit_sno2': 'U202012345',
-         '11_question_file3': '文件',
-         '12_detail3': '',
-         '13_submit_file3': '系统设计.md',
-         '14_question_radio4': '单选题',
-         '15_detail4': '',
-         '16_checked_radio4': 'A',
-         '17_submit_radio4': 'B',
-         '18_question_multipleChoice5': '多选题',
-         '19_detail5': '',
-         '20_checked_mulans5': 'C',
-         '21_checked_mulans5': 'D',
-         '22_submit_mulans5': 'A',
-         '23_submit_mulans5': 'B',
-         '24_question_qnaire6': '问卷题目',
-         '25_detail6': '是否已做核酸',
-         '26_qn_option6': '是',
-         '27_qn_option6': '否',
-         '28_submit_qnaire6': '2'}
+        (dict):
+            一个字典，包含该提交记录中用户的提交内容。
+            
+            格式如下：
+            {'1_collectionTitle': '核酸检测',
+            '2_collector': '张三',
+            '3_deadline': '2022-11-15 15:23:09',
+            '4_description': '',
+            '5_question_name1': '姓名',
+            '6_detail1': '',
+            '7_submit_name1': '王广凯',
+            '8_question_sno2': '学号',
+            '9_detail2': '',
+            '10_submit_sno2': 'U202012345',
+            '11_question_file3': '文件',
+            '12_detail3': '',
+            '13_submit_file3': '系统设计.md',
+            '14_question_radio4': '单选题',
+            '15_detail4': '',
+            '16_checked_radio4': 'A',
+            '17_submit_radio4': 'B',
+            '18_question_multipleChoice5': '多选题',
+            '19_detail5': '',
+            '20_checked_mulans5': 'C',
+            '21_checked_mulans5': 'D',
+            '22_submit_mulans5': 'A',
+            '23_submit_mulans5': 'B',
+            '24_question_qnaire6': '问卷题目',
+            '25_detail6': '是否已做核酸',
+            '26_qn_option6': '是',
+            '27_qn_option6': '否',
+            '28_submit_qnaire6': '2'}
     """
     seq = 0
     submission = {}
@@ -1333,7 +1340,7 @@ def get_submission_dict(collection_id: int, submission_id: int) -> dict:
     return submission
 
 
-def collection_data_statistics(collection_id: int) -> (dict, dict):
+def collection_data_statistics(collection_id: int) -> dict:
     """对收集中的选择题、问卷题的答题情况进行数据统计
 
     Args:
