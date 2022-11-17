@@ -48,7 +48,7 @@ def personal_homepage():
     """个人主页
 
     Returns:
-        personal_homepage, 携带参数 r_code
+        personal_homepage, 携带参数 r_code。
     """
     if request.method == 'POST':
         tmp_data = request.form.to_dict()
@@ -107,10 +107,10 @@ def file_submitting(collection_message):
     """问卷提交
 
     Args:
-        collection_message (str): 收集信息字符串，包含收集 id
+        collection_message (str): 收集信息字符串，包含收集 id（已加密）
 
     Returns:
-        Response: 提交成功，重定向到 submit_successfully; 提交失败，转到 file_submitting
+        提交成功，重定向到 submit_successfully; 提交失败，转到 file_submitting。
     """
     # ! 从收集信息字符串中提取收集 id
     # collection_id = id_str_to_int(collection_message[-1])
@@ -449,6 +449,7 @@ def generate_collection():
 
 
 @app.route('/create_link/<string:share_id>')
+@login_required
 def create_link(share_id: str) -> str:
     """生成收集链接
 
@@ -456,7 +457,7 @@ def create_link(share_id: str) -> str:
         share_id (str): 分享 id（已加密）
 
     Returns:
-        Response: create_link 页面，生成收集链接
+        create_link 页面，生成收集链接。
     """
     return render_template(
         'create_link.html',
@@ -471,7 +472,7 @@ def index() -> str:
     """收件箱主页
 
     Returns:
-        index 主页
+        index 主页。
     """
     return render_template('index.html')
 
@@ -575,6 +576,7 @@ def register():
 
 
 @app.route('/file_editing/<string:collection_id>', methods=['GET', 'POST'])
+@login_required
 def file_editing(collection_id):
     """收集编辑界面
 
@@ -609,6 +611,7 @@ def file_editing(collection_id):
 
 
 @app.route('/file_preview')
+@login_required
 def file_preview():
     """问卷预览
 
