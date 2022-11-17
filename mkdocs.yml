@@ -57,6 +57,7 @@ theme:
   #     quote: octicons/quote-16
 plugins:
   - search
+  - glightbox
   - mkdocstrings:
       handlers:
         python:
@@ -67,6 +68,7 @@ markdown_extensions:
   - codehilite:
       guess_lang: true
       use_pygments: true
+  - md_in_html
   - toc:
       permalink: "#"
   - pymdownx.highlight:
