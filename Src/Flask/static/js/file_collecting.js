@@ -872,34 +872,6 @@ op_qnaire.onclick = () => {
     createQuestionnaire("问卷题目", "", ["", ""], false);
 };
 
-let jsonFromHtml = {
-    "1_collectionTitle": "交作业交作业",
-    "2_collector": "王广凯",
-    "3_deadline": "2022-11-09 19:50:59",
-    "4_description": "第三次计网作业",
-    "5_question_sno1": "学号",
-    "6_detail1": "请填写学号",
-    "7_question_name2": "姓名",
-    "8_detail2": "请填写姓名",
-    "9_question_file3": "文件",
-    "10_detail3": "",
-    "11_checked_topic3": "姓名",
-    "12_question_qnaire4": "水的分子式是什么?",
-    "13_detail4": "答案：H2O",
-    "14_qn_option4": "H2O",
-    "15_qn_option4": "HO",
-    "16_qn_option4": "H2O2",
-    "17_choose_type4": "single",
-    "18_question_radio5": "单选题",
-    "19_detail5": "",
-    "20_checked_radio5": "B",
-    "21_question_multipleChoice6": "多选题",
-    "22_detail6": "第五题",
-    "23_checked_mulans6": "A",
-    "24_checked_mulans6": "C",
-    "25_checked_mulans6": "B"
-};
-
 let tmp_json = document.getElementById('collection').innerHTML;
 // 处理数据
 // let formData = JSON.parse(JSON.stringify(jsonFromHtml));
