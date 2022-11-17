@@ -1572,7 +1572,16 @@ def collection_data_statistics(collection_id: int) -> (dict, dict):
     return choice_statistics, qnaire_statistics
 
 
-def get_email_list(collection_id: int):
+def get_email_list(collection_id: int) -> list:
+    """获取邮箱地址列表
+
+    Args:
+        collection_id: 收集id
+
+    Returns:
+        一个列表，每个元素为一个邮箱地址
+
+    """
     namelist_path = os.path.join(
         APP_FILE,
         Collection_info.query.get(collection_id).collection_path
@@ -1597,6 +1606,15 @@ def get_email_list(collection_id: int):
 
 
 def is_accessible(user_id: int, collection_id: int) -> bool:
+    """判断id为user_id的用户是否有权限访问id为collection_id的收集
+
+    Args:
+        user_id: 用户id
+        collection_id: 收集id
+
+    Returns:
+        一个布尔值，为True表示有权限，为False表示无权限
+    """
     collection_id_list = Collection_info.query.filter_by(creator_id=user_id).with_entities(Collection_info.id).all()
     collection_id_list = list(map(itemgetter(0), collection_id_list))
     return collection_id in collection_id_list
