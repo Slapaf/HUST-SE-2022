@@ -247,12 +247,12 @@ function sendEmailRequest() {
   // XMLHttpRequest对象用于在后台与服务器交换数据
   var xhr = new XMLHttpRequest();
   let url = "/email?collectionId=" + getCollectionId();
-  xhr.open("GET", url, false);
+  xhr.open("GET", url, true);
   xhr.onreadystatechange = function () {
     // readyState == 4说明请求已完成
     if (xhr.readyState == 4) {
       if (xhr.status == 200 || xhr.status == 304) {
-        
+        alert(this.responseText);
       }
     }
   };
