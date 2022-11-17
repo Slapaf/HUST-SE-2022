@@ -1,4 +1,5 @@
 import json
+import threading
 import os.path
 from flask import render_template, request, url_for, redirect, flash
 from flask_login import login_user, login_required, logout_user, current_user
@@ -25,21 +26,6 @@ def value_type_check(sth_to_be_check):
     print("Value-Type Check!")
     print("Value:\n", sth_to_be_check)
     print("Type:\n", type(sth_to_be_check))
-
-
-# def id_str_to_int(id_str: str):
-#     """
-#     将 str 类型的 id 号转换为 int 类型
-#
-#     Args:
-#         id_str(str): str 类型的 id 号
-#
-#     Returns:
-#         id_int(int): int 类型的 id 号
-#     """
-#     if id_str.isalpha():
-#         return ord(id_str) - ord('a') + 10
-#     return int(id_str)
 
 
 @app.route('/personal_homepage', methods=['GET', 'POST'])
@@ -663,18 +649,6 @@ def statistics() -> str:
     return json_message
 
 
-@app.route('/email/<int:collection_id>', methods=['GET', 'POST'])
-@login_required
-def email(collection_id):
-    email_list = get_email_list(collection_id)
-    flag = current_user.send_email(to_email=email_list, email_title="你的父亲大人发来的关爱信息", email_message="臭sb")
-    if flag == False:
-        print("发送失败！")
-    else:
-        print("发送成功！")
-    return redirect(url_for("index"))
-
-
 @app.route('/email')
 @login_required
 def send_email():
@@ -692,14 +666,7 @@ def send_email():
     email_list = get_email_list(collection_id=collection_id)
     email_title = collection_title + "即将截止"
     email_message = "<p>您的问卷被催交啦！请在截止时间 " + str(collection_ddl) + " 之前及时提交哦！</p>"
-    r_code = current_user.send_email(
-        to_email=email_list,
-        email_title=email_title,
-        email_message=email_message
-    )
-    if r_code:
-        print("邮件发送成功")
-        return "Success"
-    else:
-        print("邮件发送失败")
-        return "Failed"
+    # * 异步发送，减少等待时间
+    email_thread = threading.Thread(target=current_user.sub_func, args=(email_list, email_title, email_message))
+    email_thread.start()
+    return "发送完毕"
