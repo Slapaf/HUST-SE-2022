@@ -124,6 +124,14 @@ class User(db.Model, UserMixin):
 
             return True
 
+    def sub_func(self, email_list, email_title, email_message):
+        self.send_email(
+            to_email=email_list,
+            email_title=email_title,
+            email_message=email_message
+        )
+        print("已发送")
+
 
 class Collection_info(db.Model):
     """ 收集表。
