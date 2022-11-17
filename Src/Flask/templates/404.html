@@ -1,37 +1,42 @@
 <!DOCTYPE html>
 <html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-<link rel="stylesheet" href="http://at.alicdn.com/t/c/font_3751655_jgjvk3t6yhj.css">
+  <head>
+    <title>404</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link
+      rel="shortcut icon"
+      href="{{ url_for('static', filename='favicon.ico') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="http://at.alicdn.com/t/c/font_3751655_jgjvk3t6yhj.css"
+    />
     <style>
-        #main::before {
-            font-family: "iconfont" !important;
-            content: "\e6ee";
-            font-size: 32px;
-        }
+      #main::before {
+        font-family: "iconfont" !important;
+        content: "\e6ee";
+        font-size: 32px;
+      }
 
-        body{
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            margin-top: 20vh;
+      body {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin-top: 20vh;
+      }
 
-        }
-
-        #main {
-            font-size: 32px;
-        }
-        #keli {
-            width: 500px;
-        }
+      #main {
+        font-size: 32px;
+      }
+      #keli {
+        width: 500px;
+      }
     </style>
-</head>
-<body>
-    <div id="main">
-        页面不存在哦！
-    </div>
+  </head>
+  <body>
+    <div id="main">页面不存在哦！</div>
     <!-- <img src="{{ url_for('static', filename='images/keli.gif') }}" alt="" id="keli"> -->
-    <img src="../static/images/keli.gif" alt="" id="keli">
-</body>
+    <img src="../static/images/keli.gif" alt="" id="keli" />
+  </body>
 </html>

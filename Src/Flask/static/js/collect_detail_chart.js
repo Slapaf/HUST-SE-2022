@@ -311,7 +311,6 @@ function getCollectionId() {
   if (relUrl.indexOf("?") != -1) {
     relUrl = relUrl.split("?")[0];
   }
-  console.log(relUrl);
   return relUrl;
 }
 

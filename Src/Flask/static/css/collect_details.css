@@ -123,15 +123,18 @@ body {
     /* overflow: auto; */
 }
 
+#sendEmail,
 .btn_add {
     border-radius: 8px;
     margin-left: 25px;
     margin-top: 20px;
+    margin-bottom: 20px;
     width: 90px;
     height: 40px;
     border: 1px solid rgb(190, 190, 190);
 }
 
+#sendEmail:hover,
 .btn_re:hover,
 .btn_add:hover {
     background-color: #6c94f0;
@@ -421,6 +424,30 @@ body {
     width: 80%;
     height: 400px;
     margin: auto;
+}
+
+.pieChart::before {
+    content: "";
+    width: 100px;
+    height: 30px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background-color: #f7f9fb;
+    border-radius: 15px;
+    z-index: 2;
+}
+
+.columnChart::before {
+    content: "";
+    width: 100px;
+    height: 30px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background-color: #f7f9fb;
+    border-radius: 15px;
+    z-index: 2;
 }
 
 .nameListContainer {
