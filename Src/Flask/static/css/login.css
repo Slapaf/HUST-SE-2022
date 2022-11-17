@@ -93,7 +93,7 @@ a {
     margin-top: 30px;
     font-size: 16px;
     text-decoration: none;
-    color: rgb(33, 255, 236);
+    color: #595bb3;
     font-family: sans-serif;
 }
 
@@ -102,7 +102,7 @@ a {
     height: 40px;
     font-size: 20px;
     position: absolute;
-    left: 5vw;
+    left: 1vw;
 }
 
 .goback_link {
