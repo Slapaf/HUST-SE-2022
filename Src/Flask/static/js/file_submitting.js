@@ -135,36 +135,6 @@ function creatQuestionnaire(
     newli.appendChild(qBox);
 }
 
-
-// TODO:按照这个格式传数据
-let jsonFromHtml = {
-    "1_collectionTitle": "文件收集",
-    "2_collector": "凯",
-    "3_deadline": "2022-10-28 14:55",
-    "4_description": "描述",
-    "5_question_name1": "姓名lala",
-    "6_detail1": "",
-    "7_question_file2": "文件haha",
-    "8_detail2": "请提交本次作业",
-    "9_checked_topic2": "姓名",
-    "10_checked_topic2": "学号",
-    "11_question_sno3": "学号xixi",
-    "12_detail3": "",
-    "13_question_radio4": "单选题nie",
-    "14_detail4": "",
-    "15_checked_radio4": "",
-    "16_question_multipleChoice5": "多选题kk",
-    "17_detail5": "",
-    "18_checked_mulans5": "C",
-    "19_checked_mulans5": "D",
-    "20_question_qnaire6": "你喜欢跑步吗？",
-    "21_detail6": "请选择一个选项",
-    "22_qn_option6": "喜欢",
-    "23_qn_option6": "不喜欢",
-    "24_qn_option6": "还行",
-    "25_choose_type6": "multiple",
-};
-
 let tmp_json = document.getElementById('collection').innerHTML;
 tmp_json = eval("(" + tmp_json + ")"); // ! 有风险
 // console.log(typeof tmp_json);

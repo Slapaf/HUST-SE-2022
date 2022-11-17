@@ -453,52 +453,6 @@ function createMultipleChoice(topicName, detailText, checkedChoiceAmount, checke
     // newli.ondrop = onDrop;
 }
 
-// function onDragStart(e) {
-//     // 获取当前拖拽元素
-//     dragElement = e.currentTarget;
-// }
-//
-// function onDragOver(e) {
-//     // 默认的当你dragover的时候会阻止你做drop的操作，所以需要取消这个默认
-//     e.preventDefault();
-// }
-//
-// function onDrop(e) {
-//     // 当拖动结束的时候，给拖动div所在的位置下面的div做drop事件
-//     let dropElement = e.currentTarget;
-//     if (dragElement === dropElement) return;
-//     if (dragElement != null) {
-//         ul.insertBefore(dragElement, dropElement);
-//     }
-//     //交换复选框中的位置
-//     let dragId = dragElement.id;
-//     let dropId = dropElement.id;
-//     let dragElementType = dragElement.getElementsByClassName("input-topic")[0].name;
-//     let dropElementType = dropElement.getElementsByClassName("input-topic")[0].name;
-//     if (dragElementType === "question_name" || dragElementType === "question_sno") {
-//         if (dropElementType === "question_name" || dropElementType === "question_sno") {
-//             for_checkbox("swap", dragId, dropId);
-//         } else {
-//             let next = dropElement.nextSibling;
-//             let nextType = null;
-//             let flag = 0;
-//             while (next) {
-//                 nextType = next.getElementsByClassName("input-topic")[0].name;
-//                 if (nextType && (nextType === "question_file" || nextType === "question_radio")) {
-//                     for_checkbox("swap", dragId, next.id);
-//                     flag = 1;
-//                     break;
-//                 }
-//                 next = next.nextSibling;
-//             }
-//             if (!flag) {
-//                 for_checkbox("swap", dragId, 0);
-//             }
-//         }
-//     }
-//
-// }
-
 //提交表单时给每个问题加上编号
 function numberQuestion() {
     let finalId = 1;
@@ -843,34 +797,6 @@ op_multipleChoice.onclick = () => {
 
 op_qnaire.onclick = () => {
     createQuestionnaire("问卷题目", "", ["", ""], false);
-};
-
-let jsonFromHtml = {
-    "1_collectionTitle": "交作业交作业",
-    "2_collector": "王广凯",
-    "3_deadline": "2022-11-09 19:50:59",
-    "4_description": "第三次计网作业",
-    "5_question_sno1": "学号",
-    "6_detail1": "请填写学号",
-    "7_question_name2": "姓名",
-    "8_detail2": "请填写姓名",
-    "9_question_file3": "文件",
-    "10_detail3": "",
-    "11_checked_topic3": "姓名",
-    "12_question_qnaire4": "水的分子式是什么?",
-    "13_detail4": "答案：H2O",
-    "14_qn_option4": "H2O",
-    "15_qn_option4": "HO",
-    "16_qn_option4": "H2O2",
-    "17_choose_type4": "single",
-    "18_question_radio5": "单选题",
-    "19_detail5": "",
-    "20_checked_radio5": "B",
-    "21_question_multipleChoice6": "多选题",
-    "22_detail6": "第五题",
-    "23_checked_mulans6": "A",
-    "24_checked_mulans6": "C",
-    "25_checked_mulans6": "B"
 };
 
 let tmp_json = document.getElementById('collection').innerHTML;

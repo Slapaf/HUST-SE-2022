@@ -172,40 +172,6 @@ function addQuestion_for_filePreview(chooseType, qnOptionText, if_checked) {
   return opBox;
 }
 
-// TODO:按照这个格式传数据
-let sample_json = {
-  "1_collectionTitle": "核酸检测",
-  "2_collector": "张三",
-  "3_deadline": "2022-11-15 15:23:09",
-  "4_description": "",
-  "5_question_name1": "姓名",
-  "6_detail1": "",
-  "7_submit_name1": "王广凯",
-  "8_question_sno2": "学号",
-  "9_detail2": "",
-  "10_submit_sno2": "U202012345",
-  "11_question_file3": "文件",
-  "12_detail3": "",
-  "13_submit_file3": "系统设计.md",
-  "14_question_radio4": "单选题",
-  "15_detail4": "",
-  "16_checked_radio4": "A",
-  "17_submit_radio4": "C",
-  "18_question_multipleChoice5": "多选题",
-  "19_detail5": "",
-  "20_checked_mulans5": "A",
-  "21_checked_mulans5": "C",
-  "22_submit_mulans5": "A",
-  "23_submit_mulans5": "C",
-  "24_submit_mulans5": "D",
-  "25_question_qnaire6": "问卷题目",
-  "26_detail6": "是否已做核酸",
-  "27_qn_option6": "是",
-  "28_qn_option6": "否",
-  "29_submit_qnaire6": "1",
-  "30_submit_qnaire6": "2",
-};
-
 let tmp_json = document.getElementById("collection").innerHTML;
 tmp_json = eval("(" + tmp_json + ")"); // ! 有风险
 console.log(tmp_json);
