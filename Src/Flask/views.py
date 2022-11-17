@@ -255,7 +255,7 @@ def collection_details(collection_id: str):
         (Response | str): collection_details 收集详情页面。
     """
     if is_accessible(current_user.id, int(decryption(collection_id))) == False:
-        return redirect(url_for('page_not_found'))
+        return redirect(url_for('no_access'))
     if request.method == 'POST':
         namelist_data = request.form.to_dict()  # * 获取应交名单数据
         print("前端数据: ", namelist_data)
@@ -385,7 +385,7 @@ def copy_collection(collection_id: str):
         collection_id (str): 待复制的收集 id
     """
     if is_accessible(current_user.id, int(decryption(collection_id))) == False:
-        return redirect(url_for('page_not_found'))
+        return redirect(url_for('no_access'))
     if request.method == 'POST':
         question_list = request.form
         if not question_list:
@@ -575,7 +575,7 @@ def file_editing(collection_id):
         (str): 若为 GET 请求，查询到收集转 file_editing 页面，未查询到转 404 页面。
     """
     if is_accessible(current_user.id, int(decryption(collection_id))) == False:
-        return redirect(url_for('page_not_found'))
+        return redirect(url_for('no_access'))
 
     if request.method == 'POST':
         question_list = request.form
@@ -676,6 +676,10 @@ def send_email():
 
 
 @app.route('/404')
-@login_required
 def page_not_found():
     return render_template("404.html")
+
+
+@app.route('/403')
+def no_access():
+    return render_template("403.html")
