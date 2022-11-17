@@ -88,7 +88,9 @@ class User(db.Model, UserMixin):
             布尔值，表示是否发送成功
         """
         server = "smtp." + self.email.split('@')[1]
-        print(server)
+        if self.authorization_code is None:
+            print("没有邮箱授权码！")
+            return False
         yag = yagmail.SMTP(user=self.email, password=self.authorization_code, host=server)
         if yag is None:
             print("yag is None!")

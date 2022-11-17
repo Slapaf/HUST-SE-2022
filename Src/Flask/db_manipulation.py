@@ -128,7 +128,6 @@
         - -1：user_id错误，即该用户不存在
     
     9、modify_personal_info(user_id: int, new_name: str, new_email: str, authorization_code: str)
-        ！未验证正确性
         Function: 修改id为user_id的用户的个人信息（昵称、邮箱、邮箱授权码）
         
         Inputs:
@@ -318,25 +317,8 @@ from operator import itemgetter
 from pathlib import Path
 
 
-# def id_int_to_str(id_int: int):
-#     """
-#     将 int 类型的 id 号转换为 str 类型
-#
-#     Args:
-#         id_int(int): int 类型的 id 号
-#
-#     Return:
-#         id_str(str): str 类型的 id 号
-#     """
-#     if 0 <= id_int <= 9:
-#         return str(id_int)
-#     id_int -= 10
-#     return chr(id_int + 97)
-
-
 def add_FC(question_list: list, user_id: int) -> int:
-    """
-    将新创建的收集存入数据库，并为每个收集分配一个收集者用户目录下的子目录，总长度为 X 位，最后一位代表收集 id。
+    """将新创建的收集存入数据库，并为每个收集分配一个收集者用户目录下的子目录，总长度为 X 位，最后一位代表收集 id。
 
     Args:
         question_list: 题目信息列表
