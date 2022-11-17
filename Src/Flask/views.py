@@ -1,4 +1,5 @@
 import json
+import threading
 import os.path
 from flask import render_template, request, url_for, redirect, flash
 from flask_login import login_user, login_required, logout_user, current_user
@@ -681,6 +682,14 @@ def send_email():
     """
     发送邮件
     """
+
+    def sub_func():
+        current_user.send_email(
+            to_email=email_list,
+            email_title=email_title,
+            email_message=email_message
+        )
+
     tmp_data = request.args.to_dict()
     print("邮件参数: ", tmp_data)
     if 'collectionId' not in tmp_data.keys():
@@ -692,14 +701,7 @@ def send_email():
     email_list = get_email_list(collection_id=collection_id)
     email_title = collection_title + "即将截止"
     email_message = "<p>您的问卷被催交啦！请在截止时间 " + str(collection_ddl) + " 之前及时提交哦！</p>"
-    r_code = current_user.send_email(
-        to_email=email_list,
-        email_title=email_title,
-        email_message=email_message
-    )
-    if r_code:
-        print("邮件发送成功")
-        return "Success"
-    else:
-        print("邮件发送失败")
-        return "Failed"
+    # * 异步发送，减少等待时间
+    email_thread = threading.Thread(target=sub_func)
+    email_thread.start()
+    return "发送完毕"
