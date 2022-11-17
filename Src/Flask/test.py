@@ -2,9 +2,7 @@ from operator import itemgetter
 
 l1 = [1, 2, 3, 4, 5]
 l2 = [11, 22, 33, 44, 55]
-l = list(map(itemgetter(0), list(filter(lambda x: x == 1, l1))))
-print(l, l1)
-
+print(1 in l1)
 # d = {'单选1':{'A':['jsx','zjy'],'B':['wgk','wzx']}
 #      '你喜欢跑步吗?':{'喜欢'}}
 
@@ -80,40 +78,40 @@ print(l, l1)
 
 # 选择题数据统计：
 choice_data = {'question_1': {
-                    'questionName': '单选题',
-                    'correctAnswer': 'A',
-                    'accuracy': 0.25,
-                    'A': ['王梓熙'],
-                    'B': ['张隽翊'],
-                    'C': ['王广凯'],
-                    'D': ['计胜翔']
-                },
-               'question_2': {
-                   'questionName': '多选题',
-                   'correctAnswer': 'C-D',
-                   'accuracy': 0.25,
-                   'A': ['王梓熙', '计胜翔'],
-                   'B': ['王梓熙', '张隽翊'],
-                   'C': ['张隽翊', '王广凯'],
-                   'D': ['王广凯', '计胜翔']
-               }
+    'questionName': '单选题',
+    'correctAnswer': 'A',
+    'accuracy': 0.25,
+    'A': ['王梓熙'],
+    'B': ['张隽翊'],
+    'C': ['王广凯'],
+    'D': ['计胜翔']
+},
+    'question_2': {
+        'questionName': '多选题',
+        'correctAnswer': 'C-D',
+        'accuracy': 0.25,
+        'A': ['王梓熙', '计胜翔'],
+        'B': ['王梓熙', '张隽翊'],
+        'C': ['张隽翊', '王广凯'],
+        'D': ['王广凯', '计胜翔']
+    }
 }
 
 # 问卷题数据统计：
 qnaire_data = {'question_1': {
-                    'questionName': '你喜欢吃屎吗？',
-                    'optionNumber': 2,
-                    'option_1': {
-                        'optionName': '喜欢',
-                        'peopleNumber': 3,
-                        'people': ['王梓熙', '张隽翊', '王广凯']
-                    },
-                    'option_2': {
-                        'optionName': '不喜欢',
-                        'peopleNumber': 1,
-                        'people': ['计胜翔']
-                    }
-            }
+    'questionName': '你喜欢吃屎吗？',
+    'optionNumber': 2,
+    'option_1': {
+        'optionName': '喜欢',
+        'peopleNumber': 3,
+        'people': ['王梓熙', '张隽翊', '王广凯']
+    },
+    'option_2': {
+        'optionName': '不喜欢',
+        'peopleNumber': 1,
+        'people': ['计胜翔']
+    }
+}
 }
 
 # kdulehxbxcpcebce

@@ -1582,8 +1582,6 @@ def get_email_list(collection_id: int):
     else:
         return []
 
-    excel_name = Collection_info.query.get(collection_id).collection_title
-
     # * 已交名单列表
     who_has_submitted_list = [
         submission[0] for submission in submission_record(collection_id=collection_id)
@@ -1596,3 +1594,9 @@ def get_email_list(collection_id: int):
     email_list = list(map(itemgetter(0), email_list))
     print("可发送的邮箱：", email_list)
     return email_list
+
+
+def is_accessible(user_id: int, collection_id: int) -> bool:
+    collection_id_list = Collection_info.query.filter_by(creator_id=user_id).with_entities(Collection_info.id).all()
+    collection_id_list = list(map(itemgetter(0), collection_id_list))
+    return collection_id in collection_id_list
