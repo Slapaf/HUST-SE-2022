@@ -11,6 +11,18 @@ from EaD import *
 SUBMITTING_PAGE = "127.0.0.1:5000/file_submitting"
 
 
+@app.route('/email/<int:collection_id>', methods=['GET', 'POST'])
+@login_required
+def email(collection_id):
+    email_list = get_email_list(collection_id)
+    flag = current_user.send_email(to_email=email_list, email_title="你的父亲大人发来的关爱信息", email_message="臭sb")
+    if flag == False:
+        print("发送失败！")
+    else:
+        print("发送成功！")
+    return redirect(url_for("index"))
+
+
 def value_type_check(sth_to_be_check):
     """调试函数，项目完成后删除
 
