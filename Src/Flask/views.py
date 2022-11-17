@@ -28,21 +28,6 @@ def value_type_check(sth_to_be_check):
     print("Type:\n", type(sth_to_be_check))
 
 
-# def id_str_to_int(id_str: str):
-#     """
-#     将 str 类型的 id 号转换为 int 类型
-#
-#     Args:
-#         id_str(str): str 类型的 id 号
-#
-#     Returns:
-#         id_int(int): int 类型的 id 号
-#     """
-#     if id_str.isalpha():
-#         return ord(id_str) - ord('a') + 10
-#     return int(id_str)
-
-
 @app.route('/personal_homepage', methods=['GET', 'POST'])
 @login_required
 def personal_homepage():
@@ -662,18 +647,6 @@ def statistics() -> str:
     json_message = json.dumps(new_dict, indent=2,
                               sort_keys=True, ensure_ascii=False)
     return json_message
-
-
-@app.route('/email/<int:collection_id>', methods=['GET', 'POST'])
-@login_required
-def email(collection_id):
-    email_list = get_email_list(collection_id)
-    flag = current_user.send_email(to_email=email_list, email_title="你的父亲大人发来的关爱信息", email_message="臭sb")
-    if flag == False:
-        print("发送失败！")
-    else:
-        print("发送成功！")
-    return redirect(url_for("index"))
 
 
 @app.route('/email')

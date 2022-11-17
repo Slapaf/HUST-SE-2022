@@ -252,7 +252,7 @@ function sendEmailRequest() {
     // readyState == 4说明请求已完成
     if (xhr.readyState == 4) {
       if (xhr.status == 200 || xhr.status == 304) {
-        
+        alert(this.responseText);
       }
     }
   };
