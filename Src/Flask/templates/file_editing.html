@@ -5,11 +5,12 @@
     <meta charset="UTF-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>文件收集</title>
+    <title>文件编辑</title>
     <script src="{{ url_for('static', filename='iconfont/iconfont.js') }}"></script>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <link
             rel="stylesheet"
-            href="http://at.alicdn.com/t/c/font_3751655_z5o1dt36bka.css"
+            href="http://at.alicdn.com/t/c/font_3751655_751heus60au.css"
     >
     <link
             rel="stylesheet"
@@ -25,6 +26,9 @@
 {# ? 用于传参 #}
 <div id="collection" style="display: none">{{ collection }}</div>
 <body>
+    <div id="goback">
+        <a href="{{ url_for('mycollection') }}" class="goback_link" id="goback_link">返回</a>
+    </div>
 <div class="container">
     <form id="form" method="post" name="Form">
         <div class="header">

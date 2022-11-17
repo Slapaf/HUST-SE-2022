@@ -1,8 +1,4 @@
-import random
-import string
-import datetime
-import re
-import yagmail
+import random, smtplib, string, datetime, re, yagmail
 from init import db
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -24,12 +20,11 @@ class User(db.Model, UserMixin):
     """
     id = db.Column(db.Integer, primary_key=True)  # 主键
     name = db.Column(db.String(30), nullable=False)  # 用户昵称
-    username = db.Column(db.String(30), nullable=False, unique=True)  # 用户名（
+    username = db.Column(db.String(30), nullable=False, unique=True)  # 用户名
     password_hash = db.Column(db.String(128), nullable=False)  # 密码散列值
     userpath = db.Column(db.String(50), nullable=False, unique=True)  # 用户空间路径
     email = db.Column(db.String(30), nullable=False)  # 用户邮箱
     authorization_code = db.Column(db.String(30))  # 邮箱授权码
-    yag = None
 
     def set_password(self, password: str) -> None:
         """设置密码
@@ -69,21 +64,19 @@ class User(db.Model, UserMixin):
         """
         self.email = email
 
-    def user_authentication(self, user_email: str, user_pwd: str, host: str = 'smtp.sina.com') -> None:
-        """用户认证
+    def email_authentication(self, user_email: str = email,
+                             user_pwd: str = authorization_code,
+                             host: str = 'smtp.sina.com'):
+        """邮箱认证
 
         Args:
             user_email: 用户邮箱
             user_pwd: 邮箱授权码
             host: 发送邮件服务器地址
         """
-        self.yag = yagmail.SMTP(
-            user=user_email,
-            password=user_pwd,
-            host=host
-        )
+        return yagmail.SMTP(user=user_email, password=user_pwd, host=host)
 
-    def send_email(self, to_email: str or list, email_title: str, email_message: str) -> bool:
+    def send_email(self, to_email, email_title: str, email_message: str) -> bool:
         """发送邮件，可以单发也可以群发，取决于传入参数 to_email 的类型
 
         Args:
@@ -94,28 +87,39 @@ class User(db.Model, UserMixin):
         Returns:
             布尔值，表示是否发送成功
         """
-        if self.yag is None:
+        server = "smtp." + self.email.split('@')[1]
+        print(server)
+        yag = yagmail.SMTP(user=self.email, password=self.authorization_code, host=server)
+        if yag is None:
+            print("yag is None!")
             return False
         if type(to_email) == "str":  # 单发
             if re.match("^.+\\@(\\[?)[a-zA-Z0-9\\-\\.]+\\.([a-zA-Z]{2,3}|[0-9]{1,3})(\\]?)$", to_email) is None:
                 print("目标邮箱地址错误！")
                 return False
-            self.yag.send(
-                to=to_email,
-                subject=email_title,
-                contents=email_message
-            )
+            try:
+                yag.send(
+                    to=to_email,
+                    subject=email_title,
+                    contents=email_message
+                )
+            except smtplib.SMTPAuthenticationError:
+                print("授权码错误！")
             return True
         else:
             for email_addr in to_email:  # 群发
                 if re.match("^.+\\@(\\[?)[a-zA-Z0-9\\-\\.]+\\.([a-zA-Z]{2,3}|[0-9]{1,3})(\\]?)$", email_addr) is None:
                     print("目标邮箱地址错误！")
                     return False
-                self.yag.send(
-                    to=email_addr,
-                    subject=email_title,
-                    contents=email_message
-                )
+                try:
+                    yag.send(
+                        to=email_addr,
+                        subject=email_title,
+                        contents=email_message
+                    )
+                except smtplib.SMTPAuthenticationError:
+                    print("授权码错误！")
+
             return True
 
 

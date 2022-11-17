@@ -1,15 +1,13 @@
 .box {
     z-index: 11;
+    position: fixed;
+    top: 20%;
+    left: 50%;
     display: none;
+    margin-left: -300px;
     width: 600px;
     height: 400px;
     background-color: #ffffff;
-    position: absolute;
-    top: 0;
-    right: 0;
-    left: 0;
-    bottom: 0;
-    margin: auto;
     border-radius: 15px;
     transition: 0.5s;
 }

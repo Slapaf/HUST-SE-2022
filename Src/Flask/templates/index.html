@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
   <head>
-    <title>Home</title>
+    <title>嘟嘟可收件箱</title>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <link
       rel="stylesheet"
       href="{{ url_for('static', filename='css/all.css') }}"
@@ -31,7 +31,10 @@
           </div>
       </div>
       <div class="middle">
-        <div id="nav_productName">嘟嘟可收件箱</div>
+        <div id="nav_productName">
+          <img src="{{ url_for('static', filename='images/Dodoco.png') }}" alt="" style="width:32px;">
+          嘟嘟可收件箱
+        </div>
       </div>
       <div class="right">
         {% if current_user.is_authenticated %}
@@ -112,16 +115,18 @@
       <img src="{{ url_for('static', filename='images/collectiondetailcard_1.png') }}" alt="" id="collectiondetailcard">
     </section>
     <section class="panel five" style="z-index: 13;">
+      <div id="aboveFooter">
+        <div id="docLinkBox">
+          我们的文档：
+        </div>
+      </div>
+      <footer>
+
+      </footer>
       <img src="{{ url_for('static', filename='images/left-top.png') }}" alt="" class="yuanshen" id="left-top">
       <img src="{{ url_for('static', filename='images/left-bottom.png') }}" alt="" class="yuanshen" id="left-bottom">
       <img src="{{ url_for('static', filename='images/right-top.png') }}" alt="" class="yuanshen" id="right-top">
       <img src="{{ url_for('static', filename='images/right-bottom.png') }}" alt="" class="yuanshen" id="right-bottom">
     </section>
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.3/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.3/ScrollTrigger.min.js"></script> -->
-    <!-- <footer>
-      <p>版权所有：一念神魔之青青草原</p>
-    </footer> -->
-    <script src="{{ url_for('static', filename='js/index.js') }}"></script>
   </body>
 </html>

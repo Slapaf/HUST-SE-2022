@@ -307,7 +307,7 @@
 
 '''''
 
-import string, random, os, shutil, re, werkzeug
+import string, random, os, shutil, re, werkzeug, pandas as pd
 from copy import deepcopy
 from flask_login import current_user
 from models import User, Collection_info, Question_info, Answer_info, Submit_Content_info, Option_info, Submission_info
@@ -864,7 +864,7 @@ def modify_personal_info(user_id: int, new_name: str, new_email: str, authorizat
         若为-1，则用户id不存在；若为1，则修改成功。
 
     """
-    user = User.query.filter_by(id=user_id).first()
+    user = User.query.get(user_id)
 
     # 该用户id不存在
     if user is None:
@@ -874,6 +874,7 @@ def modify_personal_info(user_id: int, new_name: str, new_email: str, authorizat
     user.name = new_name
     user.email = new_email
     user.authorization_code = authorization_code
+    user.email_authentication(user_email=user.email, user_pwd=user.authorization_code)
     db.session.commit()
     return 1  # 修改成功
 
@@ -1569,3 +1570,33 @@ def collection_data_statistics(collection_id: int) -> (dict, dict):
     print("选择题数据统计：", choice_statistics)
     print("问卷题数据统计：", qnaire_statistics)
     return choice_statistics, qnaire_statistics
+
+
+def get_email_list(collection_id: int):
+    namelist_path = os.path.join(
+        APP_FILE,
+        Collection_info.query.get(collection_id).collection_path
+    )
+    if os.path.exists(os.path.join(namelist_path, '应交名单.csv')):
+        who_should_submit_list = pd.read_csv(namelist_path + "/应交名单.csv", encoding='utf-8')['姓名'].to_list()
+    else:
+        return []
+
+    # * 已交名单列表
+    who_has_submitted_list = [
+        submission[0] for submission in submission_record(collection_id=collection_id)
+    ]
+
+    # 未交名单列表
+    who_has_not_submitted_list = list(filter(lambda x: x not in who_has_submitted_list, who_should_submit_list))
+    email_list = User.query.filter(User.username.in_(who_has_not_submitted_list)). \
+        with_entities(User.email).all()
+    email_list = list(map(itemgetter(0), email_list))
+    print("可发送的邮箱：", email_list)
+    return email_list
+
+
+def is_accessible(user_id: int, collection_id: int) -> bool:
+    collection_id_list = Collection_info.query.filter_by(creator_id=user_id).with_entities(Collection_info.id).all()
+    collection_id_list = list(map(itemgetter(0), collection_id_list))
+    return collection_id in collection_id_list

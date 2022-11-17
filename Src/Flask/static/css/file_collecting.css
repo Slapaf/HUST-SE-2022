@@ -31,6 +31,15 @@ body {
   right: 3px;
 }
 
+#goback_link::before {
+  font-family: "iconfont" !important;
+  content: "\e6fa";
+  font-size: 23px;
+  position: relative;
+  top: 3px;
+  right: 3px;
+}
+
 .container {
   width: 50%;
   background-color: white;

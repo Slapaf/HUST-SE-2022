@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>收集详情</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
     {#    <link rel="stylesheet" href="css/collect_details.css"/>#}
     <link rel="stylesheet" href="http://at.alicdn.com/t/c/font_3751655_o66m8aeymun.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/all.css') }}" type="text/css"/>
@@ -54,6 +55,7 @@
                     <!-- part4为tab栏的内容部分 -->
                     <button class="btn_add" onclick="click0()">添加姓名</button>
                     <div class="name_box" id="name_box"></div>
+                    <button id="sendEmail" onclick="sendEmailRequest()">催交</button>
                     <!-- 名字显示区 -->
                 </div>
             </div>
@@ -157,10 +159,10 @@
     let submitted_list = JSON.parse('{{ submitted_list | tojson }}');
     let not_submitted_list = JSON.parse('{{ not_submitted_list | tojson }}');
 
-    console.log("submitted_list:");
-    console.log(submitted_list);
-    console.log("not_submitted_list:");
-    console.log(not_submitted_list);
+    // console.log("submitted_list:");
+    // console.log(submitted_list);
+    // console.log("not_submitted_list:");
+    // console.log(not_submitted_list);
 
     function faddname(arr1, arr2) {
         let d1 = document.getElementById("name_box");
