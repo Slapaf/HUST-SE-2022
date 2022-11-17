@@ -292,9 +292,9 @@ function updateCheckbox(selectBox) {
 
 
 
-/**
+/*
  * 修改复选框中的内容
-*  当有题目的增加/删除/修改/交换顺序时，调用此函数
+ *  当有题目的增加/删除/修改/交换顺序时，调用此函数
  * @param {string} option 操作类型，
  *                        有四种取值："add","remove","modify","swap"
  * @param {string} id 勾选框选项的id
@@ -526,7 +526,7 @@ function onDrop(e) {
             ul.insertBefore(dragElement, dropElement);
         }
     }
-
+    
 }
 
 //提交表单时给每个问题加上编号
