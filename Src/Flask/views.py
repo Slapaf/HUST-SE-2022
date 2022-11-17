@@ -254,6 +254,8 @@ def collection_details(collection_id: str):
     Returns:
         (Response | str): collection_details 收集详情页面。
     """
+    if is_accessible(current_user.id, int(decryption(collection_id))) == False:
+        return redirect(url_for('page_not_found'))
     if request.method == 'POST':
         namelist_data = request.form.to_dict()  # * 获取应交名单数据
         print("前端数据: ", namelist_data)
@@ -382,6 +384,8 @@ def copy_collection(collection_id: str):
     Args:
         collection_id (str): 待复制的收集 id
     """
+    if is_accessible(current_user.id, int(decryption(collection_id))) == False:
+        return redirect(url_for('page_not_found'))
     if request.method == 'POST':
         question_list = request.form
         if not question_list:
@@ -570,6 +574,9 @@ def file_editing(collection_id):
         (Response | str): 若为 POST 请求，编辑成功重定向回 index 主页，编辑失败转 index 主页。
         (str): 若为 GET 请求，查询到收集转 file_editing 页面，未查询到转 404 页面。
     """
+    if is_accessible(current_user.id, int(decryption(collection_id))) == False:
+        return redirect(url_for('page_not_found'))
+
     if request.method == 'POST':
         question_list = request.form
         if not question_list:
@@ -629,7 +636,7 @@ def statistics() -> str:
     print("统计参数: ", tmp_data)
     if 'collectionId' not in tmp_data.keys():
         print("统计参数错误")
-        redirect(url_for('404'))
+        return redirect(url_for('page_not_found'))
     # collection_id = id_str_to_int(tmp_data['collectionId'])
     collection_id = int(decryption(tmp_data['collectionId']))
     choice_statistics, qnaire_statistics = collection_data_statistics(collection_id)
@@ -655,7 +662,7 @@ def send_email():
     print("邮件参数: ", tmp_data)
     if 'collectionId' not in tmp_data.keys():
         print("邮件参数错误")
-        redirect(url_for('404'))
+        return redirect(url_for('page_not_found'))
     collection_id = int(decryption(tmp_data['collectionId']))
     collection_title = Collection_info.query.get(collection_id).collection_title
     collection_ddl = Collection_info.query.get(collection_id).end_date.strftime('%Y-%m-%d %H:%M:%S')
@@ -666,3 +673,9 @@ def send_email():
     email_thread = threading.Thread(target=current_user.sub_func, args=(email_list, email_title, email_message))
     email_thread.start()
     return "发送完毕"
+
+
+@app.route('/404')
+@login_required
+def page_not_found():
+    return render_template("404.html")
