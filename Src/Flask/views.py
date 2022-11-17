@@ -102,7 +102,7 @@ def test(collection_id):
 
 
 # @app.route('/file_submitting/<int:collection_id>', methods=['GET', 'POST'])
-@app.route('/file_submitting/<string:collection_message>', methods=['GET', 'POST'])
+@app.route('/file_submitting/submit<string:collection_message>', methods=['GET', 'POST'])
 def file_submitting(collection_message):
     """问卷提交
 
@@ -114,7 +114,7 @@ def file_submitting(collection_message):
     """
     # ! 从收集信息字符串中提取收集 id
     # collection_id = id_str_to_int(collection_message[-1])
-    collection_id = int(decryption(collection_message.split('submit')[1]))
+    collection_id = int(decryption(collection_message))
     # print(collection_id)
     # print(type(collection_id))
     if request.method == 'POST':
@@ -449,18 +449,18 @@ def generate_collection():
 
 
 @app.route('/create_link/<string:share_id>')
-def create_link(share_id) -> str:
+def create_link(share_id: str) -> str:
     """生成收集链接
 
     Args:
-        share_id (str): 分享 id
+        share_id (str): 分享 id（已加密）
 
     Returns:
         Response: create_link 页面，生成收集链接
     """
     return render_template(
         'create_link.html',
-        share_link="127.0.0.1:5000/file_submitting/submit" + encryption(share_id)
+        share_link="127.0.0.1:5000/file_submitting/submit" + share_id
     )
 
 
