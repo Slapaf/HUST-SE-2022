@@ -552,24 +552,12 @@ def count_submission(collection_id: int = None) -> int:
         collection_id: 收集id
 
     Returns:
-        若 collection_id 不为 None， 则返回该问卷的提交数量，是一个整数；
-        若 collection_id 为 None，user_id 不为 None，则返回该用户创建的每一个问卷的提交数量，是一个字典，键为问卷 id，值为该问卷的提交数量；
-        若 2 个参数都为 None，则返回 None。
+        若collection_id不为 None，则返回该问卷的提交数量，是一个整数；否则返回None。
     """
 
     # 先看是否给了参数collection_id
     if collection_id is not None:
         return Submission_info.query.filter_by(collection_id=collection_id).count()
-
-    # # 若没给参数collection_id，但给了参数user_id
-    # if user_id is not None:
-    #     collection_id_list = Collection_info.query.filter_by(
-    #     creator_id=user_id).with_entities(Collection_info.id).all()
-    #     collection_id_list = list(map(itemgetter(0), collection_id_list))
-    #     submission_dict = {}
-    #     for collection_id in collection_id_list:
-    #         submission_dict[collection_id] = Submission_info.query.filter_by(collection_id=collection_id).count()
-    #     return submission_dict
 
     return None
 
@@ -581,28 +569,8 @@ def count_filenum(collection_id: int = None) -> int:
         collection_id: 收集id
 
     Return:
-        若collection_id不为None，则返回该问卷的已收文件数，是一个整数。
-        # 若question_id不为None，或collection_id、qno不为None，则返回该题的已收文件数，是一个整数。
-        # 若question_id为None，
-        # 若question_id为None、collection_id为None，user_id不为None，则返回该用户所有问卷的已收文件数，是一个字典，键为问卷id，值为该问卷的已收文件数。
-        # 若都为None，则返回None。
+        若collection_id不为None，则返回该问卷的已收文件数，是一个整数；否则返回None。
     """
-
-    # # 若给了参数question_id
-    # if question_id is not None:
-    #     # path = './FileStorage/' + Question_info.query.filter_by(id=question_id).first().file_path
-    #     path = os.path.join(APP_ROOT, 'FileStorage', Question_info.query.filter_by(id=question_id).first().file_path)
-    #     files = os.listdir(path)
-    #     file_num = len(files)
-    #     return file_num
-
-    # # 若给了collection_id和qno
-    # if collection_id is not None and qno is not None:
-    #     # path = './FileStorage/' + Question_info.query.filter_by(id=question_id).first().file_path
-    #     path = os.path.join(APP_ROOT, 'FileStorage', Question_info.query.filter_by(id=question_id).first().file_path)
-    #     files = os.listdir(path)
-    #     file_num = len(files)
-    #     return file_num
 
     # 若没给参数question_id，但给了参数collection_id
     if collection_id is not None:
@@ -619,27 +587,6 @@ def count_filenum(collection_id: int = None) -> int:
             files = os.listdir(path)
             file_num += len(files)
         return file_num
-
-    # # 若没给参数question_id、collection_id，但给了参数user_id
-    # if user_id is not None:
-    #     collection_id_list = Collection_info.query.filter_by(creator_id=user_id).with_entities(Collection_info.id).all()
-    #     collection_id_list = list(map(itemgetter(0), collection_id_list))
-    #     file_num_dict = {}
-    #     # 遍历该用户的所有收集
-    #     for id1 in collection_id_list:
-    #         # 查询收集中所有文件上传题
-    #         question_id_list = Question_info.query.filter_by(
-    #             collection_id=id1, question_type=Question_info.FILE_UPLOAD
-    #         ).with_entities(Question_info.id).all()
-    #         question_id_list = list(map(itemgetter(0), question_id_list))
-    #         file_num = 0
-    #         for id2 in question_id_list:
-    #             # path = './FileStorage/' + Question_info.query.filter_by(id=id2).first().file_path
-    #             path = os.path.join(APP_ROOT, 'FileStorage', Question_info.query.filter_by(id=id2).first().file_path)
-    #             files = os.listdir(path)
-    #             file_num += len(files)
-    #         file_num_dict[id1] = file_num
-    #     return file_num_dict
 
     return None
 
@@ -671,9 +618,6 @@ def delete_collection(collection_id: int) -> None:
     Answer_info.query.filter_by(collection_id=collection_id).delete()
 
     # 删除该收集的存储路径
-    # question = Question_info.query. \
-    #     filter_by(collection_id=collection_id, question_type=Question_info.FILE_UPLOAD).first()
-    # file_path = Path('./FileStorage/' + question.file_path).parent
     file_path = Collection_info.query.get(collection_id).collection_path
     file_path = Path(os.path.join(APP_FILE, file_path))
     shutil.rmtree(file_path)
@@ -1333,16 +1277,6 @@ def get_submission_dict(collection_id: int, submission_id: int) -> dict:
             submission[f'{seq}_question_file{q.qno}'] = q.question_title
             seq += 1
             submission[f'{seq}_detail{q.qno}'] = q.question_description
-            # # 重命名规则
-            # if q.rename_rule is None:
-            #     seq += 1
-            #     submission[f'{seq}_checked_topic{q.qno}'] = ''
-            # else:
-            #     qno_list = list(map(int, q.rename_rule.split('-')))
-            #     for qno in qno_list:
-            #         seq += 1
-            #         submission[f'{seq}_checked_topic{q.qno}'] = Question_info.query. \
-            #             filter_by(collection_id=collection_id, qno=qno).first().question_title
             seq += 1
             submission[f'{seq}_submit_file{q.qno}'] = s.result
 
@@ -1389,12 +1323,6 @@ def get_submission_dict(collection_id: int, submission_id: int) -> dict:
             for option in option_list:
                 seq += 1
                 submission[f'{seq}_qn_option{q.qno}'] = option.option_content
-            # if q.question_type == Question_info.SINGLE_QUESTIONNAIRE:
-            #     seq += 1
-            #     submission[f'{seq}_choose_type{q.qno}'] = "single"
-            # else:
-            #     seq += 1
-            #     submission[f'{seq}_choose_type{q.qno}'] = "multiple"
 
             # 用户提交选项
             submit_option_list = s.result.split('-')
@@ -1402,7 +1330,6 @@ def get_submission_dict(collection_id: int, submission_id: int) -> dict:
                 seq += 1
                 submission[f'{seq}_submit_qnaire{q.qno}'] = submit_option
 
-    print(submission)
     return submission
 
 
