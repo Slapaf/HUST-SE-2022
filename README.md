@@ -6,6 +6,8 @@
 
 作业收集系统，一个帮助学委的小工具
 
+详细文档请查看 https://slapaf.github.io/HUST-SE-2022/
+
 #### 软件功能
 
 - 提交文件自动重命名
@@ -33,15 +35,15 @@
 
 #### 文档编辑
 
-- `Docs/example` 目录下的 `docs` 文件夹存放相关文档的 markdown 文件，`mkdocs.yml` 组织项目结构，使用教程参考
+- `Docs/` 目录存放相关文档的 markdown 文件，`mkdocs.yml` 组织项目结构，使用教程参考
   - [中文文档](https://mkdocs.zimoapps.com/)
   - [English Documentation](https://www.mkdocs.org/)
 - 本地文档环境搭建
 
-  - 安装 `MkDocs` 及主题
+  - 安装 `MkDocs` 及主题、插件
 
     ```shell
-    pip install mkdocs mkdocs-material
+    pip install mkdocs mkdocs-material mkdocstring mkdocstring[python] mkdocs-glightbox
     ```
 
   - 检查版本
@@ -53,7 +55,7 @@
 
   - 启动文档
 
-    进入到 `example-doc` 目录下，输入如下命令：
+    在项目的根目录输入如下命令：
 
     ```shell
     $ mkdocs serve
