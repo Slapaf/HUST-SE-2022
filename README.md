@@ -4,7 +4,7 @@
 
 华中科技大学计算机学院 2020 级软件工程项目课程设计
 
-作业收集系统，一个帮助学委的小工具
+作业收集系统，一个帮助学委的小工具 http://writebug.pythonanywhere.com/
 
 详细文档请查看 https://slapaf.github.io/HUST-SE-2022/
 
