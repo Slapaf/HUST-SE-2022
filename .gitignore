@@ -22,5 +22,5 @@ bin-release/
 # information for Eclipse / Flash Builder.
 
 # addded by ZJY
-Src/__pycache__/
-Src/Flask/__pycache__/
+__pycache__/
+*.db
