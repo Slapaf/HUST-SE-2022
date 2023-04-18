@@ -8,4 +8,4 @@ if __name__ == "__main__":
     # except:
     #     logging.debug(traceback.print_exc(
     #         file=open(os.path.join(LOG_ROOT, 'traceback_INFO.txt'), 'w+')))
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0')
