@@ -12,10 +12,8 @@
 #       - run: npm install -g bats
 #       - run: bats -v
 name: Build and Deploy Docker Image
-
-on:
-  push:
-    branches: [ main ]
+run-name: ${{ github.actor }} is building image
+on: [push]
 
 jobs:
   build-and-deploy:
