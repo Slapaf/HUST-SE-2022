@@ -1,36 +1,33 @@
-# name: learn-github-actions
-# run-name: ${{ github.actor }} is learning GitHub Actions
-# on: [push]
-# jobs:
-#   check-bats-version:
-#     runs-on: ubuntu-latest
-#     steps:
-#       - uses: actions/checkout@v3
-#       - uses: actions/setup-node@v3
-#         with:
-#           node-version: '14'
-#       - run: npm install -g bats
-#       - run: bats -v
+# 工作流程名称
 name: Build and Deploy Docker Image
+
+# 运行工作流程的名称
 run-name: ${{ github.actor }} is building image
+
+# 工作流程触发条件
 on: [push]
 
+# 定义一个 job
 jobs:
   build-and-deploy:
+    # 定义运行该 job 的操作系统环境
     runs-on: ubuntu-latest
+    # 定义该 job 的步骤
     steps:
+      # 步骤1：从代码仓库检出代码
       - name: Checkout code
         uses: actions/checkout@v2
+      # 步骤2：登录 Docker Hub
       - name: Login to Docker Hub
-      # 添加登录docker内容
         uses: docker/login-action@v1
         with:
+          # 使用 GitHub Secrets 存储 Docker 用户名和密码
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
+      # 步骤3：构建并推送 Docker 镜像到 Docker Hub
       - name: Build and push Docker image
         uses: docker/build-push-action@v2
         with:
-          context: .
-          push: true
-          tags: miaomiao86/workflow-test:latest
-      
+          context: . # 指定 Docker 上下文路径
+          push: true # 推送 Docker 镜像
+          tags: miaomiao86/workflow-test:latest # Docker 镜像标签
